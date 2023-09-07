@@ -3,9 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { signUp } from "../../store/session";
 import '../LoginFormPage/LoginForm.css';
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 function SignupFormPage() {
   const dispatch = useDispatch();
+  const history = useHistory();
   const sessionUser = useSelector((state) => state.session.user);
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -87,6 +89,12 @@ function SignupFormPage() {
           </label>
           <div className="login-button-div">
             <button type="submit">Sign Up</button>
+          </div>
+          <div className="login-button-demo">
+              Already have an account? Log in
+              <span onClick={() => history.push("/login")} className="demo-button">
+                here.
+              </span>
           </div>
         </form>
       </div>

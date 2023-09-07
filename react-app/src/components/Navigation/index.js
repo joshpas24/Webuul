@@ -1,12 +1,14 @@
 import React from 'react';
 
 import { NavLink, useHistory } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import ProfileButton from './ProfileButton';
+import { logout } from '../../store/session';
 import './Navigation.css';
 
 function Navigation({ isLoaded }){
 	const history = useHistory();
+	const dispatch = useDispatch()
 
 	const user = useSelector(state => state.session.user);
 
@@ -35,7 +37,7 @@ function Navigation({ isLoaded }){
 			) : (
 				<div className='nav-right'>
 					<button className='nav-button' id='nav-no-fill'>WALLET</button>
-					<button className='nav-button' id='nav-fill'>SIGN UP</button>
+					<button className='nav-button' id='nav-fill' onClick={() => dispatch(logout())}>SIGN OUT</button>
 				</div>
 			)
 			}

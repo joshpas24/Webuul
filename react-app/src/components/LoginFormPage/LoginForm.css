@@ -94,6 +94,11 @@ h2 {
     border: 1px solid #38b6ff;
 }
 
+.login-right li {
+    list-style: none;
+    color: red;
+}
+
 .login-button-demo {
     display: flex;
     justify-content: center;
