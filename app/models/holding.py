@@ -13,8 +13,8 @@ class Holding(db.Model):
     shares = db.Column(db.Float, nullable=False)
     purchase_date = db.Column(db.Float, nullable=False)
 
-    users_rel = db.relationship("User", back_populates='holding_rel')
-    stocks_rel = db.relationship("Stock", back_populates='holding_rel')
+    user_rel = db.relationship("User", back_populates='holding_rel')
+    stock_rel = db.relationship("Stock", back_populates='holding_rel')
 
     def to_dict(self):
         return {
