@@ -16,8 +16,8 @@ class User(db.Model, UserMixin):
     cash = db.Column(db.Float)
     hashed_password = db.Column(db.String(255), nullable=False)
 
-    holdings_rel = db.Relationship("Holding", back_populates='users_rel', casade="all, delete-orphan")
-    
+    holding_rel = db.relationship("Holding", back_populates='user_rel', casade="all, delete-orphan")
+    watchlist_rel = db.relationship("Watchlist", back_populates='user_rel', cascade="all, delete-orphan")
 
     @property
     def password(self):

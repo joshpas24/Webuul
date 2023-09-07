@@ -1,8 +1,11 @@
 from .db import db, environment, SCHEMA
 
 
-class WatchlistStocks(db.Model):
+class WatchlistStock(db.Model):
     __tablename__ = 'watchlist_stocks'
+
+    if environment == "production":
+        __table_args__ = {'schema': SCHEMA}
 
     watchlist_id = db.Column(db.Integer, nullable=False)
     stock_id = db.Column(db.Integer, nullable=False)
