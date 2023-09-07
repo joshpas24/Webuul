@@ -1,0 +1,112 @@
+.login-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    width: 100%;
+}
+
+.login-left {
+    padding: 25% 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    background-color: #2081ff;
+}
+
+.login-left h1 {
+    font-size: 30pt;
+    color: white !important;
+}
+
+.login-left h3 {
+    color: white !important;
+    margin-top: 0 !important;
+}
+
+.login-left div {
+    font-size: 8pt;
+    color: white !important;
+    font-weight: 300;
+    padding: 10px 0;
+}
+
+h2 {
+    padding-bottom: 20px;
+}
+
+.login-right {
+    padding: 10%;
+    padding-right: 30%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.login-right form {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.login-right input {
+    height: 35px;
+    width: 100%;
+    padding: 0 10px;
+    border: 1px solid rgb(240, 240, 240);
+    background-color: rgb(240, 240, 240);
+    border-radius: 5px;
+}
+
+.login-right label {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.login-right label div {
+    font-size: 10pt;
+    font-weight: 700;
+}
+
+.login-button-div {
+    display: flex;
+    justify-content: center;
+    padding-top: 25px;
+}
+
+.login-button-div span {
+    margin-right: 5px;
+}
+
+.login-right form button {
+    cursor: pointer;
+    width: 40%;
+    padding: 10px 20px;
+    font-size: 14pt;
+    color: white;
+    background-color: #2081ff;
+    border: 1px solid #2081ff;
+    border-radius: 7px;
+}
+
+.login-right form button:hover {
+    background-color: #38b6ff;
+    border: 1px solid #38b6ff;
+}
+
+.login-button-demo {
+    display: flex;
+    justify-content: center;
+    padding-top: 25px;
+}
+
+.demo-button {
+    cursor: pointer;
+    color: #2081ff;
+    text-decoration: underline;
+    margin-left: 4px;
+}
+
+.demo-button:hover {
+    color: #38b6ff;
+}

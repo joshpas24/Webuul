@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { login } from "../../store/session";
 import { useDispatch, useSelector } from "react-redux";
-import { Redirect } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 import './LoginForm.css';
 
 function LoginFormPage() {
@@ -21,36 +21,58 @@ function LoginFormPage() {
     }
   };
 
+  const loginDemo = async (e) => {
+    e.preventDefault();
+    const data = await dispatch(login(email='demo@aa.io', password='password'))
+    // history.push("/markets")
+    return 'nice'
+  }
+
   return (
-    <>
-      <h1>Log In</h1>
-      <form onSubmit={handleSubmit}>
-        <ul>
-          {errors.map((error, idx) => (
-            <li key={idx}>{error}</li>
-          ))}
-        </ul>
-        <label>
-          Email
-          <input
-            type="text"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          Password
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </label>
-        <button type="submit">Log In</button>
-      </form>
-    </>
+    <div className="login-container">
+      <div className="login-left">
+        <h1>Invest in Stocks, ETFs, and Options</h1>
+        <h3>Join webuul today and start investing with 0 commission*</h3>
+        <div>*Relevant regulatory and exchange fees do not apply because this is a clone of Webull.</div>
+        <div>*Options are risky and not suitable for all investors. Investors can rapidly lose 100% or more of their investment trading options. Before trading options, carefully read Characteristics and Risks of Standardized Options, available somewhere on the internet.</div>
+        <div>*Please note this website does not allow users to trade options, or anything real.</div>
+      </div>
+      <div className="login-right">
+        <h2>Log in to <span>webuul</span></h2>
+        <form onSubmit={handleSubmit}>
+            {errors.map((error, idx) => (
+              <li key={idx}>{error}</li>
+            ))}
+          <label>
+            <div>EMAIL</div>
+            <input
+              type="text"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </label>
+          <label>
+            <div>PASSWORD</div>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </label>
+          <div className="login-button-div">
+            <button type="submit">Log In</button>
+          </div>
+          <div className="login-button-demo">
+              Don't have an account? Log in as
+              <span onClick={() => loginDemo()} className="demo-button">
+                Demo User
+              </span>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 }
 
