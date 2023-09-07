@@ -1,0 +1,60 @@
+/* SplashPage.css */
+
+.video-container {
+    position: relative;
+    width: 100%;
+    height: 100vh; /* Ensure the video container takes up the full viewport height */
+    overflow: hidden;
+}
+
+#video-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    text-align: center;
+}
+
+.content h1 {
+    font-size: 42pt;
+    color: #00357a;
+}
+
+.content h3 {
+    font-size: 20pt;
+    font-weight: 300;
+    color: #00357a;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+.content button {
+    cursor: pointer;
+    margin-top: 50px;
+    padding: 15px 50px;
+    font-size: 14pt;
+    color: white;
+    border-radius: 40px;
+    background-color: #004aad;
+    border: 2px solid #004aad;
+}
+
+.content button:hover {
+    background-color: #2081ff;
+    border: 2px solid #2081ff;
+}

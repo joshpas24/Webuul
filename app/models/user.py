@@ -10,9 +10,14 @@ class User(db.Model, UserMixin):
         __table_args__ = {'schema': SCHEMA}
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(40), nullable=False, unique=True)
+    first_name = db.Column(db.String(40), nullable=False)
+    last_name = db.Column(db.String(40), nullable=False)
     email = db.Column(db.String(255), nullable=False, unique=True)
+    cash = db.Column(db.Float)
     hashed_password = db.Column(db.String(255), nullable=False)
+
+    holding_rel = db.relationship("Holding", back_populates='user_rel', cascade="all, delete-orphan")
+    watchlist_rel = db.relationship("Watchlist", back_populates='user_rel', cascade="all, delete-orphan")
 
     @property
     def password(self):
@@ -28,6 +33,8 @@ class User(db.Model, UserMixin):
     def to_dict(self):
         return {
             'id': self.id,
-            'username': self.username,
-            'email': self.email
+            'firstName': self.first_name,
+            'lastName': self.last_name,
+            'email': self.email,
+            'cash': self.cash
         }
