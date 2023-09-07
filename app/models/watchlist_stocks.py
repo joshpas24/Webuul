@@ -1,17 +1,12 @@
-from .db import db, environment, SCHEMA
+from .db import db, environment, SCHEMA, add_prefix_for_prod
 
 
-class WatchlistStock(db.Model):
-    __tablename__ = 'watchlist_stocks'
+watchlist_stocks = db.Table(
+    'watchlist_stocks',
+    db.Model.metadata,
+    db.Column("watchlist_id", db.Integer, db.ForeignKey(add_prefix_for_prod('watchlists.id')), nullable=False, primary_key=True),
+    db.Column("stock_id", db.Integer, db.ForeignKey(add_prefix_for_prod('stocks.id')), nullable=False, primary_key=True)
+)
 
-    if environment == "production":
-        __table_args__ = {'schema': SCHEMA}
-
-    watchlist_id = db.Column(db.Integer, nullable=False)
-    stock_id = db.Column(db.Integer, nullable=False)
-
-    watchlist_rel = db.Relationship('Watchlist', back_populates='watchlist_stocks')
-    stock_rel = db.Relationship('Stock', back_populates='watchlist_stocks')
-
-    def to_dict(self):
-        return 'hello'
+if environment == "production":
+    watchlist_stocks.schema = SCHEMA
