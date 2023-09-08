@@ -8,7 +8,7 @@ class Stock(db.Model):
         __table_args__ = {'schema': SCHEMA}
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String(255), nullable=False)
     symbol = db.Column(db.String(10), nullable=False)
 
     holding_rel = db.relationship("Holding", back_populates='stock_rel')
