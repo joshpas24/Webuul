@@ -27,11 +27,12 @@ function LoginFormPage() {
     let demoEmail = 'demo@aa.io'
     let demoPassword = 'password'
     const data = await dispatch(login(demoEmail, demoPassword))
-    if (data) {
-      setErrors(data)
+    if (data.errors) {
+      setErrors(data.errors)
     } else {
-      history.push("/")
+      history.push("/markets")
     }
+    return;
   }
 
   return (

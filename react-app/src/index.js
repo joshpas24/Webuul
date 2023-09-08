@@ -9,6 +9,7 @@ import * as sessionActions from "./store/session";
 import App from "./App";
 
 import "./index.css";
+import { MarketsProvider } from "./context/MarketsTimeframe";
 
 const store = configureStore();
 
@@ -24,10 +25,12 @@ function Root() {
 	return (
 		<ModalProvider>
 			<Provider store={store}>
-				<BrowserRouter>
-					<App />
-					<Modal />
-				</BrowserRouter>
+				<MarketsProvider>
+					<BrowserRouter>
+						<App />
+						<Modal />
+					</BrowserRouter>
+				</MarketsProvider>
 			</Provider>
 		</ModalProvider>
 	);

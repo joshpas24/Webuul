@@ -12,15 +12,23 @@ function Navigation({ isLoaded }){
 
 	const user = useSelector(state => state.session.user);
 
+	const handleHome = () => {
+		if (user) {
+			history.push("/markets")
+		} else {
+			history.push("/")
+		}
+	}
+
 	return (
 		<div className='nav-container'>
 			<div>
-				<button onClick={() => history.push("/")} className='home-button'>
+				<button onClick={() => handleHome()} className='home-button'>
 					<span><img src='/logo.png' className='logo-image'/></span> webuul
 				</button>
 			</div>
 			<div className='nav-mid'>
-				<div>MARKETS</div>
+				<div onClick={() => history.push("/markets")}>MARKETS</div>
 				<div>TRADING</div>
 				<div>PORTFOLIO</div>
 				<div>ABOUT</div>

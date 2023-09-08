@@ -20,8 +20,8 @@ def get_stock_price(symbol, timeframe):
     data = r.json()
 
     if timeframe == 'WEEKLY' or timeframe == 'MONTHLY':
-        return data[f'{timeframe.title()} Time Series']
+        return { f"{symbol}" : data[f'{timeframe.title()} Time Series']}
     elif timeframe == 'DAILY':
-        return data['Time Series (Daily)']
+        return { f"{symbol}" : data['Time Series (Daily)']}
     else:
-        return data['Time Series (5min)']
+        return { f"{symbol}" : data['Time Series (5min)']}
