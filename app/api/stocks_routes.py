@@ -19,14 +19,14 @@ def get_stock_price(symbol, timeframe):
 
     r = requests.get(url)
     data = r.json()
-    return data
+    # return data
 
-    # if timeframe == 'WEEKLY' or timeframe == 'MONTHLY':
-    #     return { f"{symbol}" : data[f'{timeframe.title()} Time Series']}
-    # elif timeframe == 'DAILY':
-    #     return { f"{symbol}" : data['Time Series (Daily)']}
-    # else:
-    #     return { f"{symbol}" : data['Time Series (5min)']}
+    if timeframe == 'WEEKLY' or timeframe == 'MONTHLY':
+        return { f"{symbol}" : data[f'{timeframe.title()} Time Series']}
+    elif timeframe == 'DAILY':
+        return { f"{symbol}" : data['Time Series (Daily)']}
+    else:
+        return { f"{symbol}" : data['Time Series (5min)']}
 
 
 @market_routes.route("/top10", methods=["GET"])
