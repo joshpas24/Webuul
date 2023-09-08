@@ -13,8 +13,9 @@ def seed_stocks():
         cr = csv.reader(decoded_content.splitlines(), delimiter=',')
         my_list = list(cr)
         for row in my_list:
-            newStock = Stock(name=row[1], symbol=row[0])
-            db.session.add(newStock)
+            if len(row[0]) > 0 and len(row[1]) > 0:
+                newStock = Stock(name=row[1], symbol=row[0])
+                db.session.add(newStock)
 
     db.session.commit()
 
