@@ -6,7 +6,7 @@ export function MarketsProvider({children}) {
     const [timeframe, setTimeframe] = useState('INTRADAY');
 
     return (
-        <MarketsContext.Provider value={{ view, setTimeframe }}>
+        <MarketsContext.Provider value={{ timeframe, setTimeframe }}>
             {children}
         </MarketsContext.Provider>
     );
