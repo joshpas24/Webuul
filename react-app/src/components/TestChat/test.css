@@ -1,5 +1,6 @@
 .test-div {
-    width: 80%;
-    height: auto;
-    margin: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
 }

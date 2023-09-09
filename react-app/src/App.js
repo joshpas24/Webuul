@@ -10,6 +10,7 @@ import './App.css'
 import MarketsPage from "./components/MarketsPage";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import TestChart from "./components/TestChat";
+import LoadingComponent from "./components/LoadingVid";
 
 function App() {
   const dispatch = useDispatch();
@@ -38,6 +39,9 @@ function App() {
           <ProtectedRoute exact path="/test">
             <TestChart />
           </ProtectedRoute>
+          <Route>
+            <LoadingComponent />
+          </Route>
         </Switch>
       )}
     </>

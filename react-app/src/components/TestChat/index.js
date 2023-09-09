@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { thunkGetIndexPrices } from '../../store/markets';
 import { ResponsiveContainer, LineChart, XAxis, YAxis, Tooltip, Line } from 'recharts';
 import './test.css'
+import LoadingComponent from '../LoadingVid';
 
 const TestChart = () => {
     const dispatch = useDispatch();
@@ -26,14 +27,14 @@ const TestChart = () => {
     let data = [];
     if (dowJones) {
         data = Object.keys(dowJones).map((date) => ({
-        date,
-        price: parseFloat(dowJones[date]['4. close']),
+            date,
+            price: parseFloat(dowJones[date]['4. close']),
         }));
     }
 
     function calculateYAxisBounds(data) {
         if (data.length === 0) {
-        return [0, 0]; // Return a default range if there's no data
+            return [0, 0]; // Return a default range if there's no data
         }
 
         // Find the minimum and maximum values in the data
@@ -76,18 +77,18 @@ const TestChart = () => {
 
     return (
         <div className='test-div'>
-        {isLoaded && dowJones ? (
-            <ResponsiveContainer width="80%" height={300}>
-            <LineChart data={data}>
-                <XAxis dataKey="date" tickFormatter={formatXAxisLabel} interval={Math.floor(data.slice(1).length / 4)} />
-                <YAxis domain={calculateYAxisBounds(data)} tickFormatter={formatYAxisLabel}/>
-                <Tooltip content={<CustomTooltip />}/>
-                <Line type="monotone" dataKey="price" stroke="#8884d8" />
-            </LineChart>
-            </ResponsiveContainer>
-        ) : (
-            <div>Loading...</div>
-        )}
+            {isLoaded && dowJones ? (
+                <ResponsiveContainer width="80%" height={300}>
+                <LineChart data={data}>
+                    <XAxis dataKey="date" tickFormatter={formatXAxisLabel} interval={Math.floor(data.slice(1).length / 4)} />
+                    <YAxis domain={calculateYAxisBounds(data)} tickFormatter={formatYAxisLabel}/>
+                    <Tooltip content={<CustomTooltip />}/>
+                    <Line type="monotone" dataKey="price" stroke="#8884d8" dot={false}/>
+                </LineChart>
+                </ResponsiveContainer>
+            ) : (
+                <LoadingComponent />
+            )}
         </div>
     );
 };
