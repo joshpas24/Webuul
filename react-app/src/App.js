@@ -9,6 +9,7 @@ import SplashPage from "./components/SplashPage";
 import './App.css'
 import MarketsPage from "./components/MarketsPage";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import TestChart from "./components/TestChat";
 
 function App() {
   const dispatch = useDispatch();
@@ -33,6 +34,9 @@ function App() {
           </Route>
           <ProtectedRoute exact path="/markets">
             <MarketsPage />
+          </ProtectedRoute>
+          <ProtectedRoute exact path="/test">
+            <TestChart />
           </ProtectedRoute>
         </Switch>
       )}

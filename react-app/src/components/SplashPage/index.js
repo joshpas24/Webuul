@@ -9,7 +9,10 @@ function SplashPage() {
 
     const user = useSelector(state=>state.session.user)
 
-    if (user) return history.push("/markets")
+    if (user)  {
+        history.push("/markets")
+        return null
+    }
 
     return (
         <div class="video-container">
