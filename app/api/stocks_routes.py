@@ -36,3 +36,12 @@ def get_winners_losers():
     r = requests.get(url)
     data = r.json()
     return data
+
+
+@market_routes.route("/search/<keywords>", methods=["GET"])
+@login_required
+def get_search_results(keywords):
+    url = f'https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords={keywords}&apikey={alphaVantage}'
+    r = requests.get(url)
+    data = r.json()
+    return data

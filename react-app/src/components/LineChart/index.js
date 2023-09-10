@@ -1,5 +1,5 @@
 import React from 'react';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, Defs, linearGradient, stop, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 function calculateYAxisBounds(data) {
     if (data.length === 0) {
@@ -58,7 +58,13 @@ const IndexPriceChart = ({ dataObj, title, lineColor }) => {
     return (
         <>
             <ResponsiveContainer width="90%" height={250}>
-                <LineChart data={data} margin={{ top: 0, right: 20, left: 0, bottom: 0 }} height={250}>
+                <AreaChart data={data} margin={{ top: 0, right: 20, left: 0, bottom: 0 }} height={250}>
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor={lineColor} stopOpacity={0.8} />
+                            <stop offset="95%" stopColor={lineColor} stopOpacity={0} />
+                        </linearGradient>
+                    </defs>
                     <XAxis
                         dataKey="date"
                         axisLine={false}
@@ -74,11 +80,19 @@ const IndexPriceChart = ({ dataObj, title, lineColor }) => {
                         margin={0}
                     />
                     <Tooltip content={<CustomTooltip />}/>
-                    <Line type="monotone" dataKey="price" stroke={lineColor} dot={false}/>
-                </LineChart>
+                    <Area
+                        type="monotone"
+                        dataKey="price"
+                        stroke={lineColor}
+                        fill={lineColor}
+                        dot={false}
+                    />
+                </AreaChart>
             </ResponsiveContainer>
         </>
     );
 };
 
 export default IndexPriceChart;
+
+{/* <Line type="monotone" dataKey="price" stroke={lineColor} dot={false}/> */}

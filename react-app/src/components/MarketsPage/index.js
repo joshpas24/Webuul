@@ -28,6 +28,7 @@ function MarketsPage() {
     const nasdaq = useSelector(state=>state.markets.indices['QQQ'])
 
     const [isLoaded, setIsLoaded] = useState(false)
+    const [searchVal, setSearchVal] = useState("")
 
     let diaPrices;
     let spyPrices;
@@ -77,6 +78,16 @@ function MarketsPage() {
                         <button>MAX</button>
                     </div>
                 </div> */}
+                <div className="searchbar-container">
+                    <div>
+                        <input
+                            type="text"
+                            value={searchVal}
+                            placeholder="search by name or ticker..."
+                            onChange={(e) => setSearchVal(e.target.value)}
+                        />
+                    </div>
+                </div>
                 <div className="three-col-container">
                     <div className="index-box">
                         <div className="index-box-top">
@@ -88,9 +99,9 @@ function MarketsPage() {
                             </div>
                             <div className="index-box-top-right">
                                 <h4>${getLastPrice(diaPrices)}</h4>
-                                <h5 id={calculateIndexReturn(diaPrices) >= 0 ? "index-positive" : "index-negative"}>
+                                <div id={calculateIndexReturn(diaPrices) >= 0 ? "return-positive" : "return-negative"}>
                                     {calculateIndexReturn(diaPrices)}%
-                                </h5>
+                                </div>
                             </div>
                         </div>
                         <IndexPriceChart dataObj={dowJones} title="SPDR Dow Jones Industrial Average ETF (DIA)" lineColor="#00D7FF" />
@@ -103,9 +114,9 @@ function MarketsPage() {
                             </div>
                             <div className="index-box-top-right">
                                 <h4>${getLastPrice(spyPrices)}</h4>
-                                <h5 id={calculateIndexReturn(spyPrices) >= 0 ? "index-positive" : "index-negative"}>
+                                <div id={calculateIndexReturn(spyPrices) >= 0 ? "return-positive" : "return-negative"}>
                                     {calculateIndexReturn(spyPrices)}%
-                                </h5>
+                                </div>
                             </div>
                         </div>
                         <IndexPriceChart dataObj={spy500} title="SPDR S&P 500 ETF (SPY)" lineColor="#FF00E0" />
@@ -118,9 +129,9 @@ function MarketsPage() {
                             </div>
                             <div className="index-box-top-right">
                                 <h4>${getLastPrice(qqqPrices)}</h4>
-                                <h5 id={calculateIndexReturn(qqqPrices) >= 0 ? "index-positive" : "index-negative"}>
+                                <div id={calculateIndexReturn(qqqPrices) >= 0 ? "return-positive" : "return-negative"}>
                                     {calculateIndexReturn(qqqPrices)}%
-                                </h5>
+                                </div>
                             </div>
                         </div>
                         <IndexPriceChart dataObj={nasdaq} title="Invesco QQQ Trust (QQQ)" lineColor="#002CFF" />
@@ -132,16 +143,20 @@ function MarketsPage() {
                         <div className="list-header">
                             <div>No.</div>
                             <div>Symbol/Name</div>
-                            <div id="list-right">(%) Change</div>
-                            <div id="list-right">Price</div>
+                            <div className="list-right">(%) Change</div>
+                            <div className="list-right">Price</div>
                         </div>
                         <div className="list-content">
                             {winners.length && winners.map((winner, index) => (
                                 <div key={index} className="list-item">
                                     <div>{index + 1}</div>
                                     <div>{winner.ticker}</div>
-                                    <div id="list-right">{"+" + parseFloat(winner.change_percentage).toFixed(1) + '%'}</div>
-                                    <div id="list-right">{parseFloat(winner.price).toFixed(2)}</div>
+                                    <div className="list-right"
+                                        id={parseFloat(winner.change_percentage) >= 0 ? "return-positive" : "return-negative"}
+                                    >
+                                        {"+" + parseFloat(winner.change_percentage).toFixed(1) + '%'}
+                                    </div>
+                                    <div className="list-right">{parseFloat(winner.price).toFixed(2)}</div>
                                 </div>
                             ))}
                         </div>
@@ -151,16 +166,20 @@ function MarketsPage() {
                         <div className="list-header">
                             <div>No.</div>
                             <div>Symbol/Name</div>
-                            <div id="list-right">(%) Change</div>
-                            <div id="list-right">Price</div>
+                            <div className="list-right">(%) Change</div>
+                            <div className="list-right">Price</div>
                         </div>
                         <div className="list-content">
                             {losers.length && losers.map((loser, index) => (
                                 <div key={index} className="list-item">
                                     <div>{index + 1}</div>
                                     <div>{loser.ticker}</div>
-                                    <div id="list-right">{parseFloat(loser.change_percentage).toFixed(1) + '%'}</div>
-                                    <div id="list-right">{parseFloat(loser.price).toFixed(2)}</div>
+                                    <div className="list-right"
+                                        id={parseFloat(loser.change_percentage) >= 0 ? "return-positive" : "return-negative"}
+                                    >
+                                        {parseFloat(loser.change_percentage).toFixed(1) + '%'}
+                                    </div>
+                                    <div className="list-right">{parseFloat(loser.price).toFixed(2)}</div>
                                 </div>
                             ))}
                         </div>
@@ -170,16 +189,18 @@ function MarketsPage() {
                         <div className="list-header">
                             <div>No.</div>
                             <div>Symbol/Name</div>
-                            <div id="list-right">Volume</div>
-                            <div id="list-right">Price</div>
+                            <div className="list-right">Volume</div>
+                            <div className="list-right">Price</div>
                         </div>
                         <div className="list-content">
                             {mostActive.length && mostActive.map((stonk, index) => (
                                 <div key={index} className="list-item">
                                     <div>{index + 1}</div>
                                     <div>{stonk.ticker}</div>
-                                    <div id="list-right">{formatVolume(stonk.volume) + "M"}</div>
-                                    <div id="list-right">{parseFloat(stonk.price).toFixed(2)}</div>
+                                    <div className="list-right">
+                                        {formatVolume(stonk.volume) + "M"}
+                                    </div>
+                                    <div className="list-right">{parseFloat(stonk.price).toFixed(2)}</div>
                                 </div>
                             ))}
                         </div>
