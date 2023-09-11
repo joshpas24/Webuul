@@ -5,8 +5,9 @@ let alphaVantage = process.env.ALPHA_VANTAGE
 
 const GET_INDEX_PRICES = "markets/GET_INDEX_PRICES"
 const GET_STOCK_PRICES = "markets/GET_PRICES"
+const GET_STOCK_INFO = "markets/GET_STOCK_INFO"
 const SET_LISTS = "markets/SET_LISTS"
-// const SET_DOW = "markets/SET_DOW"
+const SEARCH_RESULTS = "markets/SEARCH_RESULTS"
 
 const getIndexPrices = (data) => ({
     type: GET_INDEX_PRICES,
@@ -18,13 +19,23 @@ const getStockPrice = (pricesObj) => ({
     pricesObj
 })
 
+const getStockInfo = (data) => ({
+    type: GET_STOCK_INFO,
+    data
+})
+
 const setLists = (data) => ({
     type: SET_LISTS,
     data
 })
 
+const getSearchResults = (data) => ({
+    type: SEARCH_RESULTS,
+    data
+})
+
 export const thunkGetIndexPrices = (symbol, timeframe) => async (dispatch) => {
-    const res = await fetch(`/api/markets/${symbol}/${timeframe}`, {
+    const res = await fetch(`/api/markets/${symbol}/prices/${timeframe}`, {
         method: "GET"
     })
 
@@ -41,7 +52,7 @@ export const thunkGetIndexPrices = (symbol, timeframe) => async (dispatch) => {
 }
 
 export const thunkGetStockPrices = (symbol, timeframe) => async (dispatch) => {
-    const res = await fetch(`/api/markets/${symbol}/${timeframe}`, {
+    const res = await fetch(`/api/markets/${symbol}/prices/${timeframe}`, {
         method: "GET"
     })
 
@@ -50,6 +61,23 @@ export const thunkGetStockPrices = (symbol, timeframe) => async (dispatch) => {
             const data = await res.json();
             // console.log(data); // Log the data
             dispatch(getStockPrice(data))
+            return data;
+        } catch (error) {
+            console.error('Error parsing JSON:', error);
+        }
+    }
+}
+
+export const thunkGetStockInfo = (symbol) => async (dispatch) => {
+    const res = await fetch(`/api/markets/${symbol}/info`, {
+        method: "GET"
+    })
+
+    if (res.ok) {
+        try {
+            const data = await res.json();
+            // console.log(data); // Log the data
+            dispatch(getStockInfo(data))
             return data;
         } catch (error) {
             console.error('Error parsing JSON:', error);
@@ -66,7 +94,7 @@ export const thunkGetTop10 = () => async (dispatch) => {
 
         if (response.status === 200) {
             const data = response.data;
-            console.log("DATA FROM URL REQUEST IN THUNK: ", data)
+            // console.log("DATA FROM URL REQUEST IN THUNK: ", data)
             dispatch(setLists(data));
             return data;
         } else {
@@ -78,8 +106,19 @@ export const thunkGetTop10 = () => async (dispatch) => {
 
 }
 
+export const thunkGetSearchResults = (keywords) => async dispatch => {
+    const res = await fetch(`/api/markets/search/${keywords}`, {
+        method: "GET"
+    });
 
-let initialState = { stockInfo: {}, stockPrice: {}, winners: [], losers: [], mostActive: [], indices: {} }
+    if (res.ok) {
+        const data = await res.json()
+        dispatch(getSearchResults(data))
+        return data
+    }
+}
+
+let initialState = { stockInfo: {}, stockPrices: {}, winners: [], losers: [], mostActive: [], indices: {}, searchResults: [] }
 
 export default function marketsReducer(state = initialState, action) {
     let newState;
@@ -101,8 +140,12 @@ export default function marketsReducer(state = initialState, action) {
                 return newState
             }
         case GET_STOCK_PRICES:
-            newState = { ...state, stockPrice: {}}
-            newState.stockPrice = action.data
+            newState = { ...state, stockPrices: {} }
+            newState.stockPrices = action.data
+            return newState;
+        case GET_STOCK_INFO:
+            newState = { ...state, stockInfo: {} }
+            newState.stockInfo = action.data
             return newState;
         case SET_LISTS:
             newState = { ...state, winners: [], losers: [], mostActive: []}
@@ -111,7 +154,11 @@ export default function marketsReducer(state = initialState, action) {
                 newState.losers.push(action.data["top_losers"][i])
                 newState.mostActive.push(action.data["most_actively_traded"][i])
             }
-            return newState
+            return newState;
+        case SEARCH_RESULTS:
+            newState = { ...state, searchResults: [] }
+            newState.searchResults = action.data
+            return newState;
         default:
             return state;
     }

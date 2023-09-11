@@ -8,7 +8,7 @@ alphaVantage = os.environ.get("ALPHA_VANTAGE")
 
 market_routes = Blueprint("markets", __name__)
 
-@market_routes.route("/<symbol>/<timeframe>", methods=["GET"])
+@market_routes.route("/<symbol>/prices/<timeframe>", methods=["GET"])
 @login_required
 def get_stock_price(symbol, timeframe):
 
@@ -29,6 +29,15 @@ def get_stock_price(symbol, timeframe):
         return { f"{symbol}" : data['Time Series (5min)']}
 
 
+@market_routes.route("/<symbol>/info", methods=["GET"])
+@login_required
+def get_stock_info(symbol):
+    url = f'https://www.alphavantage.co/query?function=OVERVIEW&symbol={symbol}&apikey={alphaVantage}'
+    r = requests.get(url)
+    data = r.json()
+    return data
+
+
 @market_routes.route("/top10", methods=["GET"])
 @login_required
 def get_winners_losers():
@@ -44,4 +53,5 @@ def get_search_results(keywords):
     url = f'https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords={keywords}&apikey={alphaVantage}'
     r = requests.get(url)
     data = r.json()
-    return data
+    # return data
+    return [ obj for obj in data['bestMatches'] if obj['4. region'] == "United States" ]

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux"
 import { useHistory } from 'react-router-dom'
-import { thunkGetIndexPrices, thunkGetStockPrices, thunkGetTop10 } from "../../store/markets";
+import { thunkGetSearchResults, thunkGetIndexPrices, thunkGetStockInfo, thunkGetStockPrices, thunkGetTop10 } from "../../store/markets";
 import './MarketsPage.css'
 import IndexPriceChart from "../LineChart";
 import LoadingComponent from "../LoadingVid";
@@ -9,6 +9,10 @@ import LoadingComponent from "../LoadingVid";
 function MarketsPage() {
     const history = useHistory();
     const dispatch = useDispatch();
+
+    const [isLoaded, setIsLoaded] = useState(false)
+    const [searchVal, setSearchVal] = useState("")
+    const [showSearchList, setShowSearchList] = useState(false)
 
     useEffect(() => {
         dispatch(thunkGetTop10())
@@ -19,16 +23,28 @@ function MarketsPage() {
         setIsLoaded(true)
     }, [dispatch])
 
+    useEffect(() => {
+        if (searchVal.length > 0) {
+            dispatch(thunkGetSearchResults(searchVal))
+            setShowSearchList(true)
+        } else {
+            setShowSearchList(false)
+        }
+
+        if (searchVal.length < 1) {
+            setSearchVal("")
+            setShowSearchList(false)
+        }
+    }, [searchVal])
+
     const user = useSelector(state=>state.session.user)
+    const searchResults = useSelector(state=>state.markets.searchResults)
     const winners = useSelector(state=>state.markets.winners)
     const losers = useSelector(state=>state.markets.losers)
     const mostActive = useSelector(state=>state.markets.mostActive)
     const dowJones = useSelector(state=>state.markets.indices['DIA'])
     const spy500 = useSelector(state=>state.markets.indices['SPY'])
     const nasdaq = useSelector(state=>state.markets.indices['QQQ'])
-
-    const [isLoaded, setIsLoaded] = useState(false)
-    const [searchVal, setSearchVal] = useState("")
 
     let diaPrices;
     let spyPrices;
@@ -38,6 +54,13 @@ function MarketsPage() {
         diaPrices = Object.values(dowJones)
         spyPrices = Object.values(spy500)
         qqqPrices = Object.values(nasdaq)
+    }
+
+    const getStockDetails = (symbol) => {
+        dispatch(thunkGetStockInfo(symbol))
+        dispatch(thunkGetStockPrices(symbol, 'INTRADAY'))
+        history.push(`/markets/${symbol}`)
+        return;
     }
 
     const calculateIndexReturn = (prices) => {
@@ -78,14 +101,29 @@ function MarketsPage() {
                         <button>MAX</button>
                     </div>
                 </div> */}
-                <div className="searchbar-container">
-                    <div>
+                <div className="searchbar-div">
+                    <div className="searchbar-container">
+                        <div className="searcbar-icon">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </div>
                         <input
                             type="text"
                             value={searchVal}
                             placeholder="search by name or ticker..."
                             onChange={(e) => setSearchVal(e.target.value)}
                         />
+                    </div>
+                    <div className="search-results">
+                        {searchResults && searchResults.length > 0 ?
+                            searchResults.map((item) => (
+                                <li key={item['1. symbol']} onClick={() => getStockDetails(item['1. symbol'])}>
+                                    <div>{item['2. name']}</div>
+                                    <div>{item['1. symbol']}</div>
+                                </li>
+                            )
+                        ) : (
+                            <li className={showSearchList ? "" : "hidden-search"}>No matches found</li>
+                        )}
                     </div>
                 </div>
                 <div className="three-col-container">
