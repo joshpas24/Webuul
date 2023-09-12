@@ -76,7 +76,7 @@ export const thunkGetStockInfo = (symbol) => async (dispatch) => {
     if (res.ok) {
         try {
             const data = await res.json();
-            // console.log(data); // Log the data
+            // console.log(data);
             dispatch(getStockInfo(data))
             return data;
         } catch (error) {
@@ -86,22 +86,19 @@ export const thunkGetStockInfo = (symbol) => async (dispatch) => {
 }
 
 export const thunkGetTop10 = () => async (dispatch) => {
-    console.log("API Key:", alphaVantage);
-    const url = `https://www.alphavantage.co/query?function=TOP_GAINERS_LOSERS&entitlement=delayed&apikey=UKZYTRW4O1WVGICE`
+    const res = await fetch("/api/markets/top10", {
+        method: "GET"
+    })
 
-    try {
-        const response = await axios.get(url);
-
-        if (response.status === 200) {
-            const data = response.data;
-            // console.log("DATA FROM URL REQUEST IN THUNK: ", data)
-            dispatch(setLists(data));
+    if (res.ok) {
+        try {
+            const data = await res.json();
+            // console.log(data);
+            dispatch(setLists(data))
             return data;
-        } else {
-            console.log('Status:', response.status);
+        } catch (error) {
+            console.error('Error parsing JSON:', error);
         }
-    } catch (error) {
-        console.error('Error:', error);
     }
 
 }
