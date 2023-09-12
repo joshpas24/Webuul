@@ -10,3 +10,11 @@
     font-family: 'Lato', sans-serif;
     text-decoration: none;
 }
+
+#return-positive {
+    color: green;
+}
+
+#return-negative {
+    color: red;
+}

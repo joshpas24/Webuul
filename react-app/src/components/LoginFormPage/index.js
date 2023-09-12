@@ -22,16 +22,14 @@ function LoginFormPage() {
     }
   };
 
-  const loginDemo = async (e) => {
+  const loginDemo = (e) => {
     e.preventDefault();
     let demoEmail = 'demo@aa.io'
     let demoPassword = 'password'
-    const data = await dispatch(login(demoEmail, demoPassword))
-    if (data) {
-      setErrors(data)
-    } else {
-      history.push("/")
-    }
+    dispatch(login(demoEmail, demoPassword))
+
+    history.push("/markets")
+    return;
   }
 
   return (
