@@ -1,7 +1,7 @@
 
 .nav-container {
   display: grid;
-  grid-template-columns: 1fr 4fr 1fr;
+  grid-template-columns: 1fr 3fr 1fr;
   /* width: 100%; */
   padding: 30px 5%;
   box-shadow: 0 2px 50px rgba(107, 107, 107, 0.1);
@@ -31,6 +31,7 @@
   justify-content: flex-end;
   align-items: center;
   gap: 10%;
+  width: 100%;
 }
 
 .nav-button {
@@ -44,6 +45,7 @@
   color: white;
   background-color: #2081ff;
   border: 1px solid #2081ff;
+  width: auto;
 }
 
 #nav-fill:hover {

@@ -1,7 +1,3 @@
-import axios from 'axios'
-
-const polygon = process.env.POLYGON
-let alphaVantage = process.env.ALPHA_VANTAGE
 
 const GET_INDEX_PRICES = "markets/GET_INDEX_PRICES"
 const GET_STOCK_PRICES = "markets/GET_PRICES"
@@ -42,7 +38,6 @@ export const thunkGetIndexPrices = (symbol, timeframe) => async (dispatch) => {
     if (res.ok) {
         try {
             const data = await res.json();
-            console.log(data); // Log the data
             dispatch(getIndexPrices(data))
             return data;
         } catch (error) {
@@ -59,7 +54,6 @@ export const thunkGetStockPrices = (symbol, timeframe) => async (dispatch) => {
     if (res.ok) {
         try {
             const data = await res.json();
-            // console.log(data); // Log the data
             dispatch(getStockPrice(data))
             return data;
         } catch (error) {
@@ -76,8 +70,7 @@ export const thunkGetStockInfo = (symbol) => async (dispatch) => {
     if (res.ok) {
         try {
             const data = await res.json();
-            // console.log(data);
-            dispatch(getStockInfo(data))
+            dispatch(getStockInfo(data));
             return data;
         } catch (error) {
             console.error('Error parsing JSON:', error);
@@ -93,8 +86,7 @@ export const thunkGetTop10 = () => async (dispatch) => {
     if (res.ok) {
         try {
             const data = await res.json();
-            // console.log(data);
-            dispatch(setLists(data))
+            dispatch(setLists(data));
             return data;
         } catch (error) {
             console.error('Error parsing JSON:', error);
