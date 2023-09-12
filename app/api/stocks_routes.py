@@ -54,4 +54,4 @@ def get_search_results(keywords):
     r = requests.get(url)
     data = r.json()
     # return data
-    return [ obj for obj in data['bestMatches'] if obj['4. region'] == "United States" ]
+    return [ obj for obj in data['bestMatches'] if obj['4. region'] == "United States" and obj['3. type'] == "Equity"]

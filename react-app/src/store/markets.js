@@ -14,9 +14,9 @@ const getIndexPrices = (data) => ({
     data
 })
 
-const getStockPrice = (pricesObj) => ({
+const getStockPrice = (data) => ({
     type: GET_STOCK_PRICES,
-    pricesObj
+    data
 })
 
 const getStockInfo = (data) => ({

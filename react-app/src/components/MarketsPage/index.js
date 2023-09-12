@@ -114,7 +114,7 @@ function MarketsPage() {
                         />
                     </div>
                     <div className="search-results">
-                        {searchResults && searchResults.length > 0 ?
+                        {searchResults && searchResults.length > 0 && searchVal.length > 0 ?
                             searchResults.map((item) => (
                                 <li key={item['1. symbol']} onClick={() => getStockDetails(item['1. symbol'])}>
                                     <div>{item['2. name']}</div>
