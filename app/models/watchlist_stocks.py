@@ -10,6 +10,8 @@ class WatchlistStock(db.Model):
     watchlist_id = db.Column(db.Integer, db.ForeignKey('watchlists.id'), nullable=False, primary_key=True)
     stock_id = db.Column(db.Integer, db.ForeignKey('stocks.id'), nullable=False, primary_key=True)
 
-    # Define relationships to Watchlist and Stock models
-    watchlist = db.relationship('Watchlist', backref='watchlist_stocks')
-    stock = db.relationship('Stock', backref='watchlist_stocks')
+    # def to_dict(self):
+    #     return {
+    #         'id': self.id,
+    #         'symbol': self.symbol,
+    #     }

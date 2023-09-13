@@ -4,6 +4,7 @@ from ..forms.watchlist_form import WatchlistForm
 from flask_login import login_required, current_user
 import requests
 import os
+from sqlalchemy import and_
 
 watchlist_routes = Blueprint("watchlists", __name__)
 
@@ -43,7 +44,18 @@ def create_watchlist():
         return { "errors": validation_errors_to_error_messages(form.errors) }
 
 
-@watchlist_routes.route("/<int:id>/add/<symbol>", methods=["POST"])
+@watchlist_routes.route("/<int:id>/delete", methods=["DELETE"])
+@login_required
+def delete_watchlist(id):
+    watchlist_to_delete = Watchlist.query.get(id)
+
+    db.session.delete(watchlist_to_delete)
+    db.session.commit()
+
+    return { "message": "Successfully deleted"}
+
+
+@watchlist_routes.route("/<int:id>/add/<symbol>", methods=["GET"])
 @login_required
 def add_to_watchlist(id, symbol):
     stonk = Stock.query.filter(Stock.symbol == symbol).first()
@@ -57,3 +69,14 @@ def add_to_watchlist(id, symbol):
 
     watchlist = Watchlist.query.get(id)
     return watchlist.to_dict()
+
+@watchlist_routes.route("/<int:id>/remove/<symbol>", methods=["DELETE"])
+@login_required
+def remove_from_watchlist(id, symbol):
+    stonk = Stock.query.filter(Stock.symbol == symbol).first()
+    watchlist_stonk = WatchlistStock.query.filter(and_(WatchlistStock.watchlist_id == id, WatchlistStock.stock_id == stonk.id)).first()
+    db.session.delete(watchlist_stonk)
+    db.session.commit()
+
+    updated_watchlist = Watchlist.query.get(id)
+    return updated_watchlist.to_dict()

@@ -2,10 +2,13 @@ from app.models import db, Stock, environment, SCHEMA
 from sqlalchemy.sql import text
 import csv
 import requests
+import os
+
+alphaVantage = os.environ.get("ALPHA_VANTAGE")
 
 def seed_stocks():
 
-    CSV_URL = 'https://www.alphavantage.co/query?function=LISTING_STATUS&apikey=PVIKY67GN8NUSXEF'
+    CSV_URL = f'https://www.alphavantage.co/query?function=LISTING_STATUS&apikey={alphaVantage}'
 
     with requests.Session() as s:
         download = s.get(CSV_URL)

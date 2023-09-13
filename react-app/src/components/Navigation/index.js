@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import ProfileButton from './ProfileButton';
 import { logout } from '../../store/session';
 import './Navigation.css';
+import WatchlistsModal from '../WatchlistsModal';
 
 function Navigation({ isLoaded }){
 	const history = useHistory();
@@ -43,7 +44,7 @@ function Navigation({ isLoaded }){
 				</div>
 			) : (
 				<div className='nav-right'>
-					<button className='nav-button' id='nav-no-fill'>WATCHLISTS</button>
+					<WatchlistsModal />
 					<button className='nav-button' id='nav-fill' onClick={() => dispatch(logout())}>SIGN OUT</button>
 				</div>
 			)
