@@ -1,5 +1,5 @@
 from .db import db, environment, SCHEMA, add_prefix_for_prod
-from .watchlist_stocks import WatchlistStock
+
 
 class Stock(db.Model):
     __tablename__ = 'stocks'
@@ -12,7 +12,6 @@ class Stock(db.Model):
     symbol = db.Column(db.String(50), nullable=False)
 
     holding_rel = db.relationship("Holding", back_populates='stock_rel')
-    watchlist_rel = db.relationship('Watchlist', back_populates='stock_rel', secondary='watchlist_stocks')
 
     def to_dict(self):
         return {

@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from ..models import db, Stock, Watchlist, WatchlistStock
+from ..models import db, Stock, Watchlist
 from ..forms.watchlist_form import WatchlistForm
 from flask_login import login_required, current_user
 import requests
@@ -58,25 +58,47 @@ def delete_watchlist(id):
 @watchlist_routes.route("/<int:id>/add/<symbol>", methods=["GET"])
 @login_required
 def add_to_watchlist(id, symbol):
-    stonk = Stock.query.filter(Stock.symbol == symbol).first()
 
-    new_watchlist_stock = WatchlistStock(
-        watchlist_id = id,
-        stock_id = stonk.id
-    )
-    db.session.add(new_watchlist_stock)
-    db.session.commit()
+    try:
+        stonk = Stock.query.filter(Stock.symbol == symbol).first()
+        watchlist = Watchlist.query.get(id)
 
-    watchlist = Watchlist.query.get(id)
-    return watchlist.to_dict()
+        if not stonk or not watchlist:
+            return {"error": "Stock or watchlist not found"}, 404
+
+        # Check if the stock is already in the watchlist
+        if stonk in watchlist.stocks:
+            return {"error": "Stock already in watchlist"}, 400
+
+        # Add the stock to the watchlist
+        watchlist.stocks.append(stonk)
+        db.session.commit()
+
+        return watchlist.to_dict()
+
+    except Exception as e:
+        return ({"error": str(e)}), 500
 
 @watchlist_routes.route("/<int:id>/remove/<symbol>", methods=["DELETE"])
 @login_required
 def remove_from_watchlist(id, symbol):
-    stonk = Stock.query.filter(Stock.symbol == symbol).first()
-    watchlist_stonk = WatchlistStock.query.filter(and_(WatchlistStock.watchlist_id == id, WatchlistStock.stock_id == stonk.id)).first()
-    db.session.delete(watchlist_stonk)
-    db.session.commit()
 
-    updated_watchlist = Watchlist.query.get(id)
-    return updated_watchlist.to_dict()
+    try:
+        stonk = Stock.query.filter(Stock.symbol == symbol).first()
+        watchlist = Watchlist.query.get(id)
+
+        if not stonk or not watchlist:
+            return {"error": "Stock or watchlist not found"}, 404
+
+        # Check if the stock is already in the watchlist
+        if stonk not in watchlist.stocks:
+            return {"error": "Stock is not in watchlist"}, 400
+
+        # Add the stock to the watchlist
+        watchlist.stocks.remove(stonk)
+        db.session.commit()
+
+        return watchlist.to_dict()
+
+    except Exception as e:
+        return ({"error": str(e)}), 500
