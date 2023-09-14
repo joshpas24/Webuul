@@ -1,6 +1,7 @@
 from flask.cli import AppGroup
 from .users import seed_users, undo_users
 from .stocks import seed_stocks, undo_stocks
+from .delete import undo_transactions_watchlists_holdings
 
 from app.models.db import db, environment, SCHEMA
 
@@ -27,6 +28,7 @@ def seed():
 # Creates the `flask seed undo` command
 @seed_commands.command('undo')
 def undo():
+    undo_transactions_watchlists_holdings()
     undo_stocks()
     undo_users()
     # Add other undo functions here

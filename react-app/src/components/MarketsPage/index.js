@@ -109,7 +109,7 @@ function MarketsPage() {
                         <input
                             type="text"
                             value={searchVal}
-                            placeholder="search by name or ticker..."
+                            placeholder="search by name or ticker"
                             onChange={(e) => setSearchVal(e.target.value)}
                         />
                     </div>

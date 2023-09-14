@@ -1,0 +1,33 @@
+.watchlist-modal {
+    position: fixed;
+    top: -16px;
+    right: 0;
+    height: 100%;
+    width: 20%;
+    padding: 40px 30px;
+    background-color: #FFFFFF;
+    box-shadow: -10px 0px 50px #e5e5e5;
+    transition: right 3s ease-in-out;
+    z-index: 5000;
+}
+
+.watchlist-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 10px;
+}
+
+#exit-watchlist {
+    cursor: pointer;
+    font-size: 16pt;
+    padding: 5px;
+    padding-left: 0;
+    width: 30px;
+    background-color: transparent;
+    border: none;
+}
+
+#exit-watchlist:hover {
+    color: red;
+}

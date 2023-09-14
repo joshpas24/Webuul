@@ -13,11 +13,12 @@ class User(db.Model, UserMixin):
     first_name = db.Column(db.String(40), nullable=False)
     last_name = db.Column(db.String(40), nullable=False)
     email = db.Column(db.String(255), nullable=False, unique=True)
-    cash = db.Column(db.Float)
+    cash = db.Column(db.Float, default=100000.00)
     hashed_password = db.Column(db.String(255), nullable=False)
 
     holding_rel = db.relationship("Holding", back_populates='user_rel', cascade="all, delete-orphan")
     watchlist_rel = db.relationship("Watchlist", back_populates='user_rel', cascade="all, delete-orphan")
+    transaction_rel = db.relationship("Transaction", back_populates='user_rel', cascade="all, delete-orphan")
 
     @property
     def password(self):

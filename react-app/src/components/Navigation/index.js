@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import ProfileButton from './ProfileButton';
 import { logout } from '../../store/session';
 import './Navigation.css';
+import WatchlistsModal from '../WatchlistsModal';
 
 function Navigation({ isLoaded }){
 	const history = useHistory();
@@ -29,9 +30,9 @@ function Navigation({ isLoaded }){
 			</div>
 			<div className='nav-mid'>
 				<div onClick={() => history.push("/markets")}>MARKETS</div>
-				<div>TRADING</div>
+				{/* <div onClick={() => history.push("/trading")}>TRADING</div> */}
 				<div>PORTFOLIO</div>
-				<div>ABOUT</div>
+				<div>NEWS</div>
 			</div>
 			{!user ? (
 				<div className='nav-right'>
@@ -44,7 +45,7 @@ function Navigation({ isLoaded }){
 				</div>
 			) : (
 				<div className='nav-right'>
-					<button className='nav-button' id='nav-no-fill'>WALLET</button>
+					<WatchlistsModal />
 					<button className='nav-button' id='nav-fill' onClick={() => dispatch(logout())}>SIGN OUT</button>
 				</div>
 			)
