@@ -39,7 +39,9 @@ def upgrade():
                existing_nullable=False)
 
     if environment == "production":
-        op.execute(f"ALTER TABLE stocks SET SCHEMA {SCHEMA};")
+        op.execute(f"ALTER TABLE transactions SET SCHEMA {SCHEMA};")
+    if environment == "production":
+        op.execute(f"ALTER TABLE holdings SET SCHEMA {SCHEMA};")
 
     # ### end Alembic commands ###
 

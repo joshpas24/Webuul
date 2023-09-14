@@ -25,7 +25,7 @@ def upgrade():
         batch_op.add_column(sa.Column('purchase_price', sa.Float(), nullable=False))
 
     if environment == "production":
-        op.execute(f"ALTER TABLE stocks SET SCHEMA {SCHEMA};")
+        op.execute(f"ALTER TABLE holdings SET SCHEMA {SCHEMA};")
 
     # ### end Alembic commands ###
 
