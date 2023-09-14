@@ -409,11 +409,11 @@ function TradingPage() {
                 <div className="trading-page-right">
                     <div className="trading-transaction-container">
                         <div className="transaction-top">
-                            <button onClick={() => setTransactionType('BUY')}>
-                                BUY {symbol}
+                            <button onClick={() => setTransactionType('BUY')} className={transactionType=='BUY'?"active-transaction":""} id="buy-button">
+                                BUY
                             </button>
-                            <button onClick={() => setTransactionType('SELL')}>
-                                SELL {symbol}
+                            <button onClick={() => setTransactionType('SELL')} className={transactionType=='SELL'?"active-transaction":""} id="sell-button">
+                                SELL
                             </button>
                         </div>
                         <div className="transaction-content">
@@ -471,12 +471,14 @@ function TradingPage() {
                                                 value={numShares}
                                                 onChange={(e) => setNumShares(e.target.value)}
                                                 placeholder="0"
+                                                className="quantity-input"
                                             />
                                         ) : (
                                             <input type="text"
                                                 value={numDollars}
                                                 onChange={(e) => setNumDollars(e.target.value)}
                                                 placeholder="$0.00"
+                                                className="quantity-input"
                                             />
                                         )}
                                     </div>
