@@ -50,7 +50,7 @@ function AddToWatchlist({ symbol }) {
                             </li>
                         ))}
                     </div>
-                    <button onClick={() => addStockToWatchlist(symbol)}>Add to Watchlist</button>
+                    <button onClick={() => {addStockToWatchlist(symbol)}}>Add to Watchlist</button>
                 </div>
             ) : (
                 <div>

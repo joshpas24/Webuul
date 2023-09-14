@@ -126,6 +126,7 @@ function StockDetailsPage() {
                                         </>
                                     )}
                                 />
+                                <button onClick={() => history.push(`/trading/${symbol}`)}>trade</button>
                             </div>
                             <h5>{info["Exchange"]} • {info["Sector"]} • {info["Industry"]}</h5>
                         </div>

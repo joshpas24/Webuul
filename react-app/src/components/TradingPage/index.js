@@ -8,7 +8,7 @@ import IndexPriceChart from "../LineChart";
 // import "./StockDetailsPage.css"
 import "../StockDetailsPage/StockDetailsPage.css"
 import "./TradingPage.css"
-import { thunkGetPortfolioInfo } from "../../store/portfolio";
+import { thunkGetPortfolioInfo, thunkPurchase, thunkSell } from "../../store/portfolio";
 import { thunkAddStock } from "../../store/watchlists";
 
 function TradingPage() {
@@ -25,6 +25,7 @@ function TradingPage() {
     const [isLoaded, setIsLoaded] = useState(false)
     const [searchVal, setSearchVal] = useState("")
     const [showSearchList, setShowSearchList] = useState(false)
+    const [currentMV, setCurrentMV] = useState("")
     const [transactionType, setTransactionType] = useState("BUY")
     const [quantityType, setQuantityType] = useState("shares")
     const [numShares, setNumShares] = useState("")
@@ -39,14 +40,15 @@ function TradingPage() {
 
     useEffect(() => {
         dispatch(thunkGetStockPrices(symbol.toString(), 'INTRADAY'))
+        if (pricesObj && pricesArr && pricesArr.length) {
+            setCurrentMV(pricesArr[pricesArr.length - 1]['4. close'])
+        }
         dispatch(thunkGetStockInfo(symbol))
         dispatch(thunkGetPortfolioInfo())
-        if (holdings && holdings.length === 1) {
-            setSellId(holdings[0].id)
-        }
         setPostTransactionCash(cash)
         setIsLoaded(true)
     }, [dispatch])
+
 
     useEffect(() => {
         if (searchVal.length > 0) {
@@ -95,12 +97,59 @@ function TradingPage() {
     }, [postTransactionCash])
 
     useEffect(() => {
+        if (pricesArr) {
+            setCurrentMV(pricesArr[pricesArr.length - 1]['4. close'])
+        }
+
+        if (transactionType === 'BUY') {
+            console.log("switch to BUY")
+            setTotalCost(0)
+        }
+
         if (transactionType === 'SELL' && !activeSymbols.includes(symbol)) {
             setDisabled(true)
             let err = { "message": `You do not currently own ${symbol}`}
             setErrors(err)
+        } else {
+            if (activeHoldingsObj[symbol]) {
+                //INITIALIZES SELLID TO THE FIRST HOLDING
+                let firstHolding = activeHoldingsObj[symbol][0]
+                console.log("firstHolding:", firstHolding)
+                setSellId(firstHolding.id)
+                console.log("*****sellId: ", sellId)
+                let total = firstHolding.shares * currentMV
+                setTotalCost(total)
+            }
         }
     }, [transactionType, symbol])
+
+    useEffect(() => {
+        console.log("from useEffect: ", sellId)
+        if (sellId && activeHoldingsObj[symbol]) {
+            let holding = activeHoldingsObj[symbol].find( obj => obj.id == sellId)
+            console.log("holding set to selectedTranche: ", holding)
+            setSelectedTranche(holding)
+        }
+    }, [sellId])
+
+    useEffect(() => {
+        // setCurrentMV(pricesArr[pricesArr.length - 1]['4. close'])
+        if (selectedTranche && currentMV) {
+            let estTotal = selectedTranche.shares * currentMV
+            console.log("shares in useEffect: ", selectedTranche.shares)
+            console.log("currentMV in useEffect: ", currentMV)
+            console.log("estTotal in useEffect: ", estTotal)
+            setTotalCost(estTotal.toFixed(2))
+        }
+    }, [selectedTranche])
+
+    useEffect(() => {
+        if (transactionType === 'SELL') {
+            let postCash = parseInt(cash) + parseInt(totalCost)
+            console.log("postCash in useEffect: ", postCash)
+            setPostTransactionCash(postCash)
+        }
+    }, [totalCost])
 
 
     let activeHoldingsObj = {};
@@ -110,6 +159,7 @@ function TradingPage() {
             if (holding.shares > 0) {
                 if (activeHoldingsObj[holding.symbol]) {
                     activeHoldingsObj[holding.symbol] = [...activeHoldingsObj[holding.symbol], holding]
+                    console.log("activeHoldingsObj: ", activeHoldingsObj)
                 } else {
                     activeHoldingsObj[holding.symbol] = [holding]
                 }
@@ -126,29 +176,29 @@ function TradingPage() {
         activeSymbols = Object.keys(activeHoldingsObj)
     }
 
-    let cumulativeHoldings = [];
+    // let cumulativeHoldings = [];
 
-    if (activeHoldings && activeHoldings.length > 0) {
-        activeHoldings.forEach((holdingArr) => {
-            if (holdingArr.length > 1) {
-                let newObj = holdingArr[0]
-                for (let i = 1; i < holdingArr.length; i++) {
-                    newObj.shares += holdingArr[i].shares
-                }
-                cumulativeHoldings.push(newObj)
-            } else {
-                cumulativeHoldings.push(holdingArr[0])
-            }
-        })
-    }
+    // if (activeHoldings && activeHoldings.length > 0) {
+    //     activeHoldings.map((holdingArr) => {
+    //         if (holdingArr.length > 1) {
+    //             let newObj = holdingArr[0]
+    //             for (let i = 1; i < holdingArr.length; i++) {
+    //                 newObj.shares += holdingArr[i].shares
+    //             }
+    //             cumulativeHoldings.push(newObj)
+    //         } else {
+    //             cumulativeHoldings.push(holdingArr[0])
+    //         }
+    //     })
+    // }
 
-    let cumulativeHoldingsObj = {}
+    // let cumulativeHoldingsObj = {}
 
-    if (cumulativeHoldings && cumulativeHoldings.length > 0) {
-        cumulativeHoldings.map((obj) => {
-            cumulativeHoldingsObj[obj.symbol] = obj
-        })
-    }
+    // if (cumulativeHoldings && cumulativeHoldings.length > 0) {
+    //     cumulativeHoldings.map((obj) => {
+    //         cumulativeHoldingsObj[obj.symbol] = obj
+    //     })
+    // }
 
     let pricesArr;
 
@@ -202,18 +252,22 @@ function TradingPage() {
 
     const handleSelectTranche = (e) => {
         const selectedId = e.target.value;
-        console.log("**************", selectedId)
-        const selectedTrancheObj = activeHoldingsObj[symbol].find(obj => obj.id === selectedId);
+        console.log("selectedId: ", selectedId)
         setSellId(selectedId);
-        setSelectedTranche(selectedTrancheObj);
+        // console.log("Updated sellId: ", selectedId); // Add this line
+
     }
 
     const handleSubmit = () => {
         if (transactionType === "BUY") {
             let price = pricesArr[pricesArr.length - 1]['4. close']
-            dispatch(thunkAddStock(symbol, numShares, price))
-        } else {
+            dispatch(thunkPurchase(symbol, numShares, price))
+            history.push("/portfolio")
+        }
 
+        if (transactionType === 'SELL') {
+            dispatch(thunkSell(sellId, currentMV))
+            history.push("/portfolio")
         }
     }
 
@@ -397,7 +451,7 @@ function TradingPage() {
                                     )}
                                 </div>
                             )}
-                            {selectedTranche && (
+                            {transactionType === 'SELL' && selectedTranche && (
                                 <div>
                                     <h4>Selected Tranche:</h4>
                                     <p>Purchase Price: {selectedTranche.purchasePrice}</p>

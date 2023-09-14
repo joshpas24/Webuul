@@ -79,7 +79,7 @@ def purchase_holding(symbol, price):
         return { "errors": validation_errors_to_error_messages(form.errors) }
 
 
-@portfolio_routes.route("/sell/<holdingId>/<float:price>", methods=["PUT"])
+@portfolio_routes.route("/sell/<int:holdingId>/<float:price>", methods=["POST"])
 @login_required
 def sell_holding(holdingId, price):
     holding_to_sell = Holding.query.filter(Holding.id == holdingId).first()

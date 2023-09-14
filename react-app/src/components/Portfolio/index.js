@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useRef } from "react"
 import { useSelector, useDispatch } from "react-redux";
 import StockDetailsPage from "../StockDetailsPage";
+import { thunkGetPortfolioInfo } from "../../store/portfolio";
 
 
 function PortfolioPage() {
-
+    const dispatch = useDispatch()
 
     // const [portfolioView, setPortfolioView] = useState("allocation")
     const [listVisibility, setListVisibility] = useState({});
@@ -12,6 +13,13 @@ function PortfolioPage() {
     const holdings = useSelector(state=>state.portfolio["holdings"])
     const cash = useSelector(state=>state.portfolio["cash"])
     const transactions = useSelector(state=>state.portfolio["transactions"])
+
+    const [isLoaded, setIsLoaded] = useState(false)
+
+    useEffect(() => {
+        dispatch(thunkGetPortfolioInfo())
+        setIsLoaded(true)
+    }, [dispatch])
 
     let activeHoldingsObj = {};
 
@@ -51,7 +59,10 @@ function PortfolioPage() {
 
 
     const getHoldingName = (holdingId) => {
-        return 'poop'
+        if (holdings) {
+            let holding = holdings.find(obj => obj.id == holdingId)
+            return holding.symbol
+        }
     }
 
     const getTotal = (shares, price) => {
@@ -72,54 +83,61 @@ function PortfolioPage() {
     // };
 
     return (
-        <div className="portfolio-container">
-            <div className="portfolio-allocation">
-                <div className="allocation-box">
-                    <h4>Allocation</h4>
-                    <div>
-                        Chart
+        <>
+            {isLoaded && activeHoldingsObj && (<div className="portfolio-container">
+                <div className="portfolio-allocation">
+                    <div className="allocation-box">
+                        <h4>Allocation</h4>
+                        <div>
+                            Chart
+                        </div>
+                    </div>
+                    <div className="allocation-box">
+                    <h4>Transactions</h4>
+                        <ul>
+                            {transactions && transactions.length > 0 ? (
+                                [...transactions].reverse().map((transaction) => (
+                                    <li key={transaction.id}>
+                                        <div>{transaction.date}</div>
+                                        <div>{transaction.type}</div>
+                                        {/* <div>{transaction.type}</div> */}
+                                        <div>{getHoldingName(transaction.holdingId)}</div>
+                                        <div>{transaction.shares}</div>
+                                        <div>{() => getTotal(transaction.shares, transaction.price)}</div>
+                                    </li>
+                                ))
+                            ) : (
+                                <div>
+                                    No transactions made
+                                </div>
+                            )}
+                        </ul>
                     </div>
                 </div>
-                <div className="allocation-box">
-                <h4>Transactions</h4>
-                    <ul>
-                        {transactions && transactions.length > 0 ? (
-                            transactions.map((transaction) => (
-                                <li key={transaction.id}>
-                                    <div>{transaction.date}</div>
-                                    <div>{transaction.type}</div>
-                                    <div>{() => getHoldingName(transaction.holdingId)}</div>
-                                    <div>{transaction.shares}</div>
-                                    <div>{() => getTotal(transaction.shares, transaction.price)}</div>
-                                </li>
-                            ))
-                        ) : (
+                <div className="portfolio-transactions">
+                    <h4>Holdings</h4>
+                        <ul>
                             <div>
-                                No transactions made
+                                <div>Available Cash</div>
+                                <div>{cash}</div>
                             </div>
-                        )}
-                    </ul>
+                            {holdings && holdings.length > 0 ? (
+                                cumulativeHoldings.map((holding) => (
+                                    <div className="holding-header">
+                                        <div>{holding.symbol}</div>
+                                        <div>{holding.shares * holding.currentPrice}</div>
+                                        <div>{() => getReturn(holding.purchasePrice, holding.currentPrice)}</div>
+                                    </div>
+                                ))
+                            ) : (
+                                <li>
+                                    Your portfolio is empty
+                                </li>
+                            )}
+                        </ul>
                 </div>
-            </div>
-            <div className="portfolio-transactions">
-                <h4>Holdings</h4>
-                    <ul>
-                        {holdings && holdings.length > 0 ? (
-                            cumulativeHoldings.map((holding) => (
-                                <div className="holding-header">
-                                    <div>{holding.symbol}</div>
-                                    <div>{holding.shares * holding.currentPrice}</div>
-                                    <div>{() => getReturn(holding.purchasePrice, holding.currentPrice)}</div>
-                                </div>
-                            ))
-                        ) : (
-                            <li>
-                                Your portfolio is empty
-                            </li>
-                        )}
-                    </ul>
-            </div>
-        </div>
+            </div>)}
+        </>
     )
 }
 
