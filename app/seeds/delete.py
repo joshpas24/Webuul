@@ -1,4 +1,4 @@
-from ..models import db, Transaction, Watchlist, Holding, WatchlistStock, environment, SCHEMA
+from ..models import db, Transaction, Watchlist, Holding, environment, SCHEMA
 
 
 def undo_transactions_watchlists_holdings():
