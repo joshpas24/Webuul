@@ -14,6 +14,7 @@ import { thunkAddStock } from "../../store/watchlists";
 function TradingPage() {
     const dispatch = useDispatch();
     const history = useHistory();
+    const {symbol} = useParams()
 
     const cash = useSelector(state=>state.portfolio['cash'])
     const info = useSelector(state=>state.markets.stockInfo);
@@ -21,7 +22,6 @@ function TradingPage() {
     const searchResults = useSelector(state=>state.markets.searchResults)
     const holdings = useSelector(state=>state.portfolio["holdings"])
 
-    const [symbol, setSymbol] = useState("TSLA")
     const [isLoaded, setIsLoaded] = useState(false)
     const [searchVal, setSearchVal] = useState("")
     const [showSearchList, setShowSearchList] = useState(false)
@@ -41,6 +41,9 @@ function TradingPage() {
         dispatch(thunkGetStockPrices(symbol.toString(), 'INTRADAY'))
         dispatch(thunkGetStockInfo(symbol))
         dispatch(thunkGetPortfolioInfo())
+        if (holdings && holdings.length === 1) {
+            setSellId(holdings[0].id)
+        }
         setPostTransactionCash(cash)
         setIsLoaded(true)
     }, [dispatch])
@@ -65,49 +68,23 @@ function TradingPage() {
             // console.log("hello")
             marketPrice = formatCurrentPrice(pricesArr[pricesArr.length - 1]['4. close'])
 
-            if (transactionType === 'BUY') {
-                if (quantityType === 'shares') {
-                    let total = marketPrice * parseFloat(numShares || 0);
-                    setTotalCost(total.toFixed(2));
-                    setTotalShares('');
+            if (quantityType === 'shares') {
+                let total = marketPrice * numShares
+                if (numShares) {
+                    // setDisabled(true)
+                    setTotalCost(total)
+                    setPostTransactionCash(cash-total)
                 } else {
-                    let total = parseFloat(numDollars || 0) / marketPrice;
-                    setTotalShares(total.toFixed(2));
-                    setTotalCost('');
+                    setTotalCost(0)
+                    setPostTransactionCash(cash)
                 }
+            } else {
+                let total = numDollars / marketPrice
+                setTotalShares(total.toFixed(2))
+                setPostTransactionCash(cash - numDollars)
             }
-
-            // if (quantityType === 'shares') {
-            //     let total = marketPrice * numShares
-            //     if (transactionType === 'BUY') {
-            //         if (numShares) {
-            //             setTotalCost(total)
-            //             setPostTransactionCash(cash-total)
-            //         } else {
-            //             setTotalCost(0)
-            //             setPostTransactionCash(cash)
-            //         }
-            //     } else {
-            //         if (numShares) {
-            //             setTotalCost(total)
-            //             setPostTransactionCash(cash+total)
-            //         } else {
-            //             setTotalCost(0)
-            //             setPostTransactionCash(cash)
-            //         }
-            //     }
-            // } else {
-            //     let total = numDollars / marketPrice
-            //     if (transactionType === 'BUY') {
-            //         setTotalShares(total.toFixed(2))
-            //         setPostTransactionCash(cash - numDollars)
-            //     } else {
-            //         setTotalShares(total.toFixed(2))
-            //         setPostTransactionCash(cash + numDollars)
-            //     }
-            // }
         }
-    }, [numShares, numDollars, transactionType, quantityType, sellId])
+    }, [numShares, numDollars])
 
     useEffect(() => {
         if (postTransactionCash < 0) {
@@ -123,13 +100,8 @@ function TradingPage() {
             let err = { "message": `You do not currently own ${symbol}`}
             setErrors(err)
         }
-    }, [transactionType])
+    }, [transactionType, symbol])
 
-    // const cash = useSelector(state=>state.portfolio['cash'])
-    // const info = useSelector(state=>state.markets.stockInfo);
-    // const pricesObj = useSelector(state=>state.markets.stockPrices);
-    // const searchResults = useSelector(state=>state.markets.searchResults)
-    // const holdings = useSelector(state=>state.portfolio["holdings"])
 
     let activeHoldingsObj = {};
 
@@ -196,7 +168,8 @@ function TradingPage() {
     const getStockDetails = (symbol) => {
         dispatch(thunkGetStockInfo(symbol))
         dispatch(thunkGetStockPrices(symbol, 'INTRADAY'))
-        history.push(`/markets/${symbol}`)
+        history.push(`/trading/${symbol}`)
+        setSearchVal("")
         return;
     }
 
@@ -229,6 +202,7 @@ function TradingPage() {
 
     const handleSelectTranche = (e) => {
         const selectedId = e.target.value;
+        console.log("**************", selectedId)
         const selectedTrancheObj = activeHoldingsObj[symbol].find(obj => obj.id === selectedId);
         setSellId(selectedId);
         setSelectedTranche(selectedTrancheObj);
@@ -274,7 +248,7 @@ function TradingPage() {
                         <div className="trading-search-results">
                             {searchResults && searchResults.length > 0 && searchVal.length > 0 ?
                                 searchResults.map((item) => (
-                                    <li key={item['1. symbol']} onClick={() => {getStockDetails(item['1. symbol']); setSymbol(item['1.symbol'])}}>
+                                    <li key={item['1. symbol']} onClick={() => getStockDetails(item['1. symbol'])}>
                                         <div>{item['2. name']}</div>
                                         <div>{item['1. symbol']}</div>
                                     </li>
@@ -480,7 +454,9 @@ function TradingPage() {
                             </div>
                         </div>
                         <div>
-                            <button disabled={disabled} onClick={() => handleSubmit()}>
+                            <button
+                                // disabled={disabled}
+                                onClick={() => handleSubmit()}>
                                 {transactionType === "BUY" ? "PURCHASE" : "SELL"}
                             </button>
                             {errors && (<p>{errors.message}</p>)}

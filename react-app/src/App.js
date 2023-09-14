@@ -48,7 +48,7 @@ function App() {
           <ProtectedRoute exact path="/portfolio">
             <PortfolioPage />
           </ProtectedRoute>
-          <ProtectedRoute exact path="/trading">
+          <ProtectedRoute exact path="/trading/:symbol">
             <TradingPage />
           </ProtectedRoute>
           <Route>
