@@ -7,8 +7,8 @@ class WatchlistStock(db.Model):
     if environment == "production":
         __table_args__ = {'schema': SCHEMA}
 
-    watchlist_id = db.Column(db.Integer, db.ForeignKey('watchlists.id'), nullable=False, primary_key=True)
-    stock_id = db.Column(db.Integer, db.ForeignKey('stocks.id'), nullable=False, primary_key=True)
+    watchlist_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('watchlists.id')), nullable=False, primary_key=True)
+    stock_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('stocks.id')), nullable=False, primary_key=True)
 
     # def to_dict(self):
     #     return {
