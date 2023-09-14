@@ -12,6 +12,8 @@ import ProtectedRoute from "./components/auth/ProtectedRoute";
 import TestChart from "./components/TestChat";
 import LoadingComponent from "./components/LoadingVid";
 import StockDetailsPage from "./components/StockDetailsPage";
+import PortfolioPage from "./components/Portfolio";
+import TradingPage from "./components/TradingPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -42,6 +44,12 @@ function App() {
           </ProtectedRoute>
           <ProtectedRoute exact path="/test">
             <TestChart />
+          </ProtectedRoute>
+          <ProtectedRoute exact path="/portfolio">
+            <PortfolioPage />
+          </ProtectedRoute>
+          <ProtectedRoute exact path="/trading">
+            <TradingPage />
           </ProtectedRoute>
           <Route>
             <LoadingComponent />

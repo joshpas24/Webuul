@@ -2,6 +2,8 @@ import React, { useState, useEffect} from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory, useParams } from "react-router-dom/cjs/react-router-dom.min";
 import { thunkGetStockInfo, thunkGetStockPrices, thunkGetSearchResults } from "../../store/markets";
+import OpenModalButton from "../OpenModalButton";
+import AddToWatchlist from "../AddToWatchlistModal";
 import IndexPriceChart from "../LineChart";
 import "./StockDetailsPage.css"
 
@@ -112,10 +114,18 @@ function StockDetailsPage() {
                         <div>
                             <div className="stock-title">
                                 <h1>{info["Name"]} ({symbol})</h1>
-                                <button>
+                                {/* <button onClick={() => addToWatchlist()}>
                                     <i class="fa-regular fa-star"></i>
                                     <span>Add to Watchlist</span>
-                                </button>
+                                </button> */}
+                                <OpenModalButton modalComponent={<AddToWatchlist symbol={symbol} />}
+                                    buttonText={(
+                                        <>
+                                            <i class="fa-regular fa-star"></i>
+                                            <span>Add to Watchlist</span>
+                                        </>
+                                    )}
+                                />
                             </div>
                             <h5>{info["Exchange"]} • {info["Sector"]} • {info["Industry"]}</h5>
                         </div>

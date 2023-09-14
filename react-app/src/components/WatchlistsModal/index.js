@@ -1,14 +1,14 @@
 import React, { useEffect, useState, useRef } from "react"
-import './WatchlistsModal.css'
 import { useSelector, useDispatch } from "react-redux";
-import { thunkCreateWatchlist, thunkGetWatchlists } from "../../store/watchlists";
-
+import { thunkCreateWatchlist, thunkDeleteWatchlist, thunkGetWatchlists, thunkRemoveStock } from "../../store/watchlists";
+import { useWatchlistToggle } from "../../context/WatchlistModalToggle";
+import './WatchlistsModal.css'
 
 function WatchlistsModal() {
     const ulRef = useRef();
     const dispatch = useDispatch();
 
-    const [showModal, setShowModal] = useState(false);
+    const { viewWatchlist, setViewWatchlist } = useWatchlistToggle()
     const [listVisibility, setListVisibility] = useState({});
     const [newList, setNewList] = useState(false)
     const [listName, setListName] = useState("")
@@ -16,19 +16,19 @@ function WatchlistsModal() {
     const lists = useSelector(state=>state.watchlists)
 
     useEffect(() => {
-        if (!showModal) return;
+        if (!viewWatchlist) return;
 
         const closeWatchlists = (e) => {
             if (!ulRef.current) return
             if (!ulRef.current.contains(e.target)) {
-                setShowModal(false);
+                setViewWatchlist(false);
             }
         };
 
         document.addEventListener("click", closeWatchlists);
 
         return () => document.removeEventListener("click", closeWatchlists);
-    }, [showModal]);
+    }, [viewWatchlist]);
 
     useEffect(() => {
         dispatch(thunkGetWatchlists())
@@ -37,7 +37,7 @@ function WatchlistsModal() {
 
 
     const toggleWatchlists = () => {
-        setShowModal(!showModal)
+        setViewWatchlist(!viewWatchlist)
     }
 
     const toggleList = (listName) => {
@@ -53,7 +53,11 @@ function WatchlistsModal() {
         setListName("")
     }
 
-    const ulClassName = "watchlist-modal" + (showModal ? "" : " hidden");
+    const handleDeleteList = (watchlistId) => {
+        dispatch(thunkDeleteWatchlist(watchlistId))
+    }
+
+    const ulClassName = "watchlist-modal" + (viewWatchlist ? "" : " hidden");
 
     return (
         <>
@@ -64,10 +68,10 @@ function WatchlistsModal() {
                 WATCHLISTS
             </button>
             <div>
-                {showModal && (
+                {viewWatchlist && (
                     <div className={ulClassName} ref={ulRef}>
                         <div className="watchlist-container">
-                            <button onClick={() => setShowModal(false)} id='exit-watchlist'>
+                            <button onClick={() => setViewWatchlist(false)} id='exit-watchlist'>
                                 <i class="fa-solid fa-x"></i>
                             </button>
                             <div className="watchlists-dropdown">
@@ -75,43 +79,64 @@ function WatchlistsModal() {
                                     <div className="watchlist-header-left">
                                         WATCHLISTS
                                     </div>
-                                    <button onClick={() => setNewList(true)}
-                                        ref={ulRef}
-                                    >
+                                    <button onClick={(e) => {setNewList(true); e.stopPropagation()}}>
                                         <i class="fa-solid fa-plus"></i>
                                     </button>
                                 </div>
                                 {newList && (
-                                    <div>
+                                    <div className="list-form">
                                         <input
                                             type="text"
                                             placeholder="name"
                                             value={listName}
                                             onChange={(e) => setListName(e.target.value)}
                                         />
-                                        <button onClick={() => createNewList()}
-                                            ref={ulRef}
-                                        >
+                                        <button onClick={(e) => {createNewList(); e.stopPropagation()}}>
                                             CREATE
                                         </button>
-                                        <button onClick={() => setNewList(false)}
-                                            ref={ulRef}
-                                        >
+                                        <button onClick={(e) => {setNewList(false); e.stopPropagation()}}>
                                             CANCEL
                                         </button>
                                     </div>
                                 )}
                                 {lists && lists.length > 0 ? (
-                                    <div>
+                                    <div className="lists-container">
                                         {lists.map((list) => (
-                                            <li>
+                                            <div className="single-list-container">
                                                 <div>
-                                                    <div>{list.name}</div>
-                                                    <button onClick={() => toggleList(list.name)}>
-                                                        {listVisibility[list.name] ? <i class="fa-solid fa-caret-down"></i> : <i class="fa-solid fa-caret-up"></i>}
-                                                    </button>
+                                                    <div>
+                                                        <div>{list.name}</div>
+                                                        <button onClick={() => toggleList(list.name)}>
+                                                            {listVisibility[list.name] ? (
+                                                                <i class="fa-solid fa-caret-up"></i>
+                                                            ) : (
+                                                                <i class="fa-solid fa-caret-down"></i>
+                                                            )}
+                                                        </button>
+                                                    </div>
+                                                    <div>
+                                                        <button onClick={() => handleDeleteList(list.id)}>
+                                                            <i class="fa-solid fa-trash"></i>
+                                                        </button>
+                                                    </div>
                                                 </div>
-                                            </li>
+                                            {listVisibility[list.name] && (
+                                                <ul>
+                                                    {list.stocks.map((stock, index) => (
+                                                        <li key={index}>
+                                                            <div>
+                                                                {stock.symbol}
+                                                            </div>
+                                                            <div>
+                                                                <button onClick={() => thunkRemoveStock(list.id, stock.symbol)}>
+                                                                    <i class="fa-solid fa-trash"></i>
+                                                                </button>
+                                                            </div>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            )}
+                                            </div>
                                         ))}
                                     </div>
                                 ) : (

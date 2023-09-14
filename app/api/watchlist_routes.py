@@ -18,11 +18,11 @@ def validation_errors_to_error_messages(validation_errors):
             errorMessages.append(f'{field} : {error}')
     return errorMessages
 
-@watchlist_routes.route("/", methods=["GET"])
+@watchlist_routes.route("/current", methods=["GET"])
 @login_required
 def get_user_watchlists():
     watchlists = Watchlist.query.filter(Watchlist.user_id == current_user.id).all()
-    return [ watchlist.to_dict() for watchlist in watchlists]
+    return [ watchlist.to_dict() for watchlist in watchlists ]
 
 
 @watchlist_routes.route("/create", methods=["POST"])

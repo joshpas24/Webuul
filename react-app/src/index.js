@@ -10,6 +10,7 @@ import App from "./App";
 
 import "./index.css";
 import { MarketsProvider } from "./context/MarketsTimeframe";
+import { WatchlistProvider } from "./context/WatchlistModalToggle";
 
 const store = configureStore();
 
@@ -26,10 +27,12 @@ function Root() {
 		<ModalProvider>
 			<Provider store={store}>
 				<MarketsProvider>
-					<BrowserRouter>
-						<App />
-						<Modal />
-					</BrowserRouter>
+					<WatchlistProvider>
+						<BrowserRouter>
+							<App />
+							<Modal />
+						</BrowserRouter>
+					</WatchlistProvider>
 				</MarketsProvider>
 			</Provider>
 		</ModalProvider>

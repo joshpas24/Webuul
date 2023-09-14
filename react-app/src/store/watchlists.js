@@ -26,7 +26,7 @@ const deleteWatchlist = (data) => ({
 
 
 export const thunkGetWatchlists = () => async (dispatch) => {
-    const res = await fetch("/api/watchlists", {
+    const res = await fetch("/api/watchlists/current", {
         method: "GET"
     })
 
