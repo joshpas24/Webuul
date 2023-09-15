@@ -18,3 +18,9 @@
 #return-negative {
     color: red;
 }
+
+#symbol-link:hover {
+    cursor: pointer;
+    color: #2081ff;
+    text-decoration: underline;
+}

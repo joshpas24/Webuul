@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react"
 import { useSelector, useDispatch } from "react-redux";
-import { thunkCreateWatchlist, thunkDeleteWatchlist, thunkGetWatchlists, thunkRemoveStock } from "../../store/watchlists";
+import { thunkDeleteWatchlist, thunkGetWatchlists, thunkRemoveStock } from "../../store/watchlists";
 import { useWatchlistToggle } from "../../context/WatchlistModalToggle";
 import './WatchlistsModal.css'
 
@@ -10,8 +10,6 @@ function WatchlistsModal() {
 
     const { viewWatchlist, setViewWatchlist } = useWatchlistToggle()
     const [listVisibility, setListVisibility] = useState({});
-    const [newList, setNewList] = useState(false)
-    const [listName, setListName] = useState("")
 
     const lists = useSelector(state=>state.watchlists)
 
@@ -47,12 +45,6 @@ function WatchlistsModal() {
         }));
     };
 
-    const createNewList = () => {
-        dispatch(thunkCreateWatchlist(listName))
-        setNewList(false)
-        setListName("")
-    }
-
     const handleDeleteList = (watchlistId) => {
         dispatch(thunkDeleteWatchlist(watchlistId))
     }
@@ -79,26 +71,7 @@ function WatchlistsModal() {
                                     <div className="watchlist-header-left">
                                         WATCHLISTS
                                     </div>
-                                    <button onClick={(e) => {setNewList(true); e.stopPropagation()}}>
-                                        <i class="fa-solid fa-plus"></i>
-                                    </button>
                                 </div>
-                                {newList && (
-                                    <div className="list-form">
-                                        <input
-                                            type="text"
-                                            placeholder="name"
-                                            value={listName}
-                                            onChange={(e) => setListName(e.target.value)}
-                                        />
-                                        <button onClick={(e) => {createNewList(); e.stopPropagation()}}>
-                                            CREATE
-                                        </button>
-                                        <button onClick={(e) => {setNewList(false); e.stopPropagation()}}>
-                                            CANCEL
-                                        </button>
-                                    </div>
-                                )}
                                 {lists && lists.length > 0 ? (
                                     <div className="lists-container">
                                         {lists.map((list) => (

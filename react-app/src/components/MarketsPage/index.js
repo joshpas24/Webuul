@@ -188,7 +188,9 @@ function MarketsPage() {
                             {winners.length && winners.map((winner, index) => (
                                 <div key={index} className="list-item">
                                     <div>{index + 1}</div>
-                                    <div>{winner.ticker}</div>
+                                    <div onClick={() => history.push(`/markets/${winner.ticker}`)}
+                                        id="symbol-link"
+                                    >{winner.ticker}</div>
                                     <div className="list-right"
                                         id={parseFloat(winner.change_percentage) >= 0 ? "return-positive" : "return-negative"}
                                     >
@@ -211,7 +213,11 @@ function MarketsPage() {
                             {losers.length && losers.map((loser, index) => (
                                 <div key={index} className="list-item">
                                     <div>{index + 1}</div>
-                                    <div>{loser.ticker}</div>
+                                    <div onClick={() => history.push(`/markets/${loser.ticker}`)}
+                                        id="symbol-link"
+                                    >
+                                        {loser.ticker}
+                                    </div>
                                     <div className="list-right"
                                         id={parseFloat(loser.change_percentage) >= 0 ? "return-positive" : "return-negative"}
                                     >
@@ -234,7 +240,9 @@ function MarketsPage() {
                             {mostActive.length && mostActive.map((stonk, index) => (
                                 <div key={index} className="list-item">
                                     <div>{index + 1}</div>
-                                    <div>{stonk.ticker}</div>
+                                    <div onClick={() => history.push(`/markets/${stonk.ticker}`)}
+                                        id="symbol-link"
+                                    >{stonk.ticker}</div>
                                     <div className="list-right">
                                         {formatVolume(stonk.volume) + "M"}
                                     </div>

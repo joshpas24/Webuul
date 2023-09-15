@@ -157,6 +157,23 @@
     color: white !important;
 }
 
+#trade-button {
+    background-color: white;
+    border: 1px solid #2081ff;
+}
+
+#trade-button:hover {
+    background-color: #9edbff;
+}
+
+#trade-button i {
+    color: #2081ff !important;
+}
+
+#trade-button span {
+    color: #2081ff !important;
+}
+
 .stock-return {
     display: flex;
     flex-direction: column;

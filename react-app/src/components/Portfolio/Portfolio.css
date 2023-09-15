@@ -30,7 +30,8 @@
 
 #transaction-header {
     display: grid;
-    grid-template-columns: 1fr 1fr 3fr 1fr 1fr;
+    grid-template-columns: 2fr 1fr 5fr 1fr 2fr;
+    gap: 2%;
     font-size: 12pt;
     font-weight: 700;
     margin-bottom: 5px;
@@ -42,7 +43,8 @@
 .transaction-item {
     padding: 2px 5px;
     display: grid;
-    grid-template-columns: 1fr 1fr 3fr 1fr 1fr;
+    grid-template-columns: 2fr 1fr 5fr 1fr 2fr;
+    gap: 2%;
     font-size: 11pt;
 }
 
@@ -69,6 +71,7 @@
 .holding-header {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
+    gap: 5%;
     font-size: 12pt;
     font-weight: 700;
     margin-bottom: 5px;
@@ -96,7 +99,7 @@
     text-align: right;
     display: flex;
     justify-content: flex-end;
-    margin-right: 50px;
+    /* margin-right: 50px; */
 }
 
 .rightmost-column {
@@ -104,6 +107,14 @@
     justify-content: flex-end;
     text-align: right !important;
     margin-right: 5px;
+}
+
+.middle-column {
+    text-align: right;
+}
+
+.middle-align {
+    text-align: center;
 }
 
 .leftmost-column {
@@ -115,3 +126,4 @@
     justify-content: space-between;
     padding: 10px 5px;
 }
+
