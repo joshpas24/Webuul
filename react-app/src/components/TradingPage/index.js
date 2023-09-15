@@ -258,19 +258,6 @@ function TradingPage() {
 
     }
 
-    const handleSubmit = () => {
-        if (transactionType === "BUY") {
-            let price = pricesArr[pricesArr.length - 1]['4. close']
-            dispatch(thunkPurchase(symbol, numShares, price))
-            history.push("/portfolio")
-        }
-
-        if (transactionType === 'SELL') {
-            dispatch(thunkSell(sellId, currentMV))
-            history.push("/portfolio")
-        }
-    }
-
     function formatOption(dateString, shares) {
         const date = new Date(dateString);
 
@@ -281,7 +268,30 @@ function TradingPage() {
         const formattedDate = `${year}-${month}-${day} (${shares} shares)`;
 
         return formattedDate;
-      }
+    }
+
+    function formatDate(dateStr) {
+        const date = new Date(dateStr)
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+
+        const formattedDate = `${month}-${day}-${year}`;
+        return formattedDate
+    }
+
+    const handleSubmit = async () => {
+        if (transactionType === "BUY") {
+            let price = pricesArr[pricesArr.length - 1]['4. close']
+            await dispatch(thunkPurchase(symbol, numShares, price))
+            history.push("/portfolio")
+        }
+
+        if (transactionType === 'SELL') {
+            await dispatch(thunkSell(sellId, currentMV, numShares))
+            history.push("/portfolio")
+        }
+    }
 
     return (
         <div className="trading-page-container">
@@ -452,13 +462,42 @@ function TradingPage() {
                                 </div>
                             )}
                             {transactionType === 'SELL' && selectedTranche && (
-                                <div>
-                                    <h4>Selected Tranche:</h4>
-                                    <p>Purchase Price: {selectedTranche.purchasePrice}</p>
-                                    <p># of Shares: {selectedTranche.shares}</p>
-                                    <p>Purchase Date: {selectedTranche.purchaseDate}</p>
-                                    {/* Include other properties you want to display */}
+                                <div className="tranche-info">
+                                        <div>
+                                            <div>Price</div>
+                                            <div id="tranche-info-right">${selectedTranche.purchasePrice}</div>
+                                        </div>
+                                        <div>
+                                            <div># of Shares</div>
+                                            <div id="tranche-info-right">{selectedTranche.shares}</div>
+                                        </div>
+                                        <div>
+                                            <div>Purchase Date</div>
+                                            <div id="tranche-info-right">{formatDate(selectedTranche.purchaseDate)}</div>
+                                        </div>
                                 </div>
+                            )}
+                            {transactionType === 'SELL' && selectedTranche && (
+                                <div>
+                                    <h4>
+                                        Shares
+                                    </h4>
+                                    <div>
+                                        {/* <select id="sell-tranche-shares" onChange={(e) => setNumShares(e.target.value)}>
+                                            {Array.from({ length: selectedTranche.shares }, (_, index) => (
+                                                <option key={index + 1} value={index + 1}>
+                                                    {index + 1}
+                                                </option>
+                                            ))}
+                                        </select> */}
+                                        <input type="text"
+                                            value={numShares}
+                                            onChange={(e) => setNumShares(e.target.value)}
+                                            placeholder={`Max ${selectedTranche.shares}`}
+                                            className="quantity-input"
+                                        />
+                                    </div>
+                            </div>
                             )}
                             {transactionType === "BUY" && (
                                 <div>
@@ -509,7 +548,7 @@ function TradingPage() {
                                 </div>
                             </div>
                         </div>
-                        <div>
+                        <div className="transaction-bottom">
                             <button
                                 // disabled={disabled}
                                 onClick={() => handleSubmit()}>

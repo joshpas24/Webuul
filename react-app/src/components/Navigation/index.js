@@ -31,7 +31,7 @@ function Navigation({ isLoaded }){
 			<div className='nav-mid'>
 				<div onClick={() => history.push("/markets")}>MARKETS</div>
 				{/* <div onClick={() => history.push("/trading")}>TRADING</div> */}
-				<div>PORTFOLIO</div>
+				<div onClick={() => history.push("/portfolio")}>PORTFOLIO</div>
 				<div>NEWS</div>
 			</div>
 			{!user ? (

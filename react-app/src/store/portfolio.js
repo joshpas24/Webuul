@@ -34,8 +34,8 @@ export const thunkPurchase = (symbol, shares, price) => async (dispatch) => {
     }
 }
 
-export const thunkSell = (holdingId, price) => async (dispatch) => {
-    const res = await fetch(`/api/portfolio/sell/${holdingId}/${price}`, {
+export const thunkSell = (holdingId, price, shares) => async (dispatch) => {
+    const res = await fetch(`/api/portfolio/sell/${holdingId}/${price}/${shares}`, {
         method: "POST"
     })
 

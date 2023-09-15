@@ -79,19 +79,19 @@ def purchase_holding(symbol, price):
         return { "errors": validation_errors_to_error_messages(form.errors) }
 
 
-@portfolio_routes.route("/sell/<int:holdingId>/<float:price>", methods=["POST"])
+@portfolio_routes.route("/sell/<int:holdingId>/<float:price>/<int:shares>", methods=["POST"])
 @login_required
-def sell_holding(holdingId, price):
+def sell_holding(holdingId, price, shares):
     holding_to_sell = Holding.query.filter(Holding.id == holdingId).first()
     user = User.query.get(current_user.id)
-    sale_amount = holding_to_sell.shares * price
 
+    sale_amount = shares * price
     user.cash += sale_amount
 
     sale_transaction = Transaction(
         user_id = current_user.id,
         holding_id = holding_to_sell.id,
-        shares = holding_to_sell.shares,
+        shares = shares,
         price = price,
         type = "SELL",
         date = datetime.datetime.now(),
@@ -100,7 +100,7 @@ def sell_holding(holdingId, price):
     db.session.add(sale_transaction)
     db.session.commit()
 
-    holding_to_sell.shares = 0
+    holding_to_sell.shares -= shares
     db.session.commit()
 
     return { "message": "Sale successful"}

@@ -1,0 +1,99 @@
+.portfolio-container {
+    padding: 3% 10%;
+    display: grid;
+    grid-template-columns: 5fr 4fr;
+    gap: 50px;
+}
+
+.portfolio-left {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.left-box {
+    padding: 15px;
+    border: 1px solid rgb(210, 210, 210);
+    border-radius: 15px;
+}
+
+.left-box h4 {
+    margin: 0 !important;
+    margin-bottom: 10px !important;
+}
+
+.left-box li {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+}
+
+#transaction-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr 3fr 1fr 1fr;
+    font-size: 10pt;
+    font-weight: 700;
+    margin-bottom: 5px;
+    background-color: rgb(149, 215, 255);
+    padding: 2px 5px;
+}
+
+.transaction-item {
+    padding: 2px 5px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 3fr 1fr 1fr;
+    font-size: 10pt;
+}
+
+.portfolio-right {
+    padding: 15px;
+    border: 1px solid rgb(210, 210, 210);
+}
+
+.portfolio-right h4 {
+    margin: 0 !important;
+    margin-bottom: 10px !important;
+}
+
+.holding-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.holding-header {
+    display: grid;
+    grid-template-columns: 1fr 3fr 2fr 1fr;
+    font-size: 11pt;
+    font-weight: 700;
+    margin-bottom: 5px;
+    background-color: rgb(149, 215, 255);
+    padding: 2px 5px;
+}
+
+.holding-item {
+    padding: 2px 5px;
+    display: grid;
+    grid-template-columns: 1fr 3fr 2fr 1fr;
+    font-size: 10pt;
+}
+
+#total-value {
+    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+    width: 80%;
+}
+
+#total-holding {
+    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 50px;
+}
+
+.cash-balance {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 5px;
+}
