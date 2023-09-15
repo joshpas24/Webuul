@@ -14,7 +14,7 @@ class Holding(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('users.id')), nullable=False)
     stock_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('stocks.id')), nullable=False)
     name = db.Column(db.String, nullable=False)
-    symbol = db.Column(db.Integer, nullable=False)
+    symbol = db.Column(db.String, nullable=False)
     shares = db.Column(db.Float, nullable=False)
     purchase_price = db.Column(db.Float, nullable=False)
     current_price = db.Column(db.Float, nullable=False)
