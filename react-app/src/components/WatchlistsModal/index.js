@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react"
 import { useSelector, useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { thunkDeleteWatchlist, thunkGetWatchlists, thunkRemoveStock } from "../../store/watchlists";
 import { useWatchlistToggle } from "../../context/WatchlistModalToggle";
 import './WatchlistsModal.css'
@@ -7,6 +8,7 @@ import './WatchlistsModal.css'
 function WatchlistsModal() {
     const ulRef = useRef();
     const dispatch = useDispatch();
+    const history = useHistory()
 
     const { viewWatchlist, setViewWatchlist } = useWatchlistToggle()
     const [listVisibility, setListVisibility] = useState({});
@@ -68,17 +70,14 @@ function WatchlistsModal() {
                             </button>
                             <div className="watchlists-dropdown">
                                 <div className="watchlist-header">
-                                    <div className="watchlist-header-left">
-                                        WATCHLISTS
-                                    </div>
+                                    WATCHLISTS
                                 </div>
                                 {lists && lists.length > 0 ? (
                                     <div className="lists-container">
                                         {lists.map((list) => (
                                             <div className="single-list-container">
-                                                <div>
-                                                    <div>
-                                                        <div>{list.name}</div>
+                                                <div className="single-list-header">
+                                                    <div className="single-list-header-left">
                                                         <button onClick={() => toggleList(list.name)}>
                                                             {listVisibility[list.name] ? (
                                                                 <i class="fa-solid fa-caret-up"></i>
@@ -86,28 +85,29 @@ function WatchlistsModal() {
                                                                 <i class="fa-solid fa-caret-down"></i>
                                                             )}
                                                         </button>
+                                                        <div>{list.name}</div>
                                                     </div>
-                                                    <div>
+                                                    <div className="single-list-header-right">
                                                         <button onClick={() => handleDeleteList(list.id)}>
                                                             <i class="fa-solid fa-trash"></i>
                                                         </button>
                                                     </div>
                                                 </div>
                                             {listVisibility[list.name] && (
-                                                <ul>
+                                                <div className="list-elements">
                                                     {list.stocks.map((stock, index) => (
-                                                        <li key={index}>
-                                                            <div>
+                                                        <div className="list-item-line">
+                                                            <div onClick={() => history.push(`/markets/${stock.symbol}`)} id="symbol-link">
                                                                 {stock.symbol}
                                                             </div>
                                                             <div>
                                                                 <button onClick={() => thunkRemoveStock(list.id, stock.symbol)}>
-                                                                    <i class="fa-solid fa-trash"></i>
+                                                                    Remove
                                                                 </button>
                                                             </div>
-                                                        </li>
+                                                        </div>
                                                     ))}
-                                                </ul>
+                                                </div>
                                             )}
                                             </div>
                                         ))}

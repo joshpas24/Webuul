@@ -28,6 +28,73 @@
     border: none;
 }
 
-#exit-watchlist:hover {
-    color: red;
+.fa-x:hover {
+    color: red !important;
+}
+
+.watchlist-header {
+    font-size: 14pt;
+    border-bottom: 2px solid lightgray;
+    padding-bottom: 5px;
+}
+
+.lists-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 10px;
+}
+
+.single-list-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    margin-bottom: 3px;
+}
+
+.single-list-header-left {
+    display: flex;
+    gap: 3px;
+}
+
+.single-list-header button {
+    cursor: pointer;
+    background-color: transparent;
+    border: 0 !important;
+}
+
+.fa-caret-up {
+    color: #2081ff !important;
+}
+
+.fa-caret-down {
+    color: #2081ff !important;
+}
+
+.fa-trash {
+    color: #2081ff !important;
+}
+
+.fa-trash:hover {
+    color: red !important;
+}
+
+.list-elements {
+    margin-left: 10px;
+    border-left: 1px solid #2081ff;
+    gap: 10px;
+}
+
+.list-item-line {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 20px;
+}
+
+.list-item-line button {
+    cursor: pointer;
+    background-color: transparent;
+    border: 1px solid #2081ff;
+    color: #2081ff !important;
+    border-radius: 3px;
 }
