@@ -32,7 +32,6 @@ function WatchlistsModal() {
 
     useEffect(() => {
         dispatch(thunkGetWatchlists())
-        console.log(lists)
     }, [dispatch])
 
 
@@ -49,6 +48,10 @@ function WatchlistsModal() {
 
     const handleDeleteList = (watchlistId) => {
         dispatch(thunkDeleteWatchlist(watchlistId))
+    }
+
+    const handleRemoveStock = (listId, symbol) => {
+        dispatch(thunkRemoveStock(listId, symbol))
     }
 
     const ulClassName = "watchlist-modal" + (viewWatchlist ? "" : " hidden");
@@ -101,7 +104,7 @@ function WatchlistsModal() {
                                                                 {stock.symbol}
                                                             </div>
                                                             <div>
-                                                                <button onClick={() => thunkRemoveStock(list.id, stock.symbol)}>
+                                                                <button onClick={() => handleRemoveStock(list.id, stock.symbol)}>
                                                                     Remove
                                                                 </button>
                                                             </div>
@@ -114,9 +117,7 @@ function WatchlistsModal() {
                                     </div>
                                 ) : (
                                     <div>
-                                        Press the plus (<span>
-                                            <i class="fa-solid fa-plus"></i>
-                                        </span>) button to create a list!
+                                        Navigate to a stock's page to add/create a watchlist!
                                     </div>
                                 )}
                             </div>

@@ -287,21 +287,21 @@ function TradingPage() {
         return num.toFixed(2)
     }
 
-    const handleSubmit = async () => {
+    const handleSubmit = () => {
 
         if (transactionType === "BUY") {
             let price = pricesArr[pricesArr.length - 1]['4. close']
             if (quantityType === 'shares') {
-                await dispatch(thunkPurchase(symbol, numShares, price))
+                dispatch(thunkPurchase(symbol, numShares, price))
                 history.push("/portfolio")
             } else {
-                await dispatch(thunkPurchase(symbol, totalShares, price))
+                dispatch(thunkPurchase(symbol, totalShares, price))
                 history.push("/portfolio")
             }
         }
 
         if (transactionType === 'SELL') {
-            await dispatch(thunkSell(sellId, currentMV, numShares))
+            dispatch(thunkSell(sellId, currentMV, numShares))
             history.push("/portfolio")
         }
     }
