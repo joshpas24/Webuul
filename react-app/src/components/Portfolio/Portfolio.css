@@ -1,7 +1,7 @@
 .portfolio-container {
     padding: 3% 10%;
     display: grid;
-    grid-template-columns: 5fr 4fr;
+    grid-template-columns: 2fr 1fr;
     gap: 50px;
 }
 
@@ -31,10 +31,11 @@
 #transaction-header {
     display: grid;
     grid-template-columns: 1fr 1fr 3fr 1fr 1fr;
-    font-size: 10pt;
+    font-size: 12pt;
     font-weight: 700;
     margin-bottom: 5px;
     background-color: rgb(149, 215, 255);
+    border-radius: 3px;
     padding: 2px 5px;
 }
 
@@ -42,12 +43,13 @@
     padding: 2px 5px;
     display: grid;
     grid-template-columns: 1fr 1fr 3fr 1fr 1fr;
-    font-size: 10pt;
+    font-size: 11pt;
 }
 
 .portfolio-right {
     padding: 15px;
     border: 1px solid rgb(210, 210, 210);
+    border-radius: 20px;
 }
 
 .portfolio-right h4 {
@@ -55,41 +57,57 @@
     margin-bottom: 10px !important;
 }
 
+
 .holding-list {
     display: flex;
     flex-direction: column;
     gap: 8px;
+    border-bottom: 1px solid rgb(210, 210, 210);
+    padding: 10px 0;
 }
 
 .holding-header {
     display: grid;
-    grid-template-columns: 1fr 3fr 2fr 1fr;
-    font-size: 11pt;
+    grid-template-columns: repeat(3, 1fr);
+    font-size: 12pt;
     font-weight: 700;
     margin-bottom: 5px;
     background-color: rgb(149, 215, 255);
+    border-radius: 3px;
     padding: 2px 5px;
+    /* text-align: center; */
 }
 
 .holding-item {
     padding: 2px 5px;
     display: grid;
-    grid-template-columns: 1fr 3fr 2fr 1fr;
-    font-size: 10pt;
+    grid-template-columns: repeat(3, 1fr);
+    font-size: 12pt;
 }
 
-#total-value {
+/* #total-value {
     text-align: right;
     display: flex;
     justify-content: flex-end;
     width: 80%;
-}
+} */
 
 #total-holding {
     text-align: right;
     display: flex;
     justify-content: flex-end;
     margin-right: 50px;
+}
+
+.rightmost-column {
+    display: flex;
+    justify-content: flex-end;
+    text-align: right !important;
+    margin-right: 5px;
+}
+
+.leftmost-column {
+    margin-left: 5px;
 }
 
 .cash-balance {

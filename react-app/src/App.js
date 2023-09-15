@@ -14,6 +14,7 @@ import LoadingComponent from "./components/LoadingVid";
 import StockDetailsPage from "./components/StockDetailsPage";
 import PortfolioPage from "./components/Portfolio";
 import TradingPage from "./components/TradingPage";
+import StockPieChart from "./components/PieChart";
 
 function App() {
   const dispatch = useDispatch();
