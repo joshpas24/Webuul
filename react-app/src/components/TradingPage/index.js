@@ -93,6 +93,8 @@ function TradingPage() {
             setDisabled(true)
             let err = { "message": "Insufficient cash"}
             setErrors(err)
+        } else {
+            setErrors({})
         }
     }, [postTransactionCash])
 
@@ -124,7 +126,7 @@ function TradingPage() {
     }, [transactionType, symbol])
 
     useEffect(() => {
-        console.log("from useEffect: ", sellId)
+        // console.log("from useEffect: ", sellId)
         if (sellId && activeHoldingsObj[symbol]) {
             let holding = activeHoldingsObj[symbol].find( obj => obj.id == sellId)
             console.log("holding set to selectedTranche: ", holding)
@@ -146,8 +148,9 @@ function TradingPage() {
     useEffect(() => {
         if (transactionType === 'SELL') {
             let postCash = parseInt(cash) + parseInt(totalCost)
+            let decimalCash = postCash.toFixed(2)
             console.log("postCash in useEffect: ", postCash)
-            setPostTransactionCash(postCash)
+            setPostTransactionCash(decimalCash)
         }
     }, [totalCost])
 
@@ -159,7 +162,7 @@ function TradingPage() {
             if (holding.shares > 0) {
                 if (activeHoldingsObj[holding.symbol]) {
                     activeHoldingsObj[holding.symbol] = [...activeHoldingsObj[holding.symbol], holding]
-                    console.log("activeHoldingsObj: ", activeHoldingsObj)
+                    // console.log("activeHoldingsObj: ", activeHoldingsObj)
                 } else {
                     activeHoldingsObj[holding.symbol] = [holding]
                 }
@@ -280,11 +283,21 @@ function TradingPage() {
         return formattedDate
     }
 
+    function formatCash(num) {
+        return num.toFixed(2)
+    }
+
     const handleSubmit = async () => {
+
         if (transactionType === "BUY") {
             let price = pricesArr[pricesArr.length - 1]['4. close']
-            await dispatch(thunkPurchase(symbol, numShares, price))
-            history.push("/portfolio")
+            if (quantityType === 'shares') {
+                await dispatch(thunkPurchase(symbol, numShares, price))
+                history.push("/portfolio")
+            } else {
+                await dispatch(thunkPurchase(symbol, totalShares, price))
+                history.push("/portfolio")
+            }
         }
 
         if (transactionType === 'SELL') {
@@ -295,7 +308,7 @@ function TradingPage() {
 
     return (
         <div className="trading-page-container">
-            {isLoaded && pricesArr && (
+            {isLoaded && pricesArr && cash && (
                 <div className="trading-page-left">
                     <div className="trading-searchbar-div">
                         <div className="details-searchbar-container">
@@ -415,7 +428,7 @@ function TradingPage() {
                     </div>
                 </div>
             )}
-            {isLoaded && pricesArr && (
+            {isLoaded && pricesArr && cash && (
                 <div className="trading-page-right">
                     <div className="trading-transaction-container">
                         <div className="transaction-top">
@@ -429,7 +442,7 @@ function TradingPage() {
                         <div className="transaction-content">
                             <div>
                                 <h4>Available Cash</h4>
-                                <div>${cash}</div>
+                                <div>${cash.toFixed(2)}</div>
                             </div>
                             {transactionType === "BUY" ? (
                                 <div>
@@ -490,9 +503,21 @@ function TradingPage() {
                                                 </option>
                                             ))}
                                         </select> */}
-                                        <input type="text"
+                                        {/* <input type="text"
                                             value={numShares}
                                             onChange={(e) => setNumShares(e.target.value)}
+                                            placeholder={`Max ${selectedTranche.shares}`}
+                                            className="quantity-input"
+                                        /> */}
+                                        <input
+                                            type="number"
+                                            value={numShares}
+                                            onChange={(e) => {
+                                                const newValue = parseFloat(e.target.value);
+                                                if (!isNaN(newValue) && newValue <= selectedTranche.shares) {
+                                                    setNumShares(newValue);
+                                                }
+                                            }}
                                             placeholder={`Max ${selectedTranche.shares}`}
                                             className="quantity-input"
                                         />
@@ -544,7 +569,7 @@ function TradingPage() {
                             <div>
                                 <h4>Cash after {transactionType === "BUY" ? "purchase" : "sale"}</h4>
                                 <div>
-                                    ${postTransactionCash ? postTransactionCash : "-"}
+                                    ${postTransactionCash ? formatCash(postTransactionCash) : "-"}
                                 </div>
                             </div>
                         </div>

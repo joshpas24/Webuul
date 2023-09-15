@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react"
 import { useSelector, useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import StockDetailsPage from "../StockDetailsPage";
 import { thunkGetPortfolioInfo } from "../../store/portfolio";
 import './Portfolio.css'
@@ -7,60 +8,59 @@ import StockPieChart from "../PieChart";
 
 function PortfolioPage() {
     const dispatch = useDispatch()
+    const history = useHistory()
 
     // const [portfolioView, setPortfolioView] = useState("allocation")
     const [listVisibility, setListVisibility] = useState({});
+    // const [totalPortfolio, setTotalPortfolio] = useState("")
 
     const holdings = useSelector(state=>state.portfolio["holdings"])
     const cash = useSelector(state=>state.portfolio["cash"])
     const transactions = useSelector(state=>state.portfolio["transactions"])
 
     const [isLoaded, setIsLoaded] = useState(false)
+    const [cumulativeHoldings, setCumulativeHoldings] = useState([])
 
-    useEffect(() => {
-        dispatch(thunkGetPortfolioInfo())
+
+    useEffect(async () => {
+        await dispatch(thunkGetPortfolioInfo())
         setIsLoaded(true)
     }, [dispatch])
 
-    let activeHoldingsObj = {};
+    useEffect(() => {
+        if (holdings && holdings.length > 0) {
+            const activeHoldingsObj = {};
+            holdings.forEach((holding) => {
+                if (holding.shares > 0) {
+                    if (activeHoldingsObj[holding.symbol]) {
+                        activeHoldingsObj[holding.symbol] = [...activeHoldingsObj[holding.symbol], holding]
+                    } else {
+                        activeHoldingsObj[holding.symbol] = [holding]
+                    }
+                }
+            });
 
-    if (holdings && holdings.length > 0) {
-        holdings.forEach((holding) => {
-            if (holding.shares > 0) {
-                if (activeHoldingsObj[holding.symbol]) {
-                    activeHoldingsObj[holding.symbol] = [...activeHoldingsObj[holding.symbol], holding]
+            const activeHoldings = Object.values(activeHoldingsObj);
+            const updatedCumulativeHoldings = [];
+
+            activeHoldings.forEach((holdingArr) => {
+                if (holdingArr.length > 1) {
+                    let newObj = { ...holdingArr[0] };
+                    for (let i = 1; i < holdingArr.length; i++) {
+                        newObj.shares += holdingArr[i].shares;
+                    }
+                    newObj["totalValue"] = newObj.shares * newObj.currentPrice;
+                    updatedCumulativeHoldings.push(newObj);
                 } else {
-                    activeHoldingsObj[holding.symbol] = [holding]
+                    let newObj = { ...holdingArr[0] };
+                    newObj["totalValue"] = newObj.shares * newObj.currentPrice;
+                    updatedCumulativeHoldings.push(newObj);
                 }
-            }
-        })
-    }
+            });
 
-    let activeHoldings;
-
-    if (activeHoldingsObj) {
-        activeHoldings = Object.values(activeHoldingsObj)
-    }
-
-    let cumulativeHoldings = [];
-
-    if (activeHoldings && activeHoldings.length > 0) {
-        activeHoldings.forEach((holdingArr) => {
-            if (holdingArr.length > 1) {
-                let newObj = holdingArr[0]
-                for (let i = 1; i < holdingArr.length; i++) {
-                    newObj.shares += holdingArr[i].shares
-                }
-                newObj["totalValue"] = newObj.shares * newObj.currentPrice
-                cumulativeHoldings.push(newObj)
-            } else {
-                let newObj = holdingArr[0]
-                newObj["totalValue"] = newObj.shares * newObj.currentPrice
-                cumulativeHoldings.push(holdingArr[0])
-            }
-        })
-        // console.log(cumulativeHoldings)
-    }
+            setCumulativeHoldings(updatedCumulativeHoldings);
+        }
+    }, [holdings])
 
 
     const getHoldingName = (holdingId) => {
@@ -105,7 +105,7 @@ function PortfolioPage() {
 
     return (
         <>
-            {isLoaded && activeHoldingsObj && (
+            {isLoaded && cumulativeHoldings && (
                 <div className="portfolio-container">
                     <div className="portfolio-left">
                         <div className="left-box">
@@ -117,19 +117,19 @@ function PortfolioPage() {
                             <div>
                                 <div id="transaction-header">
                                     <div className="leftmost-column">Date</div>
-                                    <div>Type</div>
+                                    <div className="middle-align">Type</div>
                                     <div>Symbol</div>
-                                    <div>Shares</div>
+                                    <div className="middle-column">Shares</div>
                                     <div className="rightmost-column">Order Total</div>
                                 </div>
                                 {transactions && transactions.length > 0 ? (
                                     [...transactions].reverse().map((transaction) => (
                                         <div key={transaction.id} className="transaction-item">
                                             <div className="leftmost-column">{formatDate(transaction.date)}</div>
-                                            <div>{transaction.type}</div>
+                                            <div className="middle-align">{transaction.type}</div>
                                             {/* <div>{transaction.type}</div> */}
                                             <div>{getHoldingName(transaction.holdingId)}</div>
-                                            <div>{transaction.shares}</div>
+                                            <div className="middle-column">{transaction.shares}</div>
                                             <div id="total-value" className="rightmost-column">{getTotal(transaction.shares, transaction.price)}</div>
                                         </div>
                                     ))
@@ -145,14 +145,19 @@ function PortfolioPage() {
                         <h4>Holdings</h4>
                             <div className="holding-header">
                                 <div className="leftmost-column">Symbol</div>
-                                <div>Market Value</div>
+                                <div className="middle-column">Market Value</div>
                                 <div className="rightmost-column">Return (%)</div>
                             </div>
                             <div className="holding-list">
                                 {holdings && holdings.length > 0 ? (
                                     cumulativeHoldings.map((holding) => (
                                         <div className="holding-item">
-                                            <div className="leftmost-column">{holding.symbol}</div>
+                                            <div className="leftmost-column"
+                                                onClick={() => history.push(`/markets/${holding.symbol}`)}
+                                                id="symbol-link"
+                                            >
+                                                {holding.symbol}
+                                            </div>
                                             <div id="total-holding">{getTotal(holding.shares, holding.currentPrice)}</div>
                                             <div id={getReturn(holding.purchasePrice, holding.currentPrice) > 0 ? "return-postiive" : "return-negative"}
                                                 className="rightmost-column"

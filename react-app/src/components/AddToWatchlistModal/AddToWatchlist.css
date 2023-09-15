@@ -1,0 +1,106 @@
+.add-watchlist-container {
+    padding: 35px 50px;
+    width: fit-content;
+    font-size: 14pt;
+    border-radius: 25px;
+}
+
+.add-watchlist-container h3 {
+    margin: 0 !important;
+}
+
+.add-watchlist-container h6 {
+    margin: 0 !important;
+    margin-bottom: 15px !important;
+    text-align: center;
+}
+
+
+.add-watchlist-header {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.add-watchlist-header button {
+    cursor: pointer;
+    background-color: #2081ff;
+    border: 1px solid #2081ff;
+    color: white !important;
+    border-radius: 50px;
+}
+
+.add-watchlist-header button:hover {
+    background-color: #38b6ff;
+    border: 1px solid #38b6ff;
+}
+
+.add-watchlist-header button:active {
+    border: 1px solid white;
+}
+
+.fa-plus {
+    color: white !important;
+}
+
+.list-form {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 5px;
+}
+
+#create-list {
+    cursor: pointer;
+    background-color: #2081ff;
+    border: 1px solid #2081ff;
+    color: white !important;
+    border-radius: 5px;
+}
+
+#create-list:hover {
+    background-color: #38b6ff;
+    border: 1px solid #38b6ff;
+}
+
+#create-list:active {
+    border: 1px solid white;
+}
+
+#cancel-list {
+    cursor: pointer;
+    background-color: transparent;
+    border: 1px solid #2081ff;
+    color: #2081ff !important;
+    border-radius: 5px;
+}
+
+#cancel-list:hover {
+    background-color: #c0e8ff;
+}
+
+.add-watchlist-lists {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 15px;
+}
+
+.add-watchlist-list-item {
+    width: 50%;
+    gap: 5px;
+}
+
+.add-watchlist-button-container {
+    display: flex;
+    justify-content: center;
+}
+
+.add-watchlist-button {
+    cursor: pointer;
+    background-color: #2081ff;
+    border: 1px solid #2081ff;
+    color: white !important;
+    border-radius: 5px;
+    padding: 6px 12px;
+}
