@@ -2,12 +2,14 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     width: 100%;
+    height: fit-content;
 }
 
 .login-left {
-    padding: 25% 20%;
+    padding: 30% 20%;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
     text-align: center;
     background-color: #2081ff;
@@ -35,8 +37,9 @@ h2 {
 }
 
 .login-right {
-    padding: 10%;
-    padding-right: 30%;
+    /* padding: 10%;
+    padding-right: 30%; */
+    padding: 30% 20%;
     display: flex;
     flex-direction: column;
     justify-content: center;

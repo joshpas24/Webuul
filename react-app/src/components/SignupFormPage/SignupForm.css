@@ -1,0 +1,112 @@
+.password-div {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
+    /* padding: 0 10px; */
+}
+
+.error-message {
+    display: flex;
+    margin: 0 !important;
+    color: red !important;
+    font-size: 8pt !important;
+}
+
+
+.signup-left {
+    padding: 20%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: #2081ff;
+}
+
+.signup-left h1 {
+    font-size: 30pt;
+    color: white !important;
+}
+
+.signup-left h3 {
+    color: white !important;
+    margin-top: 0 !important;
+}
+
+.signup-left div {
+    font-size: 8pt;
+    color: white !important;
+    font-weight: 300;
+    padding: 10px 0;
+}
+
+h2 {
+    padding-bottom: 20px;
+}
+
+.signup-right {
+    /* padding: 10%;
+    padding-right: 30%; */
+    padding: 10% 20%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.signup-right form {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.signup-right input {
+    height: 35px;
+    width: 100%;
+    padding: 0 10px;
+    border: 1px solid rgb(240, 240, 240);
+    background-color: rgb(240, 240, 240);
+    border-radius: 5px;
+}
+
+.signup-right label {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.signup-right label div {
+    font-size: 10pt;
+    font-weight: 700;
+}
+
+.signup-button-div {
+    display: flex;
+    justify-content: center;
+    padding-top: 25px;
+}
+
+.signup-button-div span {
+    margin-right: 5px;
+}
+
+.signup-right form button {
+    cursor: pointer;
+    width: 40%;
+    padding: 10px 20px;
+    font-size: 14pt;
+    color: white;
+    background-color: #2081ff;
+    border: 1px solid #2081ff;
+    border-radius: 7px;
+}
+
+.signup-right form button:hover {
+    background-color: #38b6ff;
+    border: 1px solid #38b6ff;
+}
+
+.signup-right li {
+    list-style: none;
+    color: red;
+}

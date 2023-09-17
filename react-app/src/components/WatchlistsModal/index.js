@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react"
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { thunkDeleteWatchlist, thunkGetWatchlists, thunkRemoveStock } from "../../store/watchlists";
-import { useWatchlistToggle } from "../../context/WatchlistModalToggle";
+
 import './WatchlistsModal.css'
 
 function WatchlistsModal() {
@@ -10,8 +10,8 @@ function WatchlistsModal() {
     const dispatch = useDispatch();
     const history = useHistory()
 
-    const { viewWatchlist, setViewWatchlist } = useWatchlistToggle()
     const [listVisibility, setListVisibility] = useState({});
+    const [viewWatchlist, setViewWatchlist] = useState(false)
 
     const lists = useSelector(state=>state.watchlists)
 

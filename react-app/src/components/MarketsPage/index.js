@@ -5,16 +5,21 @@ import { thunkGetSearchResults, thunkGetIndexPrices, thunkGetStockInfo, thunkGet
 import './MarketsPage.css'
 import IndexPriceChart from "../LineChart";
 import LoadingComponent from "../LoadingVid";
+import { useNavigation } from "../../context/NavigationView";
 
 function MarketsPage() {
     const history = useHistory();
     const dispatch = useDispatch();
+
+    const { navView, setNavView } = useNavigation()
 
     const [isLoaded, setIsLoaded] = useState(false)
     const [searchVal, setSearchVal] = useState("")
     const [showSearchList, setShowSearchList] = useState(false)
 
     useEffect(() => {
+        setNavView('markets')
+        console.log(navView)
         dispatch(thunkGetTop10())
         dispatch(thunkGetIndexPrices('DIA', 'INTRADAY'))
         dispatch(thunkGetIndexPrices('SPY', 'INTRADAY'))
@@ -101,31 +106,6 @@ function MarketsPage() {
                         <button>MAX</button>
                     </div>
                 </div> */}
-                <div className="searchbar-div">
-                    <div className="searchbar-container">
-                        <div className="searcbar-icon">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                        </div>
-                        <input
-                            type="text"
-                            value={searchVal}
-                            placeholder="search by name or ticker"
-                            onChange={(e) => setSearchVal(e.target.value)}
-                        />
-                    </div>
-                    <div className="search-results">
-                        {searchResults && searchResults.length > 0 && searchVal.length > 0 ?
-                            searchResults.map((item) => (
-                                <li key={item['1. symbol']} onClick={() => getStockDetails(item['1. symbol'])}>
-                                    <div>{item['2. name']}</div>
-                                    <div>{item['1. symbol']}</div>
-                                </li>
-                            )
-                        ) : (
-                            <li className={showSearchList ? "" : "hidden-search"}>No matches found</li>
-                        )}
-                    </div>
-                </div>
                 <div className="three-col-container">
                     <div className="index-box">
                         <div className="index-box-top">
@@ -252,6 +232,9 @@ function MarketsPage() {
                         </div>
                     </div>
                     {/* <button onClick={() => dispatch(thunkGetStockPrices('TSLA', 'DAILY'))}>Stonk Data</button> */}
+                </div>
+                <div className="two-col-container">
+
                 </div>
             </div>)}
         </>

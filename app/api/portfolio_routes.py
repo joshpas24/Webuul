@@ -42,10 +42,12 @@ def purchase_holding(symbol, price):
 
     user = User.query.get(current_user.id)
     purchase_amount = form.data["shares"] * price
+    rounded_purchase_amount = round(purchase_amount, 2)
+
 
     if form.validate_on_submit():
-        if user.cash >= purchase_amount:
-            user.cash -= purchase_amount
+        if user.cash >= rounded_purchase_amount:
+            user.cash -= rounded_purchase_amount
 
             new_holding = Holding(
                 user_id = current_user.id,
@@ -86,7 +88,9 @@ def sell_holding(holdingId, price, shares):
     user = User.query.get(current_user.id)
 
     sale_amount = shares * price
-    user.cash += sale_amount
+    rounded_sale_amount = round(sale_amount, 2)
+    
+    user.cash += rounded_sale_amount
 
     sale_transaction = Transaction(
         user_id = current_user.id,
