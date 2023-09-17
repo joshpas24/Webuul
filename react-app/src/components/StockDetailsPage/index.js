@@ -5,6 +5,7 @@ import { thunkGetStockInfo, thunkGetStockPrices, thunkGetSearchResults } from ".
 import OpenModalButton from "../OpenModalButton";
 import AddToWatchlist from "../AddToWatchlistModal";
 import IndexPriceChart from "../LineChart";
+import { useNavigation } from "../../context/NavigationView";
 import "./StockDetailsPage.css"
 
 function StockDetailsPage() {
@@ -16,7 +17,10 @@ function StockDetailsPage() {
     const [searchVal, setSearchVal] = useState("")
     const [showSearchList, setShowSearchList] = useState(false)
 
+    const { setNavView } = useNavigation()
+
     useEffect(() => {
+        setNavView('markets')
         dispatch(thunkGetStockPrices(symbol.toString(), 'INTRADAY'))
         dispatch(thunkGetStockInfo(symbol))
         setIsLoaded(true)
@@ -54,7 +58,7 @@ function StockDetailsPage() {
     }
 
     const formatCurrentPrice = (priceStr) => {
-        const priceNum = parseInt(priceStr)
+        const priceNum = parseFloat(priceStr)
         return priceNum.toFixed(2)
     }
 
@@ -62,8 +66,8 @@ function StockDetailsPage() {
         // console.log('PRICES ARG: ', prices)
         const openStr = prices[0]['4. close']
         const closeStr = prices[prices.length - 1]['4. close']
-        const open = parseInt(openStr)
-        const close = parseInt(closeStr)
+        const open = parseFloat(openStr)
+        const close = parseFloat(closeStr)
 
         const percentChange = ((close - open) / open) * 100;
         return percentChange.toFixed(2)

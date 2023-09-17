@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { login } from "../../store/session";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect, useHistory } from "react-router-dom";
 import './LoginForm.css';
+import { useNavigation } from "../../context/NavigationView";
 
 function LoginFormPage() {
   const dispatch = useDispatch();
@@ -12,7 +13,14 @@ function LoginFormPage() {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState([]);
 
-  if (sessionUser) return <Redirect to="/" />;
+  const { setNavView } = useNavigation()
+
+  useEffect(() => {
+    setNavView('')
+  }, [])
+
+  if (sessionUser) return <Redirect to="/markets" />;
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();

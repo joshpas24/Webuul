@@ -7,9 +7,10 @@
 
 .add-watchlist-container h3 {
     margin: 0 !important;
+    font-size: 18pt;
 }
 
-.add-watchlist-container h6 {
+.add-watchlist-container h5 {
     margin: 0 !important;
     margin-bottom: 15px !important;
     text-align: center;
@@ -50,6 +51,13 @@
     gap: 5px;
 }
 
+.list-form input {
+    padding: 5px 10px !important;
+    border: 1px solid rgb(240, 240, 240) !important;
+    background-color: rgb(240, 240, 240) !important;
+    border-radius: 5px !important;
+}
+
 #create-list {
     cursor: pointer;
     background-color: #2081ff;
@@ -80,6 +88,7 @@
 }
 
 .add-watchlist-lists {
+    padding: 10px;
     display: flex;
     flex-direction: column;
     gap: 5px;
@@ -87,8 +96,16 @@
 }
 
 .add-watchlist-list-item {
-    width: 50%;
-    gap: 5px;
+    /* width: 50%; */
+    gap: 10px;
+}
+
+.add-watchlist-list-item input {
+    margin-left: 15px;
+}
+
+.add-watchlist-list-item label {
+    margin-left: 10px;
 }
 
 .add-watchlist-button-container {
@@ -103,4 +120,11 @@
     color: white !important;
     border-radius: 5px;
     padding: 6px 12px;
+}
+
+.new-list-input {
+    padding: 0 10px !important;
+    border: 1px solid rgb(240, 240, 240) !important;
+    background-color: rgb(240, 240, 240) !important;
+    border-radius: 5px !important;
 }

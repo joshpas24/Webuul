@@ -30,7 +30,7 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  gap: 10%;
+  gap: 15px;
   width: 100%;
 }
 
@@ -87,3 +87,7 @@
 .hidden {
   display: none;
 } */
+
+.active-page {
+  color: #2081ff !important;
+}

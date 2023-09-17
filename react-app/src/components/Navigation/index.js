@@ -6,10 +6,13 @@ import ProfileButton from './ProfileButton';
 import { logout } from '../../store/session';
 import './Navigation.css';
 import WatchlistsModal from '../WatchlistsModal';
+import { useNavigation } from '../../context/NavigationView';
 
 function Navigation({ isLoaded }){
 	const history = useHistory();
 	const dispatch = useDispatch()
+
+	const { navView, setNavView } = useNavigation()
 
 	const user = useSelector(state => state.session.user);
 
@@ -29,9 +32,21 @@ function Navigation({ isLoaded }){
 				</button>
 			</div>
 			<div className='nav-mid'>
-				<div onClick={() => history.push("/markets")}>MARKETS</div>
-				{/* <div onClick={() => history.push("/trading")}>TRADING</div> */}
-				<div onClick={() => history.push("/portfolio")}>PORTFOLIO</div>
+				<div onClick={() => history.push("/markets")}
+					className={navView === 'markets' ? "active-page" : ""}
+				>
+					MARKETS
+				</div>
+				<div onClick={() => history.push("/trading")}
+					className={navView === 'trading' ? "active-page" : ""}
+				>
+					TRADING
+				</div>
+				<div onClick={() => history.push("/portfolio")}
+					className={navView === 'portfolio' ? "active-page" : ""}
+				>
+					PORTFOLIO
+				</div>
 				<div>NEWS</div>
 			</div>
 			{!user ? (

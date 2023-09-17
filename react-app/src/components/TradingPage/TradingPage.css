@@ -24,7 +24,13 @@
     border: 2px solid rgb(235, 235, 235);
     background-color: rgb(235, 235, 235);
     border-radius: 25px;
-    height: 73vh;
+    /* height: 80vh; */
+    height: fit-content;
+    margin-bottom: 40px;
+}
+
+.trading-transaction-container h4 {
+    margin: 15px 0 !important;
 }
 
 .trading-searchbar-div {
@@ -195,7 +201,7 @@
 
 
 .transaction-content {
-    padding: 20px 40px;
+    padding: 15px 40px;
     border-bottom: 1px solid lightgray;
 }
 
@@ -242,13 +248,25 @@
     margin: 0 !important;
 }
 
+.quantity-select {
+    display: flex !important;
+    flex-direction: column;
+}
+
+.quantity-select p {
+    margin: 0 !important;
+    margin-top: 2px;
+    font-size: 8pt;
+    color: red;
+}
+
 #tranche-info-right {
     display: flex;
     justify-content: flex-end !important;
 }
 
 .transaction-totals {
-    padding: 20px 40px;
+    padding: 15px 40px;
     border-bottom: 1px solid lightgray;
 }
 
@@ -260,11 +278,13 @@
 
 .transaction-bottom {
     padding: 40px;
+    padding-bottom: 15px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 20px;
+    gap: 15px;
+    /* height: fit-content; */
 }
 
 .transaction-bottom button {
@@ -284,6 +304,13 @@
 
 .transaction-bottom button:active {
     border: none !important;
+}
+
+.transaction-bottom button[disabled] {
+    background-color: #ccc;
+    border: 2px solid #ccc !important;
+    color: #666;
+    cursor: not-allowed;
 }
 
 .transaction-bottom p {

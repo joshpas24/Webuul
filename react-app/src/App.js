@@ -14,7 +14,9 @@ import LoadingComponent from "./components/LoadingVid";
 import StockDetailsPage from "./components/StockDetailsPage";
 import PortfolioPage from "./components/Portfolio";
 import TradingPage from "./components/TradingPage";
+import Footer from "./components/Footer";
 import StockPieChart from "./components/PieChart";
+import TradingSplash from "./components/TradingPage/TradingSplash";
 
 function App() {
   const dispatch = useDispatch();
@@ -52,11 +54,15 @@ function App() {
           <ProtectedRoute exact path="/trading/:symbol">
             <TradingPage />
           </ProtectedRoute>
-          <Route>
-            <LoadingComponent />
+          <Route exact path='/trading'>
+            <TradingSplash />
           </Route>
+          {/* <Route>
+            <LoadingComponent />
+          </Route> */}
         </Switch>
       )}
+      <Footer />
     </>
   );
 }

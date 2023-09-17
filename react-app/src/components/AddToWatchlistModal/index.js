@@ -49,29 +49,36 @@ function AddToWatchlist({ symbol }) {
         <div className="add-watchlist-container">
             <div className="add-watchlist-header">
                 <h3>Watchlists</h3>
-                <button onClick={() => setNewList(true)}>
-                    <i class="fa-solid fa-plus"></i>
-                </button>
+                {lists.length > 0 && (
+                    <button onClick={() => setNewList(true)}>
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+                )}
             </div>
-            <h6>Select lists you would like to include {symbol}</h6>
+            {!lists.length ? (
+                <h5>Create a new list below</h5>
+            ) : (
+                <h5>Select lists you would like to include {symbol}</h5>
+            )}
+            {newList && (
+                <div className="list-form">
+                    <input
+                        type="text"
+                        placeholder="name"
+                        value={listName}
+                        onChange={(e) => setListName(e.target.value)}
+                        className="new-list-input"
+                    />
+                    <button onClick={(e) => {createNewList(); e.stopPropagation()}} id="create-list">
+                        Create
+                    </button>
+                    <button onClick={(e) => {setNewList(false); e.stopPropagation()}} id="cancel-list">
+                        Cancel
+                    </button>
+                </div>
+            )}
             {lists && lists.length> 0 ? (
                 <div>
-                    {newList && (
-                        <div className="list-form">
-                            <input
-                                type="text"
-                                placeholder="name"
-                                value={listName}
-                                onChange={(e) => setListName(e.target.value)}
-                            />
-                            <button onClick={(e) => {createNewList(); e.stopPropagation()}} id="create-list">
-                                Create
-                            </button>
-                            <button onClick={(e) => {setNewList(false); e.stopPropagation()}} id="cancel-list">
-                                Cancel
-                            </button>
-                        </div>
-                    )}
                     <div className="add-watchlist-lists">
                         {lists.map((list, index) => (
                             <div className="add-watchlist-list-item">
@@ -92,18 +99,20 @@ function AddToWatchlist({ symbol }) {
                     </div>
                 </div>
             ) : (
-                <div>
-                   <div className="list-form">
-                        <input
-                            type="text"
-                            placeholder="name"
-                            value={listName}
-                            onChange={(e) => setListName(e.target.value)}
-                        />
-                        <button onClick={(e) => {createNewList(); e.stopPropagation()}}>
-                            CREATE
-                        </button>
-                    </div>
+                <div className="list-form">
+                    <input
+                        type="text"
+                        placeholder="name"
+                        value={listName}
+                        onChange={(e) => setListName(e.target.value)}
+                        className="new-list-input"
+                    />
+                    <button onClick={(e) => {createNewList(); e.stopPropagation()}} id="create-list">
+                        Create
+                    </button>
+                    <button onClick={(e) => {setNewList(false); e.stopPropagation()}} id="cancel-list">
+                        Cancel
+                    </button>
                 </div>
             )}
         </div>

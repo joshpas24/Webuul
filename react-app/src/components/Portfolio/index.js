@@ -5,14 +5,13 @@ import StockDetailsPage from "../StockDetailsPage";
 import { thunkGetPortfolioInfo } from "../../store/portfolio";
 import './Portfolio.css'
 import StockPieChart from "../PieChart";
+import { useNavigation } from '../../context/NavigationView';
 
 function PortfolioPage() {
     const dispatch = useDispatch()
     const history = useHistory()
 
-    // const [portfolioView, setPortfolioView] = useState("allocation")
-    const [listVisibility, setListVisibility] = useState({});
-    // const [totalPortfolio, setTotalPortfolio] = useState("")
+    const { navView, setNavView } = useNavigation()
 
     const holdings = useSelector(state=>state.portfolio["holdings"])
     const cash = useSelector(state=>state.portfolio["cash"])
@@ -23,6 +22,7 @@ function PortfolioPage() {
 
 
     useEffect(async () => {
+        setNavView('portfolio')
         await dispatch(thunkGetPortfolioInfo())
         setIsLoaded(true)
     }, [dispatch])

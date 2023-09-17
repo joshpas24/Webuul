@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { signUp } from "../../store/session";
 import '../LoginFormPage/LoginForm.css';
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import './SignupForm.css'
+import { useNavigation } from "../../context/NavigationView";
 
 function SignupFormPage() {
   const dispatch = useDispatch();
@@ -14,9 +16,23 @@ function SignupFormPage() {
   const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [errors, setErrors] = useState([]);
+  const [errors, setErrors] = useState({});
 
-  if (sessionUser) return <Redirect to="/" />;
+  const { setNavView } = useNavigation()
+
+  useEffect(() => {
+    setNavView('')
+  }, [])
+
+  useEffect(() => {
+    if (password.length > 0 && password.length < 8) {
+      setErrors({"password": "Password must be a minimum of 8 characters"})
+    } else {
+      setErrors({})
+    }
+  }, [password])
+
+  if (sessionUser) return <Redirect to="/markets" />;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,23 +42,24 @@ function SignupFormPage() {
           setErrors(data)
         }
     } else {
-        setErrors(['Confirm Password field must be the same as the Password field']);
+        setErrors({"confirmPassword": 'Passwords do not match'});
     }
   };
 
+
   return (
     <div className="login-container">
-      <div className="login-left">
+      <div className="signup-left">
         <h1>Invest in Stocks, ETFs, and Options</h1>
         <h3>Join webuul today and start investing with 0 commission*</h3>
         <div>*Relevant regulatory and exchange fees do not apply because this is a clone of Webull.</div>
         <div>*Options are risky and not suitable for all investors. Investors can rapidly lose 100% or more of their investment trading options. Before trading options, carefully read Characteristics and Risks of Standardized Options, available somewhere on the internet.</div>
         <div>*Please note this website does not allow users to trade options, or anything real.</div>
       </div>
-      <div className="login-right">
+      <div className="signup-right">
         <h2>Sign up for <span>webuul</span></h2>
         <form onSubmit={handleSubmit}>
-          {errors.map((error, idx) => <li key={idx}>{error}</li>)}
+          {/* {errors.map((error, idx) => <li key={idx}>{error}</li>)} */}
           <label>
             <div>FIRST NAME</div>
             <input
@@ -51,7 +68,8 @@ function SignupFormPage() {
               onChange={(e) => setFirstName(e.target.value)}
               required
             />
-          </label><label>
+          </label>
+          <label>
             <div>LAST NAME</div>
             <input
               type="text"
@@ -77,6 +95,7 @@ function SignupFormPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
+            {errors.password && (<p className="error-message">{errors.password}</p>)}
           </label>
           <label>
             <div>CONFIRM PASSWORD</div>
@@ -86,6 +105,7 @@ function SignupFormPage() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
             />
+            {errors.confirmPassword && (<p className="error-message">{errors.confirmPassword}</p>)}
           </label>
           <div className="login-button-div">
             <button type="submit">Sign Up</button>
