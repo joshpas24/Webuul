@@ -109,7 +109,7 @@ function TradingPage() {
         }
 
         if (transactionType === 'BUY') {
-            console.log("switch to BUY")
+            setErrors({})
             setTotalCost(0)
         }
 
@@ -204,13 +204,12 @@ function TradingPage() {
     }
 
     const formatBillions = (numStr) => {
-        console.log("mktCap: ", numStr)
         if (numStr === 'None') {
             return "N/A"
         } else {
             const num = parseInt(numStr)
             const million = num / 10000000000;
-            return million.toFixed(2)
+            return million.toFixed(2) + "B"
         }
     }
 

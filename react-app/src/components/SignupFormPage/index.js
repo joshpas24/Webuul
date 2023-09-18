@@ -12,6 +12,7 @@ function SignupFormPage() {
   const history = useHistory();
   const sessionUser = useSelector((state) => state.session.user);
   const [email, setEmail] = useState("");
+  const [isValidEmail, setIsValidEmail] = useState(true)
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
@@ -31,6 +32,39 @@ function SignupFormPage() {
       setErrors({})
     }
   }, [password])
+
+  useEffect(() => {
+    if (confirmPassword && (confirmPassword !== password) && confirmPassword.length < 8) {
+      setErrors({"confirmPassword": "Passwords do not match"})
+    } else {
+      setErrors({})
+    }
+  }, [confirmPassword])
+
+  useEffect(() => {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (email.length) {
+      const isValid = emailPattern.test(email);
+      setIsValidEmail(isValid);
+    }
+  }, [email]);
+
+  useEffect(() => {
+    if (firstName && firstName.length < 2) {
+      setErrors({'firstName': 'Minimum 2 characters'})
+    } else {
+      setErrors({})
+    }
+  }, [firstName])
+
+  useEffect(() => {
+    if (lastName && lastName.length < 2) {
+      setErrors({'lastName': 'Minimum 2 characters'})
+    } else {
+      setErrors({})
+    }
+  }, [lastName])
 
   if (sessionUser) return <Redirect to="/markets" />;
 
@@ -68,6 +102,7 @@ function SignupFormPage() {
               onChange={(e) => setFirstName(e.target.value)}
               required
             />
+            {errors.firstName && (<p className="error-message">{errors.firstName}</p>)}
           </label>
           <label>
             <div>LAST NAME</div>
@@ -77,6 +112,7 @@ function SignupFormPage() {
               onChange={(e) => setLastName(e.target.value)}
               required
             />
+            {errors.lastName && (<p className="error-message">{errors.lastName}</p>)}
           </label>
           <label>
             <div>EMAIL</div>
@@ -86,6 +122,7 @@ function SignupFormPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
+            {!isValidEmail && <p className="error-message">Invalid email</p>}
           </label>
           <label>
             <div>PASSWORD</div>

@@ -47,7 +47,7 @@ function Navigation({ isLoaded }){
 				>
 					PORTFOLIO
 				</div>
-				<div>NEWS</div>
+				{/* <div>NEWS</div> */}
 			</div>
 			{!user ? (
 				<div className='nav-right'>
