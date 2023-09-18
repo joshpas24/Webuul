@@ -106,6 +106,20 @@ h2 {
     border: 1px solid #38b6ff;
 }
 
+.transaction-bottom button[disabled] {
+    background-color: #ccc;
+    border: 2px solid #ccc !important;
+    color: #666;
+    cursor: not-allowed;
+}
+
+.login-button-div button[disabled] {
+    background-color: #ccc;
+    border: 2px solid #ccc !important;
+    color: #666;
+    cursor: not-allowed;
+}
+
 .signup-right li {
     list-style: none;
     color: red;

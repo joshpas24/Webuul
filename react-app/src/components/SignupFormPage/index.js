@@ -18,6 +18,7 @@ function SignupFormPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({});
+  const [disabled, setDisabled] = useState(true)
 
   const { setNavView } = useNavigation()
 
@@ -66,6 +67,14 @@ function SignupFormPage() {
     }
   }, [lastName])
 
+  useEffect(() => {
+    if (errors.firstName || errors.lastName || !isValidEmail || errors.email || errors.password || errors.confirmPassword) {
+      setDisabled(true)
+    } else {
+      setDisabled(false)
+    }
+  }, [errors])
+
   if (sessionUser) return <Redirect to="/markets" />;
 
   const handleSubmit = async (e) => {
@@ -73,13 +82,14 @@ function SignupFormPage() {
     if (password === confirmPassword) {
         const data = await dispatch(signUp(firstName, lastName, email, password));
         if (data) {
-          setErrors(data)
+          let message = data['email'][0]
+          setErrors({'email': message})
         }
     } else {
         setErrors({"confirmPassword": 'Passwords do not match'});
+        // setDisabled(true)
     }
   };
-
 
   return (
     <div className="login-container">
@@ -122,6 +132,7 @@ function SignupFormPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
+            {errors.email && (<p className="error-message">{errors.email}</p>)}
             {!isValidEmail && <p className="error-message">Invalid email</p>}
           </label>
           <label>
@@ -145,7 +156,7 @@ function SignupFormPage() {
             {errors.confirmPassword && (<p className="error-message">{errors.confirmPassword}</p>)}
           </label>
           <div className="login-button-div">
-            <button type="submit">Sign Up</button>
+            <button type="submit" disabled={disabled}>Sign Up</button>
           </div>
           <div className="login-button-demo">
               Already have an account? Log in
