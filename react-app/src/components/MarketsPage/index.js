@@ -19,7 +19,6 @@ function MarketsPage() {
 
     useEffect(() => {
         setNavView('markets')
-        console.log(navView)
         dispatch(thunkGetTop10())
         dispatch(thunkGetIndexPrices('DIA', 'INTRADAY'))
         dispatch(thunkGetIndexPrices('SPY', 'INTRADAY'))
@@ -28,22 +27,22 @@ function MarketsPage() {
         setIsLoaded(true)
     }, [dispatch])
 
-    useEffect(() => {
-        if (searchVal.length > 0) {
-            dispatch(thunkGetSearchResults(searchVal))
-            setShowSearchList(true)
-        } else {
-            setShowSearchList(false)
-        }
+    // useEffect(() => {
+    //     if (searchVal.length > 0) {
+    //         dispatch(thunkGetSearchResults(searchVal))
+    //         setShowSearchList(true)
+    //     } else {
+    //         setShowSearchList(false)
+    //     }
 
-        if (searchVal.length < 1) {
-            setSearchVal("")
-            setShowSearchList(false)
-        }
-    }, [searchVal])
+    //     if (searchVal.length < 1) {
+    //         setSearchVal("")
+    //         setShowSearchList(false)
+    //     }
+    // }, [searchVal])
 
-    const user = useSelector(state=>state.session.user)
-    const searchResults = useSelector(state=>state.markets.searchResults)
+    // const user = useSelector(state=>state.session.user)
+    // const searchResults = useSelector(state=>state.markets.searchResults)
     const winners = useSelector(state=>state.markets.winners)
     const losers = useSelector(state=>state.markets.losers)
     const mostActive = useSelector(state=>state.markets.mostActive)
@@ -72,8 +71,8 @@ function MarketsPage() {
         // console.log('PRICES ARG: ', prices)
         const openStr = prices[0]['4. close']
         const closeStr = prices[prices.length - 1]['4. close']
-        const open = parseInt(openStr)
-        const close = parseInt(closeStr)
+        const open = parseFloat(openStr)
+        const close = parseFloat(closeStr)
 
         const percentChange = ((close - open) / open) * 100;
         return percentChange.toFixed(2)
@@ -81,12 +80,12 @@ function MarketsPage() {
 
     const getLastPrice = (prices) => {
         const priceStr = prices[prices.length - 1]['4. close']
-        const price = parseInt(priceStr)
+        const price = parseFloat(priceStr)
         return price.toFixed(2)
     }
 
     const formatVolume = (numStr) => {
-        const num = parseInt(numStr)
+        const num = parseFloat(numStr)
         const newNum = num / 1000000
         return newNum.toFixed(2)
     }

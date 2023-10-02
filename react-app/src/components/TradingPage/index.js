@@ -422,7 +422,7 @@ function TradingPage() {
                         <div className="transaction-content">
                             <div>
                                 <h4>Available Cash</h4>
-                                <div>${cash}</div>
+                                <div>${cash.toFixed(2)}</div>
                             </div>
                             {transactionType === "BUY" ? (
                                 <div>
@@ -434,7 +434,7 @@ function TradingPage() {
                                         <option value="shares">Shares</option>
                                     </select>
                                 </div>
-                            ): (
+                            ) : (
                                 <div>
                                     <h4>
                                         Tranche
@@ -542,7 +542,7 @@ function TradingPage() {
                             <div>
                                 <h4>Est. cash after {transactionType === "BUY" ? "purchase" : "sale"}</h4>
                                 <div>
-                                    ${postTransactionCash ? postTransactionCash : "-"}
+                                    ${postTransactionCash ? postTransactionCash.toFixed(2) : "-"}
                                 </div>
                             </div>
                         </div>
