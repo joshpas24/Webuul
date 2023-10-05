@@ -1,4 +1,8 @@
 
+.details-page-container {
+    /* min-height: 100vh; */
+}
+
 .details-nav {
     padding-top: 30px;
     width: 100%;
@@ -84,12 +88,18 @@
     text-decoration: underline;
 }
 
+.hidden-search {
+    display: none !important;
+}
+
 .details-page-container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     padding: 0 10%;
+    height: fit-content;
+    min-height: 100vh;
 }
 
 .info-graph-container {

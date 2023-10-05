@@ -25,13 +25,13 @@ function Navigation({ isLoaded }){
 	}
 
 	return (
-		<div className='nav-container'>
+		<div className={user ? "three-container" : "two-container"}>
 			<div>
 				<button onClick={() => handleHome()} className='home-button'>
 					<span><img src='/logo.png' className='logo-image'/></span> webuul
 				</button>
 			</div>
-			<div className='nav-mid'>
+			{user && (<div className='nav-mid'>
 				<div onClick={() => history.push("/markets")}
 					className={navView === 'markets' ? "active-page" : ""}
 				>
@@ -53,7 +53,7 @@ function Navigation({ isLoaded }){
 					NEWS
 				</div>
 				{/* <div>NEWS</div> */}
-			</div>
+			</div>)}
 			{!user ? (
 				<div className='nav-right'>
 					<button className='nav-button' id='nav-no-fill'

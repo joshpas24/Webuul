@@ -11,6 +11,7 @@ import "./TradingPage.css"
 import { thunkGetPortfolioInfo, thunkPurchase, thunkSell } from "../../store/portfolio";
 import { thunkAddStock } from "../../store/watchlists";
 import { useNavigation } from '../../context/NavigationView';
+import LoadingComponent from "../LoadingVid";
 
 function TradingPage() {
     const dispatch = useDispatch();
@@ -287,277 +288,280 @@ function TradingPage() {
     }
 
     return (
-        <div className="trading-page-container">
-            {isLoaded && pricesArr && cash && (
-                <div className="trading-page-left">
-                    <div className="trading-searchbar-div">
-                        <div className="details-searchbar-container">
-                            <div className="details-searcbar-icon">
-                                <i class="fa-solid fa-magnifying-glass"></i>
-                            </div>
-                            <input
-                                type="text"
-                                value={searchVal}
-                                placeholder="search by name or ticker"
-                                onChange={(e) => setSearchVal(e.target.value)}
-                            />
-                        </div>
-                        <div className="trading-search-results">
-                            {searchResults && searchResults.length > 0 && searchVal.length > 0 ?
-                                searchResults.map((item) => (
-                                    <li key={item['1. symbol']} onClick={() => getStockDetails(item['1. symbol'])}>
-                                        <div>{item['2. name']}</div>
-                                        <div>{item['1. symbol']}</div>
-                                    </li>
-                                )
-                            ) : (
-                                <li className={showSearchList ? "" : "hidden-search"}>No matches found</li>
-                            )}
-                        </div>
-                    </div>
-                    <div className="trading-info-top">
-                        <div>
-                            <div className="trading-stock-title">
-                                <h4>{info["Name"]} ({symbol})</h4>
-                                <OpenModalButton modalComponent={<AddToWatchlist symbol={symbol} />}
-                                    buttonText={(
-                                        <>
-                                            <i class="fa-regular fa-star"></i>
-                                            <span>Add to Watchlist</span>
-                                        </>
-                                    )}
-                                />
-                            </div>
-                            <h5>{info["Exchange"]} • {info["Sector"]} • {info["Industry"]}</h5>
-                        </div>
-                        <div className="stock-return">
-                            <h4>{formatCurrentPrice(pricesArr[pricesArr.length - 1]['4. close'])}</h4>
-                            <div id={calculateStockReturn(pricesArr) > 0 ? "return-positive" : "return-negative"}>
-                                {calculateStockReturn(pricesArr)}%
-                            </div>
-                        </div>
-                    </div>
-                    <div className="trading-graph-container">
-                         <IndexPriceChart dataObj={pricesObj[`${symbol}`]} title="" lineColor="#008A05" />
-                    </div>
-                    <div className="trading-info-stats">
-                        <div className="trading-info-stats-col">
-                            <div className="trading-info-stat-item">
-                                <h4>Market Cap</h4>
-                                <h5>{formatBillions(info["MarketCapitalization"])}</h5>
-                            </div>
-                            <div className="trading-info-stat-item">
-                                <h4>52 Week Low</h4>
-                                <h5>{info["52WeekLow"]}</h5>
-                            </div>
-                            <div className="trading-info-stat-item">
-                                <h4>52 Week High</h4>
-                                <h5>{info["52WeekHigh"]}</h5>
-                            </div>
-                            <div className="trading-info-stat-item">
-                                <h4>Analyst Target Price</h4>
-                                <h5>{info["AnalystTargetPrice"]}</h5>
-                            </div>
-                            <div className="trading-info-stat-item">
-                                <h4>Beta</h4>
-                                <h5>{info["Beta"]}</h5>
-                            </div>
-                            <div className="trading-info-stat-item">
-                                <h4>PE Ratio (TTM)</h4>
-                                <h5>{info["PERatio"]}</h5>
-                            </div>
-                            <div className="trading-info-stat-item">
-                                <h4>Forward PE</h4>
-                                <h5>{info["ForwardPE"]}</h5>
-                            </div>
-                        </div>
-                        <div className="trading-info-stats-col">
-                            <div className="trading-info-stat-item">
-                                <h4>EV/EBITDA</h4>
-                                <h5>{info["EVToEBITDA"]}</h5>
-                            </div>
-                            <div className="trading-info-stat-item">
-                                <h4>Price/Book Ratio</h4>
-                                <h5>{info["PriceToBookRatio"]}</h5>
-                            </div>
-                            <div className="trading-info-stat-item">
-                                <h4>Return on Assets</h4>
-                                <h5>{info["ReturnOnAssetsTTM"]}</h5>
-                            </div>
-                            <div className="trading-info-stat-item">
-                                <h4>Return on Equity</h4>
-                                <h5>{info["ReturnOnEquityTTM"]}</h5>
-                            </div>
-                            <div className="trading-info-stat-item">
-                                <h4>Dividend Per Share</h4>
-                                <h5>{info["DividendPerShare"]}</h5>
-                            </div>
-                            <div className="trading-info-stat-item">
-                                <h4>Dividend Yield</h4>
-                                <h5>{info["DividendYield"]}</h5>
-                            </div>
-                            <div className="trading-info-stat-item">
-                                <h4>Ex-Dividend Date</h4>
-                                <h5>{info["ExDividendDate"]}</h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="about-section">
-                        <h3>Description</h3>
-                        <p>{info["Description"]}</p>
-                    </div>
-                </div>
-            )}
-            {isLoaded && pricesArr && cash && (
-                <div className="trading-page-right">
-                    <div className="trading-transaction-container">
-                        <div className="transaction-top">
-                            <button onClick={() => setTransactionType('BUY')} className={transactionType=='BUY'?"active-transaction":""} id="buy-button">
-                                BUY
-                            </button>
-                            <button onClick={() => setTransactionType('SELL')} className={transactionType=='SELL'?"active-transaction":""} id="sell-button">
-                                SELL
-                            </button>
-                        </div>
-                        <div className="transaction-content">
-                            <div>
-                                <h4>Available Cash</h4>
-                                <div>${cash.toFixed(2)}</div>
-                            </div>
-                            {transactionType === "BUY" ? (
-                                <div>
-                                    <h4>
-                                        Buy
-                                    </h4>
-                                    <select value={quantityType} onChange={handleSelectChange}>
-                                        <option value="quantity">Quantity</option>
-                                        <option value="shares">Shares</option>
-                                    </select>
+        <>
+            {isLoaded && pricesArr && cash ? (
+                    <div className="trading-page-container">
+                        <div className="trading-page-left">
+                            <div className="trading-searchbar-div">
+                                <div className="details-searchbar-container">
+                                    <div className="details-searcbar-icon">
+                                        <i class="fa-solid fa-magnifying-glass"></i>
+                                    </div>
+                                    <input
+                                        type="text"
+                                        value={searchVal}
+                                        placeholder="search by name or ticker"
+                                        onChange={(e) => setSearchVal(e.target.value)}
+                                    />
                                 </div>
-                            ) : (
-                                <div>
-                                    <h4>
-                                        Tranche
-                                    </h4>
-                                    {activeHoldingsObj[symbol] ? (
-                                        <select value={sellId} onChange={handleSelectTranche}>
-                                            {activeHoldingsObj[symbol].map((obj) => (
-                                                <option value={obj.id}>
-                                                    {formatOption(obj.purchaseDate, obj.shares)}
-                                                </option>
-                                            ))}
-                                        </select>
+                                <div className="trading-search-results">
+                                    {searchResults && searchResults.length > 0 && searchVal.length > 0 ?
+                                        searchResults.map((item) => (
+                                            <li key={item['1. symbol']} onClick={() => getStockDetails(item['1. symbol'])}>
+                                                <div>{item['2. name']}</div>
+                                                <div>{item['1. symbol']}</div>
+                                            </li>
+                                        )
                                     ) : (
-                                        <div>
-                                            No tranches availables
-                                        </div>
+                                        <li className={showSearchList ? "" : "hidden-search"}>No matches found</li>
                                     )}
                                 </div>
-                            )}
-                            {transactionType === 'SELL' && selectedTranche && (
-                                <div className="tranche-info">
-                                        <div>
-                                            <div>Price</div>
-                                            <div id="tranche-info-right">${selectedTranche.purchasePrice}</div>
-                                        </div>
-                                        <div>
-                                            <div># of Shares</div>
-                                            <div id="tranche-info-right">{selectedTranche.shares}</div>
-                                        </div>
-                                        <div>
-                                            <div>Purchase Date</div>
-                                            <div id="tranche-info-right">{formatDate(selectedTranche.purchaseDate)}</div>
-                                        </div>
-                                </div>
-                            )}
-                            {transactionType === 'SELL' && selectedTranche && (
+                            </div>
+                            <div className="trading-info-top">
                                 <div>
-                                    <h4>
-                                        Shares
-                                    </h4>
-                                    <div>
-                                        <input
-                                            type="number"
-                                            value={numShares}
-                                            onChange={(e) => {
-                                                const newValue = parseFloat(e.target.value);
-                                                if (!isNaN(newValue) && newValue <= selectedTranche.shares) {
-                                                    setNumShares(newValue);
-                                                }
-                                            }}
-                                            placeholder={`Max ${selectedTranche.shares}`}
-                                            className="quantity-input"
+                                    <div className="trading-stock-title">
+                                        <h4>{info["Name"]} ({symbol})</h4>
+                                        <OpenModalButton modalComponent={<AddToWatchlist symbol={symbol} />}
+                                            buttonText={(
+                                                <>
+                                                    <i class="fa-regular fa-star"></i>
+                                                    <span>Add to Watchlist</span>
+                                                </>
+                                            )}
                                         />
                                     </div>
+                                    <h5>{info["Exchange"]} • {info["Sector"]} • {info["Industry"]}</h5>
+                                </div>
+                                <div className="stock-return">
+                                    <h4>{formatCurrentPrice(pricesArr[pricesArr.length - 1]['4. close'])}</h4>
+                                    <div id={calculateStockReturn(pricesArr) > 0 ? "return-positive" : "return-negative"}>
+                                        {calculateStockReturn(pricesArr)}%
+                                    </div>
+                                </div>
                             </div>
-                            )}
-                            {transactionType === "BUY" && (
-                                <div>
-                                    <h4>
-                                        {quantityType === "shares" ? "Shares" : "Dollar Amount"}
-                                    </h4>
+                            <div className="trading-graph-container">
+                                <IndexPriceChart dataObj={pricesObj[`${symbol}`]} title="" lineColor="#008A05" />
+                            </div>
+                            <div className="trading-info-stats">
+                                <div className="trading-info-stats-col">
+                                    <div className="trading-info-stat-item">
+                                        <h4>Market Cap</h4>
+                                        <h5>{formatBillions(info["MarketCapitalization"])}</h5>
+                                    </div>
+                                    <div className="trading-info-stat-item">
+                                        <h4>52 Week Low</h4>
+                                        <h5>{info["52WeekLow"]}</h5>
+                                    </div>
+                                    <div className="trading-info-stat-item">
+                                        <h4>52 Week High</h4>
+                                        <h5>{info["52WeekHigh"]}</h5>
+                                    </div>
+                                    <div className="trading-info-stat-item">
+                                        <h4>Analyst Target Price</h4>
+                                        <h5>{info["AnalystTargetPrice"]}</h5>
+                                    </div>
+                                    <div className="trading-info-stat-item">
+                                        <h4>Beta</h4>
+                                        <h5>{info["Beta"]}</h5>
+                                    </div>
+                                    <div className="trading-info-stat-item">
+                                        <h4>PE Ratio (TTM)</h4>
+                                        <h5>{info["PERatio"]}</h5>
+                                    </div>
+                                    <div className="trading-info-stat-item">
+                                        <h4>Forward PE</h4>
+                                        <h5>{info["ForwardPE"]}</h5>
+                                    </div>
+                                </div>
+                                <div className="trading-info-stats-col">
+                                    <div className="trading-info-stat-item">
+                                        <h4>EV/EBITDA</h4>
+                                        <h5>{info["EVToEBITDA"]}</h5>
+                                    </div>
+                                    <div className="trading-info-stat-item">
+                                        <h4>Price/Book Ratio</h4>
+                                        <h5>{info["PriceToBookRatio"]}</h5>
+                                    </div>
+                                    <div className="trading-info-stat-item">
+                                        <h4>Return on Assets</h4>
+                                        <h5>{info["ReturnOnAssetsTTM"]}</h5>
+                                    </div>
+                                    <div className="trading-info-stat-item">
+                                        <h4>Return on Equity</h4>
+                                        <h5>{info["ReturnOnEquityTTM"]}</h5>
+                                    </div>
+                                    <div className="trading-info-stat-item">
+                                        <h4>Dividend Per Share</h4>
+                                        <h5>{info["DividendPerShare"]}</h5>
+                                    </div>
+                                    <div className="trading-info-stat-item">
+                                        <h4>Dividend Yield</h4>
+                                        <h5>{info["DividendYield"]}</h5>
+                                    </div>
+                                    <div className="trading-info-stat-item">
+                                        <h4>Ex-Dividend Date</h4>
+                                        <h5>{info["ExDividendDate"]}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="about-section">
+                                <h3>Description</h3>
+                                <p>{info["Description"]}</p>
+                            </div>
+                        </div>
+                        <div className="trading-page-right">
+                            <div className="trading-transaction-container">
+                                <div className="transaction-top">
+                                    <button onClick={() => setTransactionType('BUY')} className={transactionType=='BUY'?"active-transaction":""} id="buy-button">
+                                        BUY
+                                    </button>
+                                    <button onClick={() => setTransactionType('SELL')} className={transactionType=='SELL'?"active-transaction":""} id="sell-button">
+                                        SELL
+                                    </button>
+                                </div>
+                                <div className="transaction-content">
                                     <div>
-                                        {quantityType === "shares" ? (
-                                            <div className="quantity-select">
-                                                <input type="text"
+                                        <h4>Available Cash</h4>
+                                        <div>${cash.toFixed(2)}</div>
+                                    </div>
+                                    {transactionType === "BUY" ? (
+                                        <div>
+                                            <h4>
+                                                Buy
+                                            </h4>
+                                            <select value={quantityType} onChange={handleSelectChange}>
+                                                <option value="quantity">Quantity</option>
+                                                <option value="shares">Shares</option>
+                                            </select>
+                                        </div>
+                                    ) : (
+                                        <div>
+                                            <h4>
+                                                Tranche
+                                            </h4>
+                                            {activeHoldingsObj[symbol] ? (
+                                                <select value={sellId} onChange={handleSelectTranche}>
+                                                    {activeHoldingsObj[symbol].map((obj) => (
+                                                        <option value={obj.id}>
+                                                            {formatOption(obj.purchaseDate, obj.shares)}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            ) : (
+                                                <div>
+                                                    No tranches availables
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+                                    {transactionType === 'SELL' && selectedTranche && (
+                                        <div className="tranche-info">
+                                                <div>
+                                                    <div>Price</div>
+                                                    <div id="tranche-info-right">${selectedTranche.purchasePrice}</div>
+                                                </div>
+                                                <div>
+                                                    <div># of Shares</div>
+                                                    <div id="tranche-info-right">{selectedTranche.shares}</div>
+                                                </div>
+                                                <div>
+                                                    <div>Purchase Date</div>
+                                                    <div id="tranche-info-right">{formatDate(selectedTranche.purchaseDate)}</div>
+                                                </div>
+                                        </div>
+                                    )}
+                                    {transactionType === 'SELL' && selectedTranche && (
+                                        <div>
+                                            <h4>
+                                                Shares
+                                            </h4>
+                                            <div>
+                                                <input
+                                                    type="number"
                                                     value={numShares}
-                                                    onChange={(e) => handleQuantity(e.target.value)}
-                                                    placeholder="0"
+                                                    onChange={(e) => {
+                                                        const newValue = parseFloat(e.target.value);
+                                                        if (!isNaN(newValue) && newValue <= selectedTranche.shares) {
+                                                            setNumShares(newValue);
+                                                        }
+                                                    }}
+                                                    placeholder={`Max ${selectedTranche.shares}`}
                                                     className="quantity-input"
                                                 />
-                                                {errors.value && (<p>{errors.value}</p>)}
                                             </div>
-                                        ) : (
-                                            <div className="quantity-select">
-                                                <input type="text"
-                                                    value={numDollars}
-                                                    onChange={(e) => handleQuantity(e.target.value)}
-                                                    placeholder="$0.00"
-                                                    className="quantity-input"
-                                                />
-                                                {errors.value && (<p>{errors.value}</p>)}
+                                    </div>
+                                    )}
+                                    {transactionType === "BUY" && (
+                                        <div>
+                                            <h4>
+                                                {quantityType === "shares" ? "Shares" : "Dollar Amount"}
+                                            </h4>
+                                            <div>
+                                                {quantityType === "shares" ? (
+                                                    <div className="quantity-select">
+                                                        <input type="text"
+                                                            value={numShares}
+                                                            onChange={(e) => handleQuantity(e.target.value)}
+                                                            placeholder="0"
+                                                            className="quantity-input"
+                                                        />
+                                                        {errors.value && (<p>{errors.value}</p>)}
+                                                    </div>
+                                                ) : (
+                                                    <div className="quantity-select">
+                                                        <input type="text"
+                                                            value={numDollars}
+                                                            onChange={(e) => handleQuantity(e.target.value)}
+                                                            placeholder="$0.00"
+                                                            className="quantity-input"
+                                                        />
+                                                        {errors.value && (<p>{errors.value}</p>)}
+                                                    </div>
+                                                )}
                                             </div>
+                                        </div>
+                                    )}
+                                    <div>
+                                        {quantityType === "shares" && (
+                                            <>
+                                                <h4>Market Price</h4>
+                                                <div>{formatCurrentPrice(pricesArr[pricesArr.length - 1]['4. close'])}</div>
+                                            </>
                                         )}
                                     </div>
                                 </div>
-                            )}
-                            <div>
-                                {quantityType === "shares" && (
-                                    <>
-                                        <h4>Market Price</h4>
-                                        <div>{formatCurrentPrice(pricesArr[pricesArr.length - 1]['4. close'])}</div>
-                                    </>
-                                )}
-                            </div>
-                        </div>
-                        <div className="transaction-totals">
-                            <div>
-                                <h4>
-                                    {quantityType === "shares" ? "Est. Amount" : "Est. Shares"}
-                                </h4>
-                                <div>
-                                    {quantityType === "shares" ? "$" + totalCost : totalShares}
+                                <div className="transaction-totals">
+                                    <div>
+                                        <h4>
+                                            {quantityType === "shares" ? "Est. Amount" : "Est. Shares"}
+                                        </h4>
+                                        <div>
+                                            {quantityType === "shares" ? "$" + totalCost : totalShares}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h4>Est. cash after {transactionType === "BUY" ? "purchase" : "sale"}</h4>
+                                        <div>
+                                            ${postTransactionCash ? postTransactionCash.toFixed(2) : "-"}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="transaction-bottom">
+                                    <button
+                                        disabled={disabled}
+                                        onClick={() => handleSubmit()}>
+                                        {transactionType === "BUY" ? "PURCHASE" : "SELL"}
+                                    </button>
+                                    {errors && (<p>{errors.message}</p>)}
                                 </div>
                             </div>
-                            <div>
-                                <h4>Est. cash after {transactionType === "BUY" ? "purchase" : "sale"}</h4>
-                                <div>
-                                    ${postTransactionCash ? postTransactionCash.toFixed(2) : "-"}
-                                </div>
-                            </div>
-                        </div>
-                        <div className="transaction-bottom">
-                            <button
-                                disabled={disabled}
-                                onClick={() => handleSubmit()}>
-                                {transactionType === "BUY" ? "PURCHASE" : "SELL"}
-                            </button>
-                            {errors && (<p>{errors.message}</p>)}
                         </div>
                     </div>
-                </div>
-            )}
-        </div>
+                ) : (
+                    <LoadingComponent />
+                )
+            }
+        </>
     )
 }
 
