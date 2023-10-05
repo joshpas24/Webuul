@@ -6,6 +6,7 @@ import { thunkGetPortfolioInfo } from "../../store/portfolio";
 import './Portfolio.css'
 import StockPieChart from "../PieChart";
 import { useNavigation } from '../../context/NavigationView';
+import LoadingComponent from "../LoadingVid";
 
 function PortfolioPage() {
     const dispatch = useDispatch()
@@ -105,7 +106,7 @@ function PortfolioPage() {
 
     return (
         <>
-            {isLoaded && cumulativeHoldings && (
+            {isLoaded && cumulativeHoldings ? (
                 <div className="portfolio-container">
                     <div className="portfolio-left">
                         <div className="left-box">
@@ -178,6 +179,8 @@ function PortfolioPage() {
                             </div>
                     </div>
                 </div>
+            ) : (
+                <LoadingComponent />
             )}
         </>
     )

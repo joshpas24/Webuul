@@ -92,7 +92,7 @@ function MarketsPage() {
 
     return (
         <>
-            {isLoaded && qqqPrices && (<div className="markets-container">
+            {isLoaded && qqqPrices ? (<div className="markets-container">
                 {/* <div className="timeframe+searchbar">
                     <div className="timeframes">
                         <button>INTRADAY</button>
@@ -235,7 +235,10 @@ function MarketsPage() {
                 <div className="two-col-container">
 
                 </div>
-            </div>)}
+            </div>
+            ) : (
+                <LoadingComponent />
+            )}
         </>
     )
 }

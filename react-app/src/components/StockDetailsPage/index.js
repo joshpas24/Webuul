@@ -7,6 +7,7 @@ import AddToWatchlist from "../AddToWatchlistModal";
 import IndexPriceChart from "../LineChart";
 import { useNavigation } from "../../context/NavigationView";
 import "./StockDetailsPage.css"
+import LoadingComponent from "../LoadingVid";
 
 function StockDetailsPage() {
     const dispatch = useDispatch();
@@ -81,7 +82,7 @@ function StockDetailsPage() {
 
     return (
         <>
-            {isLoaded && pricesArr && (
+            {isLoaded && pricesArr ? (
                 <div className="details-page-container">
                     <div className="details-nav">
                         <div className="markets-back" onClick={() => history.push("/markets")}>
@@ -216,6 +217,8 @@ function StockDetailsPage() {
                         <p>{info["Description"]}</p>
                     </div>
                 </div>
+            ) : (
+                <LoadingComponent />
             )}
         </>
     )
