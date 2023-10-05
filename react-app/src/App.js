@@ -17,6 +17,7 @@ import TradingPage from "./components/TradingPage";
 import Footer from "./components/Footer";
 import StockPieChart from "./components/PieChart";
 import TradingSplash from "./components/TradingPage/TradingSplash";
+import NewsComponent from "./components/News";
 
 function App() {
   const dispatch = useDispatch();
@@ -57,9 +58,9 @@ function App() {
           <Route exact path='/trading'>
             <TradingSplash />
           </Route>
-          {/* <Route>
-            <LoadingComponent />
-          </Route> */}
+          <Route exact path='/news'>
+            <NewsComponent />
+          </Route>
         </Switch>
       )}
       <Footer />

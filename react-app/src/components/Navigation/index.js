@@ -47,6 +47,11 @@ function Navigation({ isLoaded }){
 				>
 					PORTFOLIO
 				</div>
+				<div onClick={() => history.push("/news")}
+					className={navView === 'news' ? "active-page" : ""}
+				>
+					NEWS
+				</div>
 				{/* <div>NEWS</div> */}
 			</div>
 			{!user ? (
