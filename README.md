@@ -18,9 +18,9 @@ https://webuul.onrender.com
 
 # Wiki Links
 
-[Database Schema](https://github.com/joshpas24/Webuul/wiki/DB-Schema) 
-[User Stories](https://github.com/joshpas24/Webuul/wiki/User-Stories) 
-[Wireframes](https://github.com/joshpas24/Webuul/wiki/Wireframes)
+- [Database Schema](https://github.com/joshpas24/Webuul/wiki/DB-Schema) 
+- [User Stories](https://github.com/joshpas24/Webuul/wiki/User-Stories) 
+- [Wireframes](https://github.com/joshpas24/Webuul/wiki/Wireframes)
 
 # Feature List
 
