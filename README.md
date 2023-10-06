@@ -1,8 +1,8 @@
-# Webuul
+## Webuul
 
 Webuul is a financial site with design inspirations from Webull. It allows users to view real-time market data, including up-to-the-minute pricing, investment metrics, macroeconomic news articles, and company information, as well as create personalized watchlists to track their favorite securities.
 
-# Live Link
+## Live Link
 https://webuul.onrender.com
 
 ## Tech Stack
@@ -16,13 +16,13 @@ https://webuul.onrender.com
  ### Hosting:
  ![Render](https://img.shields.io/badge/Render-%46E3B7.svg?style=for-the-badge&logo=render&logoColor=white)
 
-# Wiki Links
+## Wiki Links
 
 - [Database Schema](https://github.com/joshpas24/Webuul/wiki/DB-Schema) 
 - [User Stories](https://github.com/joshpas24/Webuul/wiki/User-Stories) 
 - [Wireframes](https://github.com/joshpas24/Webuul/wiki/Wireframes)
 
-# Feature List
+## Feature List
 
 1. Portfolio
 2. Watchlists
