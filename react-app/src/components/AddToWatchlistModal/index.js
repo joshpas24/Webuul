@@ -19,13 +19,13 @@ function AddToWatchlist({ symbol }) {
     }, [])
 
     const handleCheckboxChange = (watchlistId) => {
-        console.log(watchlistId)
+        // console.log(watchlistId)
         if (checkedLists.includes(watchlistId)) {
             setCheckedLists(checkedLists.filter((id) => id !== watchlistId));
-            console.log(checkedLists)
+            // console.log(checkedLists)
         } else {
             setCheckedLists([...checkedLists, watchlistId]);
-            console.log(checkedLists)
+            // console.log(checkedLists)
         }
     };
 
