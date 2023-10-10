@@ -48,3 +48,26 @@ https://webuul.onrender.com
 | GET /api/stocks/:symbol/info     | This fetch will return a large object of current security stats including: Symbol, EPS, Beta, EBITDA, PERatio, Sector, Exchange, ROA, ROA, etc. |
 | GET /api/stocks/top10 | This endpoint will return an array for the top gainers, losers, and most actively traded stocks at the current timestamp |
 | GET /api/stocks/search/:keywords | This fetch will return an array of stocks and stock symbols which include the characters in the keywords.   |
+
+### Portfolio
+| Request                        | Purpose                |
+| :----------------------------- | :--------------------: |
+| GET /api/portfolio/current  | This endpoint will return an object containing the user's current holdings, past transactions, and cash balance. | 
+| POST /api/portfolio/purchase/:symbol/:price | This fetch will allow the user to purcahse a stock. Purchasing the stock will create a new holding and transaction. |
+| POST /api/portfolio/sell/:symbol/:price | This fetch will allow the user to sell a current holding. The sale of the stock will create a update the number of shares of the holding and create a new transaction. |
+
+### Watchlists
+| Request                        | Purpose                |
+| :----------------------------- | :--------------------: |
+| GET /api/watchlists/current    | This endpoint will return an array of objects for all the current user's watchlists. |
+| POST /api/watchlists/create    | This fetch will create a new watchlist. |
+| DELETE /api/watchlists/:id/delete    | This fetch will delete a user's watchlist by ID. |
+| GET /api/watchlists/:watchlistId/add/:symbol | This endpoint will add a symbol to a watchlist by watchlist ID. |
+| GET /api/watchlists/:watchlistId/remove/:symbol | This endpoint will remove a symbol from a watchlist by watchlist ID. |
+
+### News
+## Portfolio
+| Request                        | Purpose                |
+| :----------------------------- | :--------------------: |
+| GET /api/news/latest   | This fetch will make a fetch call to the third party API and return an array of objects containing the latest news articles, sorted from latest to oldest, with no filter. |
+| GET /api/news/topic    | This fetch will This fetch will make a fetch call to the third party API and return an array of objects containing the news articles that pertain to the user-selected topics.  |
