@@ -44,5 +44,7 @@ https://webuul.onrender.com
 ### Markets
 | Request                        | Purpose                |
 | :----------------------------- | :--------------------: |
-| GET /api/:symbol/prices/:timeframe   | This endpoint will return an array of price data objects, specified to the exact timestamp of the price.    |
-| GET /api/:symbol/info     | This fetch will return a large object of current security stats including: Symbol, EPS, Beta, EBITDA, PERatio, Sector, Exchange, ROA, ROA, etc. |
+| GET /api/stocks/:symbol/prices/:timeframe   | This endpoint will return an array of price data objects, specified to the exact timestamp of the price.    |
+| GET /api/stocks/:symbol/info     | This fetch will return a large object of current security stats including: Symbol, EPS, Beta, EBITDA, PERatio, Sector, Exchange, ROA, ROA, etc. |
+| GET /api/stocks/top10 | This endpoint will return an array for the top gainers, losers, and most actively traded stocks at the current timestamp |
+| GET /api/stocks/search/:keywords | This fetch will return an array of stocks and stock symbols which include the characters in the keywords.   |
