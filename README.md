@@ -43,4 +43,5 @@ https://webuul.onrender.com
 
 ### Markets
 | Request                        | Purpose                | Return Value  |
+| :----------------------------- | :--------------------: | :------------------------------ |
 | GET /api/<symbol>/prices/<timeframe>   | This endpoint will return an array of price data objects, specified to the exact timestamp of the price.    | {<br>&nbsp;&nbsp;&nbsp;'symbol': [{'timestamp': {'open': STRING, 'high': STRING, 'low': STRING, 'close': STRING, 'volume': STRING}]<br><br>Status: 200<br> |
