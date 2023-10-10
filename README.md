@@ -66,7 +66,6 @@ https://webuul.onrender.com
 | GET /api/watchlists/:watchlistId/remove/:symbol | This endpoint will remove a symbol from a watchlist by watchlist ID. |
 
 ### News
-## Portfolio
 | Request                        | Purpose                |
 | :----------------------------- | :--------------------: |
 | GET /api/news/latest   | This fetch will make a fetch call to the third party API and return an array of objects containing the latest news articles, sorted from latest to oldest, with no filter. |
