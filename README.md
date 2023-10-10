@@ -42,6 +42,7 @@ https://webuul.onrender.com
 | POST /api/auth/logout | This fetch will logout the current user.<br>It returns an object with the message 'User logged Out' if it succeeds.                                 | {<br>&nbsp;&nbsp;&nbsp;'message': STRING<br>}<br><br>Status: 200<br>|
 
 ### Markets
-| Request                        | Purpose                | Return Value  |
-| :----------------------------- | :--------------------: | :------------------------------ |
-| GET /api/:<symbol>/prices/:<timeframe>   | This endpoint will return an array of price data objects, specified to the exact timestamp of the price.    | {<br>&nbsp;&nbsp;&nbsp;'symbol': [<br>&nbsp;&nbsp;&nbsp;'timestamp': {<br>&nbsp;&nbsp;&nbsp;'open': STRING, <br>&nbsp;&nbsp;&nbsp;'high': STRING, <br>&nbsp;&nbsp;&nbsp;'low': STRING, <br>&nbsp;&nbsp;&nbsp;'close': STRING, <br>&nbsp;&nbsp;&nbsp;'volume': STRING}<br>&nbsp;&nbsp;&nbsp;]<br>}<br>Status: 200<br> |
+| Request                        | Purpose                |
+| :----------------------------- | :--------------------: |
+| GET /api/:symbol/prices/:timeframe   | This endpoint will return an array of price data objects, specified to the exact timestamp of the price.    |
+| GET /api/:symbol/info     | This fetch will return a large object of current security stats including: Symbol, EPS, Beta, EBITDA, PERatio, Sector, Exchange, ROA, ROA, etc. |
