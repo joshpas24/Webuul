@@ -228,7 +228,7 @@ function TradingPage() {
             setDisabled(true)
             let err = { "value": "Value must be greater than 0"}
             setErrors(err)
-            console.log("errors: ", errors)
+            // console.log("errors: ", errors)
         } else {
             setErrors({})
             if (quantityType === "shares") {
@@ -542,7 +542,7 @@ function TradingPage() {
                                     <div>
                                         <h4>Est. cash after {transactionType === "BUY" ? "purchase" : "sale"}</h4>
                                         <div>
-                                            ${postTransactionCash ? postTransactionCash.toFixed(2) : "-"}
+                                            ${postTransactionCash ? parseFloat(postTransactionCash).toFixed(2) : "-"}
                                         </div>
                                     </div>
                                 </div>
