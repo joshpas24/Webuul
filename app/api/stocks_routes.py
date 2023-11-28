@@ -55,3 +55,11 @@ def get_search_results(keywords):
     data = r.json()
     # return data
     return [ obj for obj in data['bestMatches'] if obj['4. region'] == "United States" and obj['3. type'] == "Equity"]
+
+
+@market_routes.route("/ipo-calendar", methods=["GET"])
+@login_required
+def get_ipo_calendar():
+    url = f"https://www.alphavantage.co/query?function=IPO_CALENDAR&apikey={alphaVantage}"
+    r = requests.get(url)
+    data = r.json()
