@@ -3,6 +3,7 @@ from ..models import Stock
 from flask_login import login_required, current_user
 import requests
 import os
+import csv
 
 alphaVantage = os.environ.get("ALPHA_VANTAGE")
 
@@ -61,5 +62,13 @@ def get_search_results(keywords):
 @login_required
 def get_ipo_calendar():
     url = f"https://www.alphavantage.co/query?function=IPO_CALENDAR&apikey={alphaVantage}"
-    r = requests.get(url)
-    data = r.json()
+
+    with requests.Session() as s:
+        download = s.get(url)
+        decoded_content = download.content.decode('utf-8')
+        cr = csv.reader(decoded_content.splitlines(), delimiter=',')
+        my_list = list(cr)
+
+        # return my_list[1]
+        for row in my_list:
+            print(row)
