@@ -1,7 +1,41 @@
 .footer-container {
-    padding: 30px 0;
+    padding: 50px 10%;
     border-top: 1px solid lightgray;
     display: flex;
     gap: 10px;
-    justify-content: center;
+    justify-content: space-between;
+}
+
+.footer-logo {
+    display: flex;
+    align-items:flex-start;
+    font-size: 20pt;
+    font-weight: 700;
+    gap: 10px;
+}
+
+.footer-right-title {
+    padding-bottom: 18px;
+    font-weight: 700;
+}
+
+.footer-link {
+    cursor: pointer;
+    color: rgb(84, 84, 84);
+    font-size: 11pt !important;
+    padding-bottom: 14px;
+}
+
+.footer-link:hover {
+    color: #2081ff;
+}
+
+.footer-socials a:hover {
+    color: #2081ff !important;
+}
+
+.footer-socials {
+    display: flex;
+    gap: 30%;
+    font-size: 16pt;
 }
