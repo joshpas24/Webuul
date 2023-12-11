@@ -1,6 +1,12 @@
 
 .details-page-container {
-    /* min-height: 100vh; */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    /* padding: 0 10%; */
+    height: fit-content;
+    min-height: 100vh;
 }
 
 .details-nav {
@@ -12,11 +18,37 @@
     padding-bottom: 20px;
 }
 
+.details-nav-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.details-top {
+    width: 100%;
+    background-image: url('./adien.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+.details-top-inner {
+    padding: 0 10%;
+}
+
 .markets-back {
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 4px;
+}
+
+.markets-text {
+    color: white;
+}
+
+.fa-caret-right {
+    color: white;
 }
 
 .markets-text:hover {
@@ -92,14 +124,8 @@
     display: none !important;
 }
 
-.details-page-container {
+.details-top-content {
     display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    padding: 0 10%;
-    height: fit-content;
-    min-height: 100vh;
 }
 
 .info-graph-container {
@@ -240,5 +266,6 @@
 
 
 .about-section {
+    width: 100%;
     padding-bottom: 40px;
 }
