@@ -297,11 +297,13 @@
     margin: 0 !important;
     font-size: 11pt;
     font-weight: 300;
+    color: white;
 }
 
 .info-stat-item h5 {
     margin: 0 !important;
     font-size: 12pt;
+    color: white;
 }
 
 .graph-container {
