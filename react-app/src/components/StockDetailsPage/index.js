@@ -9,6 +9,7 @@ import { useNavigation } from "../../context/NavigationView";
 import "./StockDetailsPage.css"
 import LoadingComponent from "../LoadingVid";
 import background from "./adien.png"
+import StockPriceChart from "../LineChart/stock";
 
 function StockDetailsPage() {
     const dispatch = useDispatch();
@@ -18,6 +19,7 @@ function StockDetailsPage() {
     const [isLoaded, setIsLoaded] = useState(false)
     const [searchVal, setSearchVal] = useState("")
     const [showSearchList, setShowSearchList] = useState(false)
+    const [timeframe, setTimeframe] = useState("1D")
 
     const { setNavView } = useNavigation()
 
@@ -41,6 +43,28 @@ function StockDetailsPage() {
             setShowSearchList(false)
         }
     }, [searchVal])
+
+    useEffect(() => {
+        if (timeframe === ('5Y')) {
+            dispatch(thunkGetStockPrices(symbol.toString(), 'MONTHLY'))
+        }
+
+        if (timeframe === ('3M' || '1Y')) {
+            dispatch(thunkGetStockPrices(symbol.toString(), 'WEEKLY'))
+        }
+
+        if (timeframe === ('1M')) {
+            dispatch(thunkGetStockPrices(symbol.toString(), 'DAILY'))
+        }
+
+        if (timeframe === '1W') {
+            dispatch(thunkGetStockPrices(symbol.toString(), '1WEEK'))
+        }
+
+        if (timeframe === ('1D')) {
+            dispatch(thunkGetStockPrices(symbol.toString(), 'INTRADAY'))
+        }
+    }, [timeframe])
 
     const info = useSelector(state=>state.markets.stockInfo);
     const pricesObj = useSelector(state=>state.markets.stockPrices);
@@ -224,7 +248,15 @@ function StockDetailsPage() {
                     </div>
                     <div className="info-graph-container">
                         <div className="graph-container">
-                            <IndexPriceChart dataObj={pricesObj[`${symbol}`]} title="" lineColor="#008A05" />
+                            <div className="graph-buttons">
+                                <button onClick={() => setTimeframe("1D")}>1D</button>
+                                <button onClick={() => setTimeframe("1W")}>1W</button>
+                                <button onClick={() => setTimeframe("1M")}>1M</button>
+                                <button onClick={() => setTimeframe("3M")}>3M</button>
+                                <button onClick={() => setTimeframe("1Y")}>1Y</button>
+                                <button onClick={() => setTimeframe("5Y")}>5Y</button>
+                            </div>
+                            <StockPriceChart dataObj={pricesObj[`${symbol}`]} timeframe={timeframe} lineColor="rgb(0, 200, 0)" />
                         </div>
                     </div>
                     <div className="about-section">

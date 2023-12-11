@@ -12,6 +12,9 @@ market_routes = Blueprint("markets", __name__)
 @login_required
 def get_stock_price(symbol, timeframe):
 
+    if timeframe == '1WEEK':
+        url = f'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol={symbol}&interval=60min&entitlement=delayed&apikey={alphaVantage}'
+
     if timeframe == 'INTRADAY':
         url = f'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol={symbol}&interval=5min&entitlement=delayed&apikey={alphaVantage}'
     else:
@@ -25,6 +28,8 @@ def get_stock_price(symbol, timeframe):
         return { f"{symbol}" : data[f'{timeframe.title()} Time Series']}
     elif timeframe == 'DAILY':
         return { f"{symbol}" : data['Time Series (Daily)']}
+    elif timeframe == '1WEEK':
+        return { f"{symbol}" : data['Time Series (60min)']}
     else:
         return { f"{symbol}" : data['Time Series (5min)']}
 
