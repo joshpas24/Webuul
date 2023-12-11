@@ -109,7 +109,7 @@ function StockDetailsPage() {
                                             onChange={(e) => setSearchVal(e.target.value)}
                                         />
                                     </div>
-                                    <div className="details-search-results">
+                                    <div className={searchVal.length > 0 ? "details-search-results" : null}>
                                         {searchResults && searchResults.length > 0 && searchVal.length > 0 ?
                                             searchResults.map((item) => (
                                                 <li key={item['1. symbol']} onClick={() => getStockDetails(item['1. symbol'])}>
@@ -118,7 +118,8 @@ function StockDetailsPage() {
                                                 </li>
                                             )
                                         ) : (
-                                            <li className={showSearchList ? "" : "hidden-search"}>No matches found</li>
+                                            null
+                                            // <li className={showSearchList ? "" : "hidden-search"}>No matches found</li>
                                         )}
                                     </div>
                                 </div>
