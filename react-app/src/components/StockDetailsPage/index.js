@@ -125,29 +125,35 @@ function StockDetailsPage() {
                             </div>
                             <div className="details-top-content">
                                 <div className="info-top">
-                                    <div>
-                                        <div className="stock-title">
-                                            <h1>{info["Name"]} ({symbol})</h1>
-                                            <OpenModalButton modalComponent={<AddToWatchlist symbol={symbol} />}
-                                                buttonText={(
-                                                    <>
-                                                        <i class="fa-regular fa-star"></i>
-                                                        <span>Add to Watchlist</span>
-                                                    </>
-                                                )}
-                                            />
-                                            <button onClick={() => history.push(`/trading/${symbol}`)} id="trade-button">
-                                                <i class="fa-solid fa-chart-line"></i>
-                                                <span> Trade</span>
-                                            </button>
+                                    <div className="stock-title">
+                                        <h1>{symbol}</h1>
+                                        <div className="stock-title-right">
+                                            <h5>{info["Name"]}</h5>
+                                            <h5>{info["Exchange"]}</h5>
                                         </div>
-                                        <h5>{info["Exchange"]} • {info["Sector"]} • {info["Industry"]}</h5>
                                     </div>
-                                    <div className="stock-return">
-                                        <h4>${formatCurrentPrice(pricesArr[pricesArr.length - 1]['4. close'])}</h4>
-                                        <div id={calculateStockReturn(pricesArr) > 0 ? "return-positive" : "return-negative"}>
+                                    <div className="stock-sector">
+                                        {info["Sector"]} • {info["Industry"]}
+                                    </div>
+                                    <div className="details-return">
+                                        <div id="details-price">{formatCurrentPrice(pricesArr[pricesArr.length - 1]['4. close'])}</div>
+                                        <div id={calculateStockReturn(pricesArr) > 0 ? "detail-positive" : "detail-negative"} className="details-return-percent">
                                             {calculateStockReturn(pricesArr)}%
                                         </div>
+                                    </div>
+                                    <div className="details-buttons">
+                                        <OpenModalButton modalComponent={<AddToWatchlist symbol={symbol} />}
+                                            buttonText={(
+                                                <>
+                                                    <i class="fa-regular fa-star"></i>
+                                                    <span>Add to Watchlist</span>
+                                                </>
+                                            )}
+                                        />
+                                        <button onClick={() => history.push(`/trading/${symbol}`)} id="trade-button">
+                                            <i class="fa-solid fa-chart-line"></i>
+                                            <span> Trade</span>
+                                        </button>
                                     </div>
                                 </div>
                                 <div className="info-stats">
