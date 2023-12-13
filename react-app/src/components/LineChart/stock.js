@@ -20,63 +20,121 @@ function calculateYAxisBounds(data) {
     return [minY, maxY];
 }
 
-function formatXAxisLabel(value, index) {
+function formatXAxisLabel(value, index, props) {
+    const { timeframe } = props; // Assuming you have timeframe as a prop
+
     const date = new Date(value);
     const timeOfDay = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    return timeOfDay;
+
+    if (timeframe === '1D') {
+      return timeOfDay;
+    } else {
+      const formattedDate = date.toLocaleDateString();
+      return `${formattedDate}`;
+    }
 }
 
-const CustomTooltip = ({ active, payload, label }) => {
+const formatYAxisTick = (value) => {
+    // Use Intl.NumberFormat for formatting numbers with commas, decimals, etc.
+    const formatter = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD', // Change this to your desired currency or remove if not needed
+      minimumFractionDigits: 2,
+    });
+
+    return formatter.format(value);
+  };
+
+  const calculateYAxisTicks = (data, numTicks = 5) => {
+    const minValue = Math.min(...data.map((entry) => entry.price));
+    const maxValue = Math.max(...data.map((entry) => entry.price));
+
+    // Use a simple linear scale to calculate tick values
+    const tickStep = (maxValue - minValue) / (numTicks - 1);
+    const yAxisTicks = Array.from({ length: numTicks }, (_, index) => minValue + index * tickStep);
+
+    return yAxisTicks;
+  };
+
+const CustomTooltip = ({ active, payload, label }, props) => {
+    const { timeframe } = props; // Assuming you have timeframe as a prop
+
     if (active && payload && payload.length) {
-      const timeOfDay = new Date(label).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit'});
-      return (
-        <div className="custom-tooltip">
-          <p className="label">{`${timeOfDay}`}</p>
-          <p className="price">{`$${payload[0].value}`}</p>
-        </div>
-      );
+      const date = new Date(label);
+      const timeOfDay = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      if (timeframe === '1D') {
+        // If the timeframe is one day, only display time
+        return (
+          <div className="custom-tooltip">
+            <p className="label">{`${timeOfDay}`}</p>
+            <p className="price">{`$${payload[0].value}`}</p>
+          </div>
+        );
+      } else {
+        // For larger timeframes, display both date and time
+        const formattedDate = date.toLocaleDateString();
+        return (
+          <div className="custom-tooltip">
+            <p className="label">{`${formattedDate}`}</p>
+            <p className="price">{`$${payload[0].value}`}</p>
+          </div>
+        );
+      }
     }
 
     return null;
 };
 
 const StockPriceChart = ({ dataObj, timeframe, lineColor }) => {
-
+    // console.log('TIMEFRAME: ', timeframe)
     let data = []
     let firstDate = ''
     let lastDate = ''
 
     if (dataObj) {
-        data = Object.keys(dataObj).map((date) => ({
+        const dataArr = Object.keys(dataObj).map((date) => ({
             date,
             price: parseFloat(dataObj[date]['4. close']),
         }));
         // firstDate = data[0].date
-        lastDate = data[data.length - 1].date
+        // lastDate = data[data.length - 1].date
 
         if (timeframe === '1D') {
+            data = dataArr
             firstDate = data[0].date
+            lastDate = data[data.length - 1].date
         }
-        if (timeframe === '5D') {
+        if (timeframe === '1W') {
+            data = dataArr
             firstDate = data[0].date
+            lastDate = data[data.length - 1].date
         }
         if (timeframe === '1M') {
+            data = dataArr.slice(data.length - 25)
             firstDate = data[0].date
+            lastDate = data[data.length - 1].date
         }
         if (timeframe === '3M') {
+            data = dataArr.slice(data.length - 76)
             firstDate = data[0].date
+            lastDate = data[data.length - 1].date
         }
         if (timeframe === '1Y') {
+            data = dataArr.slice(data.length - 53)
             firstDate = data[0].date
+            lastDate = data[data.length - 1].date
         }
         if (timeframe === '5Y') {
+            data = dataArr.slice(data.length - 62)
             firstDate = data[0].date
+            lastDate = data[data.length - 1].date
         }
     }
 
     return (
         <>
-            <ResponsiveContainer width="90%" height={250}>
+            <ResponsiveContainer width="90%" height={400}>
                 <AreaChart data={data} margin={{ top: 0, right: 20, left: 0, bottom: 0 }} height={250}>
                     <defs>
                         <linearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">
@@ -87,7 +145,7 @@ const StockPriceChart = ({ dataObj, timeframe, lineColor }) => {
                     <XAxis
                         dataKey="date"
                         axisLine={false}
-                        tickFormatter={formatXAxisLabel}
+                        tickFormatter={(value, index) => formatXAxisLabel(value, index, { timeframe })}
                         ticks={[firstDate, lastDate]}
                         interval="preserveStartEnd"
                         margin={0}
@@ -95,15 +153,18 @@ const StockPriceChart = ({ dataObj, timeframe, lineColor }) => {
                     <YAxis
                         domain={calculateYAxisBounds(data)}
                         axisLine={false}
-                        tick={false}
+                        tickFormatter={formatYAxisTick}
+                        ticks={calculateYAxisTicks(data)}
+                        interval="preserveStartEnd"
                         margin={0}
+                        orientation='right'
                     />
-                    <Tooltip content={<CustomTooltip />}/>
+                    <Tooltip content={(props) => <CustomTooltip {...props} timeframe={timeframe} />}/>
                     <Area
                         type="monotone"
                         dataKey="price"
                         stroke={lineColor}
-                        fill={lineColor}
+                        fill="url(#gradient)"
                         dot={false}
                     />
                 </AreaChart>

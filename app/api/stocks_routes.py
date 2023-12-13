@@ -14,8 +14,7 @@ def get_stock_price(symbol, timeframe):
 
     if timeframe == '1WEEK':
         url = f'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol={symbol}&interval=60min&entitlement=delayed&apikey={alphaVantage}'
-
-    if timeframe == 'INTRADAY':
+    elif timeframe == 'INTRADAY':
         url = f'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol={symbol}&interval=5min&entitlement=delayed&apikey={alphaVantage}'
     else:
         url = f'https://www.alphavantage.co/query?function=TIME_SERIES_{timeframe}&symbol={symbol}&entitlement=delayed&apikey={alphaVantage}'

@@ -130,16 +130,6 @@
     /* justify-content: space-between; */
 }
 
-.info-graph-container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    align-items: center;
-    padding: 20px;
-    gap: 30px;
-    width: 100%;
-    margin: 25px 0;
-}
-
 .info-top {
     display: flex;
     flex-direction: column;
@@ -307,19 +297,67 @@
     color: white;
 }
 
-.graph-container {
-    display: flex;
-    justify-content: flex-start;
+.info-graph-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
     align-items: center;
-    border: 1px solid lightgray;
-    height: 100%;
-    width: 100%;
-    border-radius: 5px;
-    /* margin-right: 1%; */
+    /* padding: 20px; */
+    gap: 30px;
+    width: 80%;
+    margin: 25px 0;
+    margin-top: 40px;
 }
 
+.graph-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 20px;
+    /* align-items: center; */
+    /* border: 1px solid lightgray; */
+    height: 100%;
+    width: 100%;
+    /* border-radius: 5px; */
+    /* padding: 30px; */
+}
+
+.graph-buttons {
+    display: flex;
+    gap: 7px;
+}
+
+.graph-buttons button {
+    cursor: pointer;
+    font-size: 12pt;
+    /* font-weight: 700; */
+    padding: 6px 12px;
+    background-color: rgb(241, 241, 241);
+    border: none;
+    border-radius: 5px;
+}
+
+.graph-buttons button:hover {
+    color: #2081ff;
+}
+
+.active-timeframe {
+    background-color: #2081ff !important;
+    color: white !important;
+}
+
+.active-timeframe:hover {
+    color: white;
+}
 
 .about-section {
     width: 100%;
-    padding-bottom: 40px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    /* padding-bottom: 40px; */
+}
+
+.about-section h3 {
+    margin: 0;
 }

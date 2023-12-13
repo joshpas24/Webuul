@@ -10,6 +10,7 @@ import "./StockDetailsPage.css"
 import LoadingComponent from "../LoadingVid";
 import background from "./adien.png"
 import StockPriceChart from "../LineChart/stock";
+import anime from 'animejs'
 
 function StockDetailsPage() {
     const dispatch = useDispatch();
@@ -45,15 +46,17 @@ function StockDetailsPage() {
     }, [searchVal])
 
     useEffect(() => {
+        console.log('TIMEFRAME: ', timeframe)
+
         if (timeframe === ('5Y')) {
             dispatch(thunkGetStockPrices(symbol.toString(), 'MONTHLY'))
         }
 
-        if (timeframe === ('3M' || '1Y')) {
+        if (timeframe === '1Y') {
             dispatch(thunkGetStockPrices(symbol.toString(), 'WEEKLY'))
         }
 
-        if (timeframe === ('1M')) {
+        if (timeframe === '1M' || timeframe === '3M') {
             dispatch(thunkGetStockPrices(symbol.toString(), 'DAILY'))
         }
 
@@ -104,6 +107,35 @@ function StockDetailsPage() {
         const million = num / 10000000000;
         return million.toFixed(2)
     }
+
+    useEffect(() => {
+        const slotMachineElement = document.getElementById('details-price');
+        const targetPrice = parseFloat(formatCurrentPrice(pricesArr[pricesArr.length - 1]['4. close']));
+
+        const animation = anime({
+          targets: slotMachineElement,
+          innerHTML: [0, targetPrice],
+          easing: 'linear',
+          round: 2,
+          duration: 2000,
+          loop: true,
+          update: (anim) => {
+            // Check if the current value is close to the target
+            if (Math.abs(targetPrice - anim.animations[0].currentValue) < 0.01) {
+              animation.pause(); // Pause the animation when close to the target
+            }
+          },
+          complete: () => {
+            // Animation complete, you can add any additional logic here if needed
+          },
+        });
+
+        // Clean up the animation when the component unmounts
+        return () => {
+          animation.pause(); // Pause the animation
+          animation.seek(0); // Reset the animation to the beginning
+        };
+      }, [pricesArr]);
 
     return (
         <>
@@ -161,7 +193,8 @@ function StockDetailsPage() {
                                         {info["Sector"]} • {info["Industry"]}
                                     </div>
                                     <div className="details-return">
-                                        <div id="details-price">{formatCurrentPrice(pricesArr[pricesArr.length - 1]['4. close'])}</div>
+                                        <div id="details-price">Loading...</div>
+                                        {/* <div id="details-price">{formatCurrentPrice(pricesArr[pricesArr.length - 1]['4. close'])}</div> */}
                                         <div id={calculateStockReturn(pricesArr) > 0 ? "detail-positive" : "detail-negative"} className="details-return-percent">
                                             {calculateStockReturn(pricesArr)}%
                                         </div>
@@ -249,19 +282,19 @@ function StockDetailsPage() {
                     <div className="info-graph-container">
                         <div className="graph-container">
                             <div className="graph-buttons">
-                                <button onClick={() => setTimeframe("1D")}>1D</button>
-                                <button onClick={() => setTimeframe("1W")}>1W</button>
-                                <button onClick={() => setTimeframe("1M")}>1M</button>
-                                <button onClick={() => setTimeframe("3M")}>3M</button>
-                                <button onClick={() => setTimeframe("1Y")}>1Y</button>
-                                <button onClick={() => setTimeframe("5Y")}>5Y</button>
+                                <button onClick={() => setTimeframe("1D")} className={timeframe === '1D' ? 'active-timeframe' : null}>1D</button>
+                                <button onClick={() => setTimeframe("1W")} className={timeframe === '1W' ? 'active-timeframe' : null}>1W</button>
+                                <button onClick={() => setTimeframe("1M")} className={timeframe === '1M' ? 'active-timeframe' : null}>1M</button>
+                                <button onClick={() => setTimeframe("3M")} className={timeframe === '3M' ? 'active-timeframe' : null}>3M</button>
+                                <button onClick={() => setTimeframe("1Y")} className={timeframe === '1Y' ? 'active-timeframe' : null}>1Y</button>
+                                <button onClick={() => setTimeframe("5Y")} className={timeframe === '5Y' ? 'active-timeframe' : null}>5Y</button>
                             </div>
                             <StockPriceChart dataObj={pricesObj[`${symbol}`]} timeframe={timeframe} lineColor="rgb(0, 200, 0)" />
                         </div>
-                    </div>
-                    <div className="about-section">
-                        <h3>Description</h3>
-                        <p>{info["Description"]}</p>
+                        <div className="about-section">
+                            <h3>About</h3>
+                            <p>{info["Description"]}</p>
+                        </div>
                     </div>
                 </div>
             ) : (
