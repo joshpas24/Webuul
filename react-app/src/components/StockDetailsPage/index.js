@@ -92,8 +92,14 @@ function StockDetailsPage() {
     }
 
     const calculateStockReturn = (prices) => {
-        // console.log('PRICES ARG: ', prices)
-        const openStr = prices[0]['4. close']
+        let openIdx;
+        if (timeframe === '1M') openIdx = prices.length - 25
+        if (timeframe === '3M') openIdx = prices.length - 76
+        if (timeframe === '1Y') openIdx = prices.length - 53
+        if (timeframe === '5Y') openIdx = prices.length - 62
+        if (timeframe === '1D' || timeframe === '1W') openIdx = 0
+
+        const openStr = prices[openIdx]['4. close']
         const closeStr = prices[prices.length - 1]['4. close']
         const open = parseFloat(openStr)
         const close = parseFloat(closeStr)
@@ -107,35 +113,6 @@ function StockDetailsPage() {
         const million = num / 10000000000;
         return million.toFixed(2)
     }
-
-    useEffect(() => {
-        const slotMachineElement = document.getElementById('details-price');
-        const targetPrice = parseFloat(formatCurrentPrice(pricesArr[pricesArr.length - 1]['4. close']));
-
-        const animation = anime({
-          targets: slotMachineElement,
-          innerHTML: [0, targetPrice],
-          easing: 'linear',
-          round: 2,
-          duration: 2000,
-          loop: true,
-          update: (anim) => {
-            // Check if the current value is close to the target
-            if (Math.abs(targetPrice - anim.animations[0].currentValue) < 0.01) {
-              animation.pause(); // Pause the animation when close to the target
-            }
-          },
-          complete: () => {
-            // Animation complete, you can add any additional logic here if needed
-          },
-        });
-
-        // Clean up the animation when the component unmounts
-        return () => {
-          animation.pause(); // Pause the animation
-          animation.seek(0); // Reset the animation to the beginning
-        };
-      }, [pricesArr]);
 
     return (
         <>
@@ -192,12 +169,19 @@ function StockDetailsPage() {
                                     <div className="stock-sector">
                                         {info["Sector"]} • {info["Industry"]}
                                     </div>
-                                    <div className="details-return">
-                                        <div id="details-price">Loading...</div>
-                                        {/* <div id="details-price">{formatCurrentPrice(pricesArr[pricesArr.length - 1]['4. close'])}</div> */}
-                                        <div id={calculateStockReturn(pricesArr) > 0 ? "detail-positive" : "detail-negative"} className="details-return-percent">
-                                            {calculateStockReturn(pricesArr)}%
+                                    <div>
+                                        <div className="details-return">
+                                            <div id="details-price">{formatCurrentPrice(pricesArr[pricesArr.length - 1]['4. close'])}</div>
+                                            <div id={calculateStockReturn(pricesArr) > 0 ? "detail-positive" : "detail-negative"} className="details-return-percent">
+                                                {calculateStockReturn(pricesArr)}%
+                                            </div>
                                         </div>
+                                        {timeframe === '1D' ? null :
+                                            <div className="return-warning">
+                                                <i class="fa-solid fa-circle-info"></i>
+                                                <span>Return is calculated based on timeframe selected below. Prices may vary.</span>
+                                            </div>
+                                        }
                                     </div>
                                     <div className="details-buttons">
                                         <OpenModalButton modalComponent={<AddToWatchlist symbol={symbol} />}
