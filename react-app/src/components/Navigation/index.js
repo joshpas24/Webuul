@@ -25,35 +25,40 @@ function Navigation({ isLoaded }){
 	}
 
 	return (
-		<div className={user ? "three-container" : "two-container"}>
-			<div>
+		// <div className={user ? "three-container" : "two-container"}>
+		<div className="two-container">
+			<div className='nav-left'>
 				<button onClick={() => handleHome()} className='home-button'>
-					<span><img src='/logo.png' className='logo-image'/></span> webuul
+					{user ? <img src='/icon.png' className='logo-image' /> :
+						<>
+							<span><img src='/logo.png' className='logo-image'/></span> webuul
+						</>
+					}
 				</button>
+				{user && (<div className='nav-mid'>
+					<div onClick={() => history.push("/markets")}
+						className={navView === 'markets' ? "active-page" : ""}
+					>
+						MARKETS
+					</div>
+					<div onClick={() => history.push("/trading")}
+						className={navView === 'trading' ? "active-page" : ""}
+					>
+						TRADING
+					</div>
+					<div onClick={() => history.push("/portfolio")}
+						className={navView === 'portfolio' ? "active-page" : ""}
+					>
+						PORTFOLIO
+					</div>
+					<div onClick={() => history.push("/news")}
+						className={navView === 'news' ? "active-page" : ""}
+					>
+						NEWS
+					</div>
+					{/* <div>NEWS</div> */}
+				</div>)}
 			</div>
-			{user && (<div className='nav-mid'>
-				<div onClick={() => history.push("/markets")}
-					className={navView === 'markets' ? "active-page" : ""}
-				>
-					MARKETS
-				</div>
-				<div onClick={() => history.push("/trading")}
-					className={navView === 'trading' ? "active-page" : ""}
-				>
-					TRADING
-				</div>
-				<div onClick={() => history.push("/portfolio")}
-					className={navView === 'portfolio' ? "active-page" : ""}
-				>
-					PORTFOLIO
-				</div>
-				<div onClick={() => history.push("/news")}
-					className={navView === 'news' ? "active-page" : ""}
-				>
-					NEWS
-				</div>
-				{/* <div>NEWS</div> */}
-			</div>)}
 			{!user ? (
 				<div className='nav-right'>
 					<button className='nav-button' id='nav-no-fill'
