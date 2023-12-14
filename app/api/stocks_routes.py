@@ -15,13 +15,15 @@ def get_stock_price(symbol, timeframe):
     if timeframe == '1WEEK':
         url = f'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol={symbol}&interval=60min&entitlement=delayed&apikey={alphaVantage}'
     elif timeframe == 'INTRADAY':
-        url = f'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol={symbol}&interval=5min&entitlement=delayed&apikey={alphaVantage}'
+        url = f'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol={symbol}&interval=5min&apikey={alphaVantage}'
     else:
         url = f'https://www.alphavantage.co/query?function=TIME_SERIES_{timeframe}&symbol={symbol}&entitlement=delayed&apikey={alphaVantage}'
 
     r = requests.get(url)
     data = r.json()
-    # return data
+
+    if data.get('Error Message'):
+        return data, 500
 
     if timeframe == 'WEEKLY' or timeframe == 'MONTHLY':
         return { f"{symbol}" : data[f'{timeframe.title()} Time Series']}
@@ -30,6 +32,7 @@ def get_stock_price(symbol, timeframe):
     elif timeframe == '1WEEK':
         return { f"{symbol}" : data['Time Series (60min)']}
     else:
+        # return data
         return { f"{symbol}" : data['Time Series (5min)']}
 
 

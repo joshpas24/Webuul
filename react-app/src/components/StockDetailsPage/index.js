@@ -20,14 +20,41 @@ function StockDetailsPage() {
     const [isLoaded, setIsLoaded] = useState(false)
     const [searchVal, setSearchVal] = useState("")
     const [showSearchList, setShowSearchList] = useState(false)
-    const [timeframe, setTimeframe] = useState("1D")
+    const [timeframe, setTimeframe] = useState('1D')
+    const [disableIntra, setDisableIntra] = useState(false)
 
     const { setNavView } = useNavigation()
 
     useEffect(() => {
         setNavView('markets')
-        dispatch(thunkGetStockPrices(symbol.toString(), 'INTRADAY'))
         dispatch(thunkGetStockInfo(symbol))
+        const fetchPrices = async () => {
+            try {
+                const intradayPrices = await dispatch(thunkGetStockPrices(symbol.toString(), 'INTRADAY'));
+
+                // Check if intradayPrices contains data
+                if (intradayPrices && intradayPrices[symbol] && Object.keys(intradayPrices[symbol]).length > 0) {
+                    // Intraday prices are available
+                    setTimeframe('1D');
+                } else {
+                    // Intraday prices not available, try fetching daily prices
+                    const dailyPrices = await dispatch(thunkGetStockPrices(symbol.toString(), 'DAILY'));
+
+                    // Check if dailyPrices contains data
+                    if (dailyPrices && dailyPrices[symbol] && Object.keys(dailyPrices[symbol]).length > 0) {
+                        setTimeframe('1M');
+                        setDisableIntra(true);
+                    } else {
+                        // Handle the case when no pricing data is available
+                        console.error('No pricing data available for the selected stock.');
+                    }
+                }
+            } catch (error) {
+                // Handle errors that may occur during the dispatch
+                console.error('Error fetching pricing data:', error);
+            }
+        }
+        fetchPrices()
         setIsLoaded(true)
     }, [dispatch])
 
@@ -46,7 +73,7 @@ function StockDetailsPage() {
     }, [searchVal])
 
     useEffect(() => {
-        console.log('TIMEFRAME: ', timeframe)
+        // console.log('TIMEFRAME: ', timeframe)
 
         if (timeframe === ('5Y')) {
             dispatch(thunkGetStockPrices(symbol.toString(), 'MONTHLY'))
@@ -169,7 +196,7 @@ function StockDetailsPage() {
                                     <div className="stock-sector">
                                         {info["Sector"]} • {info["Industry"]}
                                     </div>
-                                    <div>
+                                    <div className="details-price-return">
                                         <div className="details-return">
                                             <div id="details-price">{formatCurrentPrice(pricesArr[pricesArr.length - 1]['4. close'])}</div>
                                             <div id={calculateStockReturn(pricesArr) > 0 ? "detail-positive" : "detail-negative"} className="details-return-percent">
@@ -266,8 +293,8 @@ function StockDetailsPage() {
                     <div className="info-graph-container">
                         <div className="graph-container">
                             <div className="graph-buttons">
-                                <button onClick={() => setTimeframe("1D")} className={timeframe === '1D' ? 'active-timeframe' : null}>1D</button>
-                                <button onClick={() => setTimeframe("1W")} className={timeframe === '1W' ? 'active-timeframe' : null}>1W</button>
+                                <button onClick={() => setTimeframe("1D")} className={timeframe === '1D' ? 'active-timeframe' : null} disabled={disableIntra}>1D</button>
+                                <button onClick={() => setTimeframe("1W")} className={timeframe === '1W' ? 'active-timeframe' : null} disabled={disableIntra}>1W</button>
                                 <button onClick={() => setTimeframe("1M")} className={timeframe === '1M' ? 'active-timeframe' : null}>1M</button>
                                 <button onClick={() => setTimeframe("3M")} className={timeframe === '3M' ? 'active-timeframe' : null}>3M</button>
                                 <button onClick={() => setTimeframe("1Y")} className={timeframe === '1Y' ? 'active-timeframe' : null}>1Y</button>
