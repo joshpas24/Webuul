@@ -179,7 +179,6 @@ function StockDetailsPage() {
                                             )
                                         ) : (
                                             null
-                                            // <li className={showSearchList ? "" : "hidden-search"}>No matches found</li>
                                         )}
                                     </div>
                                 </div>
