@@ -12,6 +12,7 @@ import { thunkGetPortfolioInfo, thunkPurchase, thunkSell } from "../../store/por
 import { thunkAddStock } from "../../store/watchlists";
 import { useNavigation } from '../../context/NavigationView';
 import LoadingComponent from "../LoadingVid";
+import StockPriceChart from "../LineChart/stock";
 
 function TradingPage() {
     const dispatch = useDispatch();
@@ -41,18 +42,71 @@ function TradingPage() {
     const [errors, setErrors] = useState({})
     const [sellId, setSellId] = useState("")
     const [selectedTranche, setSelectedTranche] = useState(null);
+    const [timeframe, setTimeframe] = useState('1D')
+    const [disableIntra, setDisableIntra] = useState(false)
 
     useEffect(() => {
         setNavView('trading')
-        dispatch(thunkGetStockPrices(symbol.toString(), 'INTRADAY'))
-        if (pricesObj && pricesArr && pricesArr.length) {
-            setCurrentMV(pricesArr[pricesArr.length - 1]['4. close'])
+        // dispatch(thunkGetStockPrices(symbol.toString(), 'INTRADAY'))
+        // if (pricesObj && pricesArr && pricesArr.length) {
+        //     setCurrentMV(pricesArr[pricesArr.length - 1]['4. close'])
+        // }
+        const fetchPrices = async () => {
+            try {
+                const intradayPrices = await dispatch(thunkGetStockPrices(symbol.toString(), 'INTRADAY'));
+
+                // Check if intradayPrices contains data
+                if (intradayPrices && intradayPrices[symbol] && Object.keys(intradayPrices[symbol]).length > 0) {
+                    // Intraday prices are available
+                    setTimeframe('1D');
+                } else {
+                    // Intraday prices not available, try fetching daily prices
+                    const dailyPrices = await dispatch(thunkGetStockPrices(symbol.toString(), 'DAILY'));
+
+                    // Check if dailyPrices contains data
+                    if (dailyPrices && dailyPrices[symbol] && Object.keys(dailyPrices[symbol]).length > 0) {
+                        setTimeframe('1M');
+                        setDisableIntra(true);
+                    } else {
+                        // Handle the case when no pricing data is available
+                        console.error('No pricing data available for the selected stock.');
+                    }
+                }
+            } catch (error) {
+                // Handle errors that may occur during the dispatch
+                console.error('Error fetching pricing data:', error);
+            }
         }
+        fetchPrices()
         dispatch(thunkGetStockInfo(symbol))
         dispatch(thunkGetPortfolioInfo())
         setPostTransactionCash(cash)
         setIsLoaded(true)
     }, [dispatch])
+
+    useEffect(() => {
+        // console.log('TIMEFRAME: ', timeframe)
+
+        if (timeframe === ('5Y')) {
+            dispatch(thunkGetStockPrices(symbol.toString(), 'MONTHLY'))
+        }
+
+        if (timeframe === '1Y') {
+            dispatch(thunkGetStockPrices(symbol.toString(), 'WEEKLY'))
+        }
+
+        if (timeframe === '1M' || timeframe === '3M') {
+            dispatch(thunkGetStockPrices(symbol.toString(), 'DAILY'))
+        }
+
+        if (timeframe === '1W') {
+            dispatch(thunkGetStockPrices(symbol.toString(), '1WEEK'))
+        }
+
+        if (timeframe === ('1D')) {
+            dispatch(thunkGetStockPrices(symbol.toString(), 'INTRADAY'))
+        }
+    }, [timeframe])
 
     useEffect(() => {
         if (searchVal.length > 0) {
@@ -195,7 +249,14 @@ function TradingPage() {
     }
 
     const calculateStockReturn = (prices) => {
-        const openStr = prices[0]['4. close']
+        let openIdx;
+        if (timeframe === '1M') openIdx = prices.length - 25
+        if (timeframe === '3M') openIdx = prices.length - 76
+        if (timeframe === '1Y') openIdx = prices.length - 53
+        if (timeframe === '5Y') openIdx = prices.length - 62
+        if (timeframe === '1D' || timeframe === '1W') openIdx = 0
+
+        const openStr = prices[openIdx]['4. close']
         const closeStr = prices[prices.length - 1]['4. close']
         const open = parseFloat(openStr)
         const close = parseFloat(closeStr)
@@ -340,7 +401,15 @@ function TradingPage() {
                                 </div>
                             </div>
                             <div className="trading-graph-container">
-                                <IndexPriceChart dataObj={pricesObj[`${symbol}`]} title="" lineColor="#008A05" />
+                                <div className="graph-buttons">
+                                    <button onClick={() => setTimeframe("1D")} className={timeframe === '1D' ? 'active-timeframe' : null} disabled={disableIntra}>1D</button>
+                                    <button onClick={() => setTimeframe("1W")} className={timeframe === '1W' ? 'active-timeframe' : null} disabled={disableIntra}>1W</button>
+                                    <button onClick={() => setTimeframe("1M")} className={timeframe === '1M' ? 'active-timeframe' : null}>1M</button>
+                                    <button onClick={() => setTimeframe("3M")} className={timeframe === '3M' ? 'active-timeframe' : null}>3M</button>
+                                    <button onClick={() => setTimeframe("1Y")} className={timeframe === '1Y' ? 'active-timeframe' : null}>1Y</button>
+                                    <button onClick={() => setTimeframe("5Y")} className={timeframe === '5Y' ? 'active-timeframe' : null}>5Y</button>
+                                </div>
+                                <StockPriceChart dataObj={pricesObj[`${symbol}`]} timeframe={timeframe} lineColor="rgb(0, 200, 0)" />
                             </div>
                             <div className="trading-info-stats">
                                 <div className="trading-info-stats-col">
