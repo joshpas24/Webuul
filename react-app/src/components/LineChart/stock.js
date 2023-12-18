@@ -100,12 +100,7 @@ const StockPriceChart = ({ dataObj, timeframe, lineColor }) => {
         // firstDate = data[0].date
         // lastDate = data[data.length - 1].date
 
-        if (timeframe === '1D') {
-            data = dataArr
-            firstDate = data[0].date
-            lastDate = data[data.length - 1].date
-        }
-        if (timeframe === '1W') {
+        if (timeframe === '1D' || timeframe === '1W' || timeframe === 'ALL') {
             data = dataArr
             firstDate = data[0].date
             lastDate = data[data.length - 1].date
