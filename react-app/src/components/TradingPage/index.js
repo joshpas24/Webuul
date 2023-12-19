@@ -261,12 +261,25 @@ function TradingPage() {
     }
 
     const calculateStockReturn = (prices) => {
+        if (!prices || prices.length === 0) {
+            return 0;
+        }
+
         let openIdx;
-        if (timeframe === '1M') openIdx = prices.length - 25
-        if (timeframe === '3M') openIdx = prices.length - 76
-        if (timeframe === '1Y') openIdx = prices.length - 53
-        if (timeframe === '5Y') openIdx = prices.length - 62
-        if (timeframe === '1D' || timeframe === '1W' || timeframe === 'ALL') openIdx = 0
+
+        if (timeframe === '1M' && prices.length >= 25) {
+            openIdx = prices.length - 25;
+        } else if (timeframe === '3M' && prices.length >= 76) {
+            openIdx = prices.length - 76;
+        } else if (timeframe === '1Y' && prices.length >= 53) {
+            openIdx = prices.length - 53;
+        } else if (timeframe === '5Y' && prices.length >= 62) {
+            openIdx = prices.length - 62;
+        } else if (timeframe === '1D' || timeframe === '1W' || timeframe === 'ALL') {
+            openIdx = 0;
+        } else {
+            return 0;
+        }
 
         const openStr = prices[openIdx]['4. close']
         const closeStr = prices[prices.length - 1]['4. close']
