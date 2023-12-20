@@ -91,7 +91,7 @@ def get_interest_rate(interval):
 @market_routes.route("/inflation", methods=["GET"])
 @login_required
 def get_inflation():
-    url = 'https://www.alphavantage.co/query?function=INFLATION&apikey=demo'
+    url = f'https://www.alphavantage.co/query?function=INFLATION&apikey={alphaVantage}'
     r = requests.get(url)
     data = r.json()
-    # return data
+    return data['data']
