@@ -80,9 +80,18 @@ def get_treasury_yield(interval):
     data = r.json()
     return data['data']
 
-@market_routes.route("/interest_rate/<interval>")
+@market_routes.route("/interest_rate/<interval>", methods=['GET'])
 @login_required
 def get_interest_rate(interval):
     url = f'https://www.alphavantage.co/query?function=FEDERAL_FUNDS_RATE&interval={interval}&apikey={alphaVantage}'
     r = requests.get(url)
     data = r.json()
+    return data['data']
+
+@market_routes.route("/inflation", methods=["GET"])
+@login_required
+def get_inflation():
+    url = 'https://www.alphavantage.co/query?function=INFLATION&apikey=demo'
+    r = requests.get(url)
+    data = r.json()
+    # return data
