@@ -62,3 +62,19 @@ def get_search_results(keywords):
     data = r.json()
     # return data
     return [ obj for obj in data['bestMatches'] if obj['4. region'] == "United States" and obj['3. type'] == "Equity"]
+
+@market_routes.route("/GDP/<interval>", methods=["GET"])
+@login_required
+def get_GDP(interval):
+    url = f'https://www.alphavantage.co/query?function=REAL_GDP&interval={interval}&apikey={alphaVantage}'
+    r = requests.get(url)
+    data = r.json()
+    # sends array
+    return data['data']
+
+@market_routes.route("/treasury_yield/<interval>", methods=["GET"])
+@login_required
+def get_treasury_yield(interval):
+    url = f'https://www.alphavantage.co/query?function=TREASURY_YIELD&interval={interval}&maturity=10year&apikey={alphaVantage}'
+    r = requests.get(url)
+    data = r.json()
