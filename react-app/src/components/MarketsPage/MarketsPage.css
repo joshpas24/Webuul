@@ -103,6 +103,9 @@
 }
 
 .indicator-box {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
     border: 1px solid rgb(235, 235, 235);
     border-radius: 5px;
     padding: 10px;
@@ -113,6 +116,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 5px;
 }
 
 .indicator-timeframe {
@@ -152,3 +156,7 @@
 /* .active-timeframe:hover {
     color: white;
 } */
+
+.indicator-graph {
+    max-height: 350px;
+}
