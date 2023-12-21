@@ -95,3 +95,19 @@ def get_inflation():
     r = requests.get(url)
     data = r.json()
     return data['data']
+
+@market_routes.route("/commodities/<interval>", methods=['GET'])
+@login_required
+def get_commodities(interval):
+    url = f'https://www.alphavantage.co/query?function=ALL_COMMODITIES&interval={interval}&apikey={alphaVantage}'
+    r = requests.get(url)
+    data = r.json()
+    return data['data']
+
+@market_routes.route("/unemployment", methods=["GET"])
+@login_required
+def get_unemployment():
+    url = f'https://www.alphavantage.co/query?function=UNEMPLOYMENT&apikey={alphaVantage}'
+    r = requests.get(url)
+    data = r.json()
+    return data['data']
