@@ -56,7 +56,6 @@ function Navigation({ isLoaded }){
 					>
 						NEWS
 					</div>
-					{/* <div>NEWS</div> */}
 				</div>)}
 			</div>
 			{!user ? (

@@ -27,22 +27,22 @@ function MarketsPage() {
         setIsLoaded(true)
     }, [dispatch])
 
-    // useEffect(() => {
-    //     if (searchVal.length > 0) {
-    //         dispatch(thunkGetSearchResults(searchVal))
-    //         setShowSearchList(true)
-    //     } else {
-    //         setShowSearchList(false)
-    //     }
+    useEffect(() => {
+        if (searchVal.length > 0) {
+            dispatch(thunkGetSearchResults(searchVal))
+            setShowSearchList(true)
+        } else {
+            setShowSearchList(false)
+        }
 
-    //     if (searchVal.length < 1) {
-    //         setSearchVal("")
-    //         setShowSearchList(false)
-    //     }
-    // }, [searchVal])
+        if (searchVal.length < 1) {
+            setSearchVal("")
+            setShowSearchList(false)
+        }
+    }, [searchVal])
 
     // const user = useSelector(state=>state.session.user)
-    // const searchResults = useSelector(state=>state.markets.searchResults)
+    const searchResults = useSelector(state=>state.markets.searchResults)
     const winners = useSelector(state=>state.markets.winners)
     const losers = useSelector(state=>state.markets.losers)
     const mostActive = useSelector(state=>state.markets.mostActive)
@@ -93,18 +93,34 @@ function MarketsPage() {
     return (
         <>
             {isLoaded && qqqPrices ? (<div className="markets-container">
-                {/* <div className="timeframe+searchbar">
-                    <div className="timeframes">
-                        <button>INTRADAY</button>
-                        <button>1 WEEK</button>
-                        <button>1 MO</button>
-                        <button>3 MO</button>
-                        <button>6 MO</button>
-                        <button>YTD</button>
-                        <button>1 YR</button>
-                        <button>MAX</button>
-                    </div>
-                </div> */}
+                <div className="markets-top-div">
+                    <h2>Markets</h2>
+                    <div className="details-searchbar-div">
+                                    <div className="details-searchbar-container">
+                                        <div className="details-searcbar-icon">
+                                            <i class="fa-solid fa-magnifying-glass"></i>
+                                        </div>
+                                        <input
+                                            type="text"
+                                            value={searchVal}
+                                            placeholder="search by name or ticker"
+                                            onChange={(e) => setSearchVal(e.target.value)}
+                                        />
+                                    </div>
+                                    <div className={searchVal.length > 0 ? "details-search-results" : null}>
+                                        {searchResults && searchResults.length > 0 && searchVal.length > 0 ?
+                                            searchResults.map((item) => (
+                                                <li key={item['1. symbol']} onClick={() => getStockDetails(item['1. symbol'])}>
+                                                    <div>{item['2. name']}</div>
+                                                    <div>{item['1. symbol']}</div>
+                                                </li>
+                                            )
+                                        ) : (
+                                            null
+                                        )}
+                                    </div>
+                                </div>
+                </div>
                 <div className="three-col-container">
                     <div className="index-box">
                         <div className="index-box-top">
@@ -232,8 +248,74 @@ function MarketsPage() {
                     </div>
                     {/* <button onClick={() => dispatch(thunkGetStockPrices('TSLA', 'DAILY'))}>Stonk Data</button> */}
                 </div>
+                <h2>Economic Indicators</h2>
                 <div className="two-col-container">
+                    <div className="indicator-box">
+                        <div className="indicator-box-top">
+                            <h4>Real GDP</h4>
+                            <div className="indicator-timeframe">
+                                <button>QTR</button>
+                                <button>YEAR</button>
+                            </div>
+                        </div>
+                        <div className="indicator-graph">
 
+                        </div>
+                    </div>
+                    <div className="indicator-box">
+                        <div className="indicator-box-top">
+                            <h4>Global Commodities Index</h4>
+                            <div className="indicator-timeframe">
+                                <button>MNTH</button>
+                                <button>QTR</button>
+                                <button>YEAR</button>
+                            </div>
+                        </div>
+                        <div className="indicator-graph">
+
+                        </div>
+                    </div>
+                </div>
+                <div className="two-col-container">
+                    <div className="indicator-box">
+                        <div className="indicator-box-top">
+                            <h4>Federal Funds (Interest) Rate</h4>
+                            <div className="indicator-timeframe">
+                                <button>QTR</button>
+                                <button>YEAR</button>
+                            </div>
+                        </div>
+                        <div className="indicator-graph">
+
+                        </div>
+                    </div>
+                    <div className="indicator-box">
+                        <div className="indicator-box-top">
+                            <h4>10 Year Treasury</h4>
+                            <div className="indicator-timeframe">
+                                <button>DAY</button>
+                                <button>WEEK</button>
+                                <button>MNTH</button>
+                            </div>
+                        </div>
+                        <div className="indicator-graph">
+
+                        </div>
+                    </div>
+                </div>
+                <div className="two-col-container">
+                    <div className="indicator-box">
+                        <h4>Inflation</h4>
+                        <div className="indicator-graph">
+
+                        </div>
+                    </div>
+                    <div className="indicator-box">
+                        <h4>Unemployment</h4>
+                        <div className="indicator-graph">
+
+                        </div>
+                    </div>
                 </div>
             </div>
             ) : (
