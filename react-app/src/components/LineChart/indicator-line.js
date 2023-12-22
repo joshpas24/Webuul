@@ -9,9 +9,20 @@ import {
 } from 'recharts';
 
 const EconomicLineChart = ({ data, timeframe, lineColor, title }) => {
-    const limitedData = data.slice(0, 24);
+
+    let limitedData;
+
+    if (timeframe === 'YEAR' && title === 'commodities') {
+        limitedData = data.slice(0, 20)
+    } else {
+        limitedData = data.slice(0,24)
+    }
     // Ensure the 'date' values are in a format that allows correct sorting
-    let newData = limitedData.map(item => ({ ...item, date: new Date(item.date) }));
+    let newData = data.length > 20 ?
+        limitedData.map(item => ({ ...item, date: new Date(item.date) }))
+        :
+        data.map(item => ({ ...item, date: new Date(item.date) }))
+
 
     // Sort the data by 'date' in ascending order
     newData.sort((a, b) => a.date - b.date);
@@ -31,6 +42,8 @@ const EconomicLineChart = ({ data, timeframe, lineColor, title }) => {
         switch (timeframe) {
             case 'DAY':
                 return formatDailyDate(date);
+            case 'WEEK':
+                return formatDailyDate(date);
             case 'MNTH':
                 return formatMonthlyDate(date);
             case 'YEAR':
@@ -42,26 +55,32 @@ const EconomicLineChart = ({ data, timeframe, lineColor, title }) => {
         }
     };
 
-  return (
-        <ResponsiveContainer width="100%" height={300}>
-            <AreaChart data={newData}>
-                <defs>
-                    <linearGradient id={`${title}`} x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor={lineColor} stopOpacity={0.8} />
-                        <stop offset="95%" stopColor={lineColor} stopOpacity={0} />
-                    </linearGradient>
-                </defs>
-                <XAxis
-                    dataKey="date"
-                    tickFormatter={(tick) => formatDate(tick)}
-                    interval="preserveStartEnd"
-                    // tick={{ angle: -45, textAnchor: 'end', dy: 10 }}
-                />
-                <YAxis />
-                <Tooltip labelFormatter={(label) => formatDate(label)} />
-                <Area type="monotone" dataKey="value" stroke={lineColor} fill={`url(#${title})`} />
-            </AreaChart>
-        </ResponsiveContainer>
+    // Extract the maximum value from the 'value' field in the data
+    const maxValue = Math.max(...newData.map(item => item.value));
+
+    // Set the domain for the YAxis to ensure it accommodates larger values
+    const yDomain = [0, Math.ceil(maxValue)];
+
+    return (
+            <ResponsiveContainer width="100%" height={300}>
+                <AreaChart data={newData}>
+                    <defs>
+                        <linearGradient id={`${title}`} x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor={lineColor} stopOpacity={0.8} />
+                            <stop offset="95%" stopColor={lineColor} stopOpacity={0} />
+                        </linearGradient>
+                    </defs>
+                    <XAxis
+                        dataKey="date"
+                        tickFormatter={(tick) => formatDate(tick)}
+                        interval="preserveStartEnd"
+                        // tick={{ angle: -45, textAnchor: 'end', dy: 10 }}
+                    />
+                    <YAxis domain={yDomain}/>
+                    <Tooltip labelFormatter={(label) => formatDate(label)} />
+                    <Area type="monotone" dataKey="value" stroke={lineColor} fill={`url(#${title})`} />
+                </AreaChart>
+            </ResponsiveContainer>
   );
 };
 

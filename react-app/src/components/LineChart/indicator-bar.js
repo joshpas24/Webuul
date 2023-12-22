@@ -46,7 +46,7 @@ const EconomicBarChart = ({ data, timeframe, lineColor }) => {
                 />
                 <YAxis />
                 <Tooltip labelFormatter={(label) => formatDate(new Date(label))} />
-                <Bar dataKey="value" fill={lineColor} />
+                <Bar dataKey="value" fill={lineColor} barSize={23}/>
             </BarChart>
         </ResponsiveContainer>
     );

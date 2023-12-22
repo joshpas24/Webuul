@@ -20,7 +20,7 @@ function MarketsPage() {
     const [showSearchList, setShowSearchList] = useState(false)
     const [gdpTimeframe, setGDPTimeframe] = useState('QTR')
     const [commodityTimeframe, setCommodityTimeframe] = useState('MNTH')
-    const [irTimeframe, setIRTimeframe] = useState('DAY')
+    const [irTimeframe, setIRTimeframe] = useState('WEEK')
     const [treasuryTimeframe, setTreasuryTimeframe] = useState('DAY')
 
     useEffect(() => {
@@ -51,6 +51,48 @@ function MarketsPage() {
             setShowSearchList(false)
         }
     }, [searchVal])
+
+    useEffect(() => {
+        if (gdpTimeframe === 'QTR') {
+            dispatch(thunkGetGDP('quarterly'))
+        }
+        if (gdpTimeframe === 'YEAR') {
+            dispatch(thunkGetGDP('yearly'))
+        }
+    }, [gdpTimeframe])
+
+    useEffect(() => {
+        if (commodityTimeframe === 'MNTH') {
+            dispatch(thunkGetCommodities('monthly'))
+        }
+        if (commodityTimeframe === 'QTR') {
+            dispatch(thunkGetCommodities('quarterly'))
+        }
+        if (commodityTimeframe === 'YEAR') {
+            dispatch(thunkGetCommodities('annual'))
+        }
+    }, [commodityTimeframe])
+
+    useEffect(() => {
+        if (irTimeframe === 'WEEK') {
+            dispatch(thunkGetInterestRates('weekly'))
+        }
+        if (irTimeframe === 'MNTH') {
+            dispatch(thunkGetInterestRates('monthly'))
+        }
+    }, [irTimeframe])
+
+    useEffect(() => {
+        if (treasuryTimeframe === 'DAY') {
+            dispatch(thunkGetTreasuryYield('daily'))
+        }
+        if (treasuryTimeframe === 'WEEK') {
+            dispatch(thunkGetTreasuryYield('weekly'))
+        }
+        if (treasuryTimeframe === 'MNTH') {
+            dispatch(thunkGetTreasuryYield('monthly'))
+        }
+    }, [treasuryTimeframe])
 
     // const user = useSelector(state=>state.session.user)
     const GDP = useSelector(state=>state.markets.gdp)
@@ -272,14 +314,20 @@ function MarketsPage() {
                             <h4>Real GDP</h4>
                             <div className="indicator-timeframe">
                                 <button className={gdpTimeframe === 'QTR' ? 'active-timeframe' : null}
-
-                                >QTR</button>
-                                <button className={gdpTimeframe === 'YEAR' ? 'active-timeframe' : null}>YEAR</button>
+                                    onClick={() => setGDPTimeframe('QTR')}
+                                >
+                                    QTR
+                                </button>
+                                <button className={gdpTimeframe === 'YEAR' ? 'active-timeframe' : null}
+                                    onClick={() => setGDPTimeframe('YEAR')}
+                                >
+                                    YEAR
+                                </button>
                             </div>
                         </div>
                         <div className="indicator-graph">
                                 {GDP && GDP.length > 0 ? (
-                                    <EconomicBarChart data={GDP.reverse()} timeframe={gdpTimeframe} lineColor="#52A955" />
+                                    <EconomicBarChart data={GDP} timeframe={gdpTimeframe} lineColor="#52A955" />
                                 ) : (
                                     <LoadingComponent />
                                 )}
@@ -290,17 +338,17 @@ function MarketsPage() {
                             <h4>Global Commodities Index</h4>
                             <div className="indicator-timeframe">
                                 <button className={commodityTimeframe === 'MNTH' ? 'active-timeframe' : null}
-
+                                    onClick={() => setCommodityTimeframe('MNTH')}
                                 >
                                     MNTH
                                 </button>
                                 <button className={commodityTimeframe === 'QTR' ? 'active-timeframe' : null}
-
+                                    onClick={() => setCommodityTimeframe('QTR')}
                                 >
                                     QTR
                                 </button>
                                 <button className={commodityTimeframe === 'YEAR' ? 'active-timeframe' : null}
-
+                                    onClick={() => setCommodityTimeframe('YEAR')}
                                 >
                                     YEAR
                                 </button>
@@ -320,13 +368,21 @@ function MarketsPage() {
                         <div className="indicator-box-top">
                             <h4>Federal Funds (Interest) Rate</h4>
                             <div className="indicator-timeframe">
-                                <button>WEEK</button>
-                                <button>MNTH</button>
+                                <button className={irTimeframe === 'WEEK' ? 'active-timeframe' : null}
+                                    onClick={() => setIRTimeframe('WEEK')}
+                                >
+                                    WEEK
+                                </button>
+                                <button className={irTimeframe === 'MNTH' ? 'active-timeframe' : null}
+                                    onClick={() => setIRTimeframe('MNTH')}
+                                >
+                                    MNTH
+                                </button>
                             </div>
                         </div>
                         <div className="indicator-graph">
                             {interest_rate && interest_rate.length > 0 ? (
-                                <EconomicLineChart data={interest_rate} timeframe={commodityTimeframe} lineColor="#FF9E00" title='commodities'/>
+                                <EconomicLineChart data={interest_rate} timeframe={commodityTimeframe} lineColor="#2B6EEC" title='interest_rate'/>
                             ) : (
                                 <LoadingComponent />
                             )}
@@ -336,13 +392,29 @@ function MarketsPage() {
                         <div className="indicator-box-top">
                             <h4>10 Year Treasury</h4>
                             <div className="indicator-timeframe">
-                                <button>DAY</button>
-                                <button>WEEK</button>
-                                <button>MNTH</button>
+                                <button className={treasuryTimeframe === 'DAY' ? 'active-timeframe' : null}
+                                    onClick={() => setTreasuryTimeframe('DAY')}
+                                >
+                                    DAY
+                                </button>
+                                <button className={treasuryTimeframe === 'WEEK' ? 'active-timeframe' : null}
+                                    onClick={() => setTreasuryTimeframe('WEEK')}
+                                >
+                                    WEEK
+                                </button>
+                                <button className={treasuryTimeframe === 'MNTH' ? 'active-timeframe' : null}
+                                    onClick={() => setTreasuryTimeframe('MNTH')}
+                                >
+                                    MNTH
+                                </button>
                             </div>
                         </div>
                         <div className="indicator-graph">
-
+                            {treasury_yield && treasury_yield.length > 0 ? (
+                                <EconomicLineChart data={treasury_yield} timeframe={treasuryTimeframe} lineColor="#E30000" title='treasury_yield'/>
+                            ) : (
+                                <LoadingComponent />
+                            )}
                         </div>
                     </div>
                 </div>
@@ -350,13 +422,21 @@ function MarketsPage() {
                     <div className="indicator-box">
                         <h4>Inflation</h4>
                         <div className="indicator-graph">
-
+                            {inflation && inflation.length > 0 ? (
+                                <EconomicBarChart data={inflation} timeframe='YEAR' lineColor="#E3C400" />
+                            ) : (
+                                <LoadingComponent />
+                            )}
                         </div>
                     </div>
                     <div className="indicator-box">
                         <h4>Unemployment</h4>
                         <div className="indicator-graph">
-
+                            {unemployment && unemployment.length > 0 ? (
+                                <EconomicBarChart data={unemployment} timeframe='MNTH' lineColor="#9B43E5" />
+                            ) : (
+                                <LoadingComponent />
+                            )}
                         </div>
                     </div>
                 </div>
