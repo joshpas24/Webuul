@@ -229,84 +229,89 @@ function MarketsPage() {
                         <IndexPriceChart dataObj={nasdaq} title="QQQ" lineColor="#002CFF" />
                     </div>
                 </div>
-                <div className="three-col-container">
-                    <div className="list-container">
-                        <h4>Top Gainers</h4>
-                        <div className="list-header">
-                            <div>No.</div>
-                            <div>Symbol/Name</div>
-                            <div className="list-right">(%) Change</div>
-                            <div className="list-right">Price</div>
-                        </div>
-                        <div className="list-content">
-                            {winners.length && winners.map((winner, index) => (
-                                <div key={index} className="list-item">
-                                    <div>{index + 1}</div>
-                                    <div onClick={() => history.push(`/markets/${winner.ticker}`)}
-                                        id="symbol-link"
-                                    >{winner.ticker}</div>
-                                    <div className="list-right"
-                                        id={parseFloat(winner.change_percentage) >= 0 ? "return-positive" : "return-negative"}
-                                    >
-                                        {"+" + parseFloat(winner.change_percentage).toFixed(1) + '%'}
+                {winners.length > 0 && losers.length > 0 && mostActive.length > 0 ?
+                    (
+                    <div className="three-col-container">
+                        <div className="list-container">
+                            <h4>Top Gainers</h4>
+                            <div className="list-header">
+                                <div>No.</div>
+                                <div>Symbol/Name</div>
+                                <div className="list-right">(%) Change</div>
+                                <div className="list-right">Price</div>
+                            </div>
+                            <div className="list-content">
+                                {winners.length && winners.map((winner, index) => (
+                                    <div key={index} className="list-item">
+                                        <div>{index + 1}</div>
+                                        <div onClick={() => history.push(`/markets/${winner.ticker}`)}
+                                            id="symbol-link"
+                                        >{winner.ticker}</div>
+                                        <div className="list-right"
+                                            id={parseFloat(winner.change_percentage) >= 0 ? "return-positive" : "return-negative"}
+                                        >
+                                            {"+" + parseFloat(winner.change_percentage).toFixed(1) + '%'}
+                                        </div>
+                                        <div className="list-right">{parseFloat(winner.price).toFixed(2)}</div>
                                     </div>
-                                    <div className="list-right">{parseFloat(winner.price).toFixed(2)}</div>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
+                        </div>
+                        <div className="list-container">
+                            <h4>Top Losers</h4>
+                            <div className="list-header">
+                                <div>No.</div>
+                                <div>Symbol/Name</div>
+                                <div className="list-right">(%) Change</div>
+                                <div className="list-right">Price</div>
+                            </div>
+                            <div className="list-content">
+                                {losers.length && losers.map((loser, index) => (
+                                    <div key={index} className="list-item">
+                                        <div>{index + 1}</div>
+                                        <div onClick={() => history.push(`/markets/${loser.ticker}`)}
+                                            id="symbol-link"
+                                        >
+                                            {loser.ticker}
+                                        </div>
+                                        <div className="list-right"
+                                            id={parseFloat(loser.change_percentage) >= 0 ? "return-positive" : "return-negative"}
+                                        >
+                                            {parseFloat(loser.change_percentage).toFixed(1) + '%'}
+                                        </div>
+                                        <div className="list-right">{parseFloat(loser.price).toFixed(2)}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="list-container">
+                            <h4>Most Active</h4>
+                            <div className="list-header">
+                                <div>No.</div>
+                                <div>Symbol/Name</div>
+                                <div className="list-right">Volume</div>
+                                <div className="list-right">Price</div>
+                            </div>
+                            <div className="list-content">
+                                {mostActive.length && mostActive.map((stonk, index) => (
+                                    <div key={index} className="list-item">
+                                        <div>{index + 1}</div>
+                                        <div onClick={() => history.push(`/markets/${stonk.ticker}`)}
+                                            id="symbol-link"
+                                        >{stonk.ticker}</div>
+                                        <div className="list-right">
+                                            {formatVolume(stonk.volume) + "M"}
+                                        </div>
+                                        <div className="list-right">{parseFloat(stonk.price).toFixed(2)}</div>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
-                    <div className="list-container">
-                        <h4>Top Losers</h4>
-                        <div className="list-header">
-                            <div>No.</div>
-                            <div>Symbol/Name</div>
-                            <div className="list-right">(%) Change</div>
-                            <div className="list-right">Price</div>
-                        </div>
-                        <div className="list-content">
-                            {losers.length && losers.map((loser, index) => (
-                                <div key={index} className="list-item">
-                                    <div>{index + 1}</div>
-                                    <div onClick={() => history.push(`/markets/${loser.ticker}`)}
-                                        id="symbol-link"
-                                    >
-                                        {loser.ticker}
-                                    </div>
-                                    <div className="list-right"
-                                        id={parseFloat(loser.change_percentage) >= 0 ? "return-positive" : "return-negative"}
-                                    >
-                                        {parseFloat(loser.change_percentage).toFixed(1) + '%'}
-                                    </div>
-                                    <div className="list-right">{parseFloat(loser.price).toFixed(2)}</div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                    <div className="list-container">
-                        <h4>Most Active</h4>
-                        <div className="list-header">
-                            <div>No.</div>
-                            <div>Symbol/Name</div>
-                            <div className="list-right">Volume</div>
-                            <div className="list-right">Price</div>
-                        </div>
-                        <div className="list-content">
-                            {mostActive.length && mostActive.map((stonk, index) => (
-                                <div key={index} className="list-item">
-                                    <div>{index + 1}</div>
-                                    <div onClick={() => history.push(`/markets/${stonk.ticker}`)}
-                                        id="symbol-link"
-                                    >{stonk.ticker}</div>
-                                    <div className="list-right">
-                                        {formatVolume(stonk.volume) + "M"}
-                                    </div>
-                                    <div className="list-right">{parseFloat(stonk.price).toFixed(2)}</div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                    {/* <button onClick={() => dispatch(thunkGetStockPrices('TSLA', 'DAILY'))}>Stonk Data</button> */}
-                </div>
+                    ) : (
+                        null
+                    )
+                }
                 <h2>Economic Indicators</h2>
                 <div className="two-col-container">
                     <div className="indicator-box">

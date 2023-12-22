@@ -76,7 +76,7 @@ const EconomicLineChart = ({ data, timeframe, lineColor, title }) => {
                         interval="preserveStartEnd"
                         // tick={{ angle: -45, textAnchor: 'end', dy: 10 }}
                     />
-                    <YAxis domain={yDomain}/>
+                    <YAxis domain={yDomain} orientation='right'/>
                     <Tooltip labelFormatter={(label) => formatDate(label)} />
                     <Area type="monotone" dataKey="value" stroke={lineColor} fill={`url(#${title})`} />
                 </AreaChart>
