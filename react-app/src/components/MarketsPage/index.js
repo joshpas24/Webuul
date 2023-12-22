@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux"
 import { useHistory } from 'react-router-dom'
-import { thunkGetSearchResults, thunkGetIndexPrices, thunkGetStockInfo, thunkGetStockPrices, thunkGetTop10 } from "../../store/markets";
+import { thunkGetSearchResults, thunkGetIndexPrices, thunkGetStockInfo, thunkGetStockPrices, thunkGetTop10, thunkGetGDP, thunkGetCommodities, thunkGetInflation, thunkGetInterestRates, thunkGetTreasuryYield, thunkGetUnemployment } from "../../store/markets";
 import './MarketsPage.css'
 import IndexPriceChart from "../LineChart";
 import LoadingComponent from "../LoadingVid";
 import { useNavigation } from "../../context/NavigationView";
+import EconomicBarChart from "../LineChart/indicator-bar";
+import EconomicLineChart from "../LineChart/indicator-line";
 
 function MarketsPage() {
     const history = useHistory();
@@ -16,6 +18,10 @@ function MarketsPage() {
     const [isLoaded, setIsLoaded] = useState(false)
     const [searchVal, setSearchVal] = useState("")
     const [showSearchList, setShowSearchList] = useState(false)
+    const [gdpTimeframe, setGDPTimeframe] = useState('QTR')
+    const [commodityTimeframe, setCommodityTimeframe] = useState('MNTH')
+    const [irTimeframe, setIRTimeframe] = useState('WEEK')
+    const [treasuryTimeframe, setTreasuryTimeframe] = useState('DAY')
 
     useEffect(() => {
         setNavView('markets')
@@ -23,26 +29,79 @@ function MarketsPage() {
         dispatch(thunkGetIndexPrices('DIA', 'INTRADAY'))
         dispatch(thunkGetIndexPrices('SPY', 'INTRADAY'))
         dispatch(thunkGetIndexPrices('QQQ', 'INTRADAY'))
-
+        dispatch(thunkGetGDP('quarterly'))
+        dispatch(thunkGetTreasuryYield('daily'))
+        dispatch(thunkGetInterestRates('weekly'))
+        dispatch(thunkGetCommodities('monthly'))
+        dispatch(thunkGetUnemployment())
+        dispatch(thunkGetInflation())
         setIsLoaded(true)
     }, [dispatch])
 
-    // useEffect(() => {
-    //     if (searchVal.length > 0) {
-    //         dispatch(thunkGetSearchResults(searchVal))
-    //         setShowSearchList(true)
-    //     } else {
-    //         setShowSearchList(false)
-    //     }
+    useEffect(() => {
+        if (searchVal.length > 0) {
+            dispatch(thunkGetSearchResults(searchVal))
+            setShowSearchList(true)
+        } else {
+            setShowSearchList(false)
+        }
 
-    //     if (searchVal.length < 1) {
-    //         setSearchVal("")
-    //         setShowSearchList(false)
-    //     }
-    // }, [searchVal])
+        if (searchVal.length < 1) {
+            setSearchVal("")
+            setShowSearchList(false)
+        }
+    }, [searchVal])
+
+    useEffect(() => {
+        if (gdpTimeframe === 'QTR') {
+            dispatch(thunkGetGDP('quarterly'))
+        }
+        if (gdpTimeframe === 'YEAR') {
+            dispatch(thunkGetGDP('yearly'))
+        }
+    }, [gdpTimeframe])
+
+    useEffect(() => {
+        if (commodityTimeframe === 'MNTH') {
+            dispatch(thunkGetCommodities('monthly'))
+        }
+        if (commodityTimeframe === 'QTR') {
+            dispatch(thunkGetCommodities('quarterly'))
+        }
+        if (commodityTimeframe === 'YEAR') {
+            dispatch(thunkGetCommodities('annual'))
+        }
+    }, [commodityTimeframe])
+
+    useEffect(() => {
+        if (irTimeframe === 'WEEK') {
+            dispatch(thunkGetInterestRates('weekly'))
+        }
+        if (irTimeframe === 'MNTH') {
+            dispatch(thunkGetInterestRates('monthly'))
+        }
+    }, [irTimeframe])
+
+    useEffect(() => {
+        if (treasuryTimeframe === 'DAY') {
+            dispatch(thunkGetTreasuryYield('daily'))
+        }
+        if (treasuryTimeframe === 'WEEK') {
+            dispatch(thunkGetTreasuryYield('weekly'))
+        }
+        if (treasuryTimeframe === 'MNTH') {
+            dispatch(thunkGetTreasuryYield('monthly'))
+        }
+    }, [treasuryTimeframe])
 
     // const user = useSelector(state=>state.session.user)
-    // const searchResults = useSelector(state=>state.markets.searchResults)
+    const GDP = useSelector(state=>state.markets.gdp)
+    const treasury_yield = useSelector(state=>state.markets.treasury_yield)
+    const interest_rate = useSelector(state=>state.markets.interest_rate)
+    const commodities = useSelector(state=>state.markets.commodities)
+    const unemployment = useSelector(state=>state.markets.unemployment)
+    const inflation = useSelector(state=>state.markets.inflation)
+    const searchResults = useSelector(state=>state.markets.searchResults)
     const winners = useSelector(state=>state.markets.winners)
     const losers = useSelector(state=>state.markets.losers)
     const mostActive = useSelector(state=>state.markets.mostActive)
@@ -93,18 +152,34 @@ function MarketsPage() {
     return (
         <>
             {isLoaded && qqqPrices ? (<div className="markets-container">
-                {/* <div className="timeframe+searchbar">
-                    <div className="timeframes">
-                        <button>INTRADAY</button>
-                        <button>1 WEEK</button>
-                        <button>1 MO</button>
-                        <button>3 MO</button>
-                        <button>6 MO</button>
-                        <button>YTD</button>
-                        <button>1 YR</button>
-                        <button>MAX</button>
-                    </div>
-                </div> */}
+                <div className="markets-top-div">
+                    <h2>Markets</h2>
+                    <div className="details-searchbar-div">
+                                    <div className="details-searchbar-container">
+                                        <div className="details-searcbar-icon">
+                                            <i class="fa-solid fa-magnifying-glass"></i>
+                                        </div>
+                                        <input
+                                            type="text"
+                                            value={searchVal}
+                                            placeholder="search by name or ticker"
+                                            onChange={(e) => setSearchVal(e.target.value)}
+                                        />
+                                    </div>
+                                    <div className={searchVal.length > 0 ? "details-search-results" : null}>
+                                        {searchResults && searchResults.length > 0 && searchVal.length > 0 ?
+                                            searchResults.map((item) => (
+                                                <li key={item['1. symbol']} onClick={() => getStockDetails(item['1. symbol'])}>
+                                                    <div>{item['2. name']}</div>
+                                                    <div>{item['1. symbol']}</div>
+                                                </li>
+                                            )
+                                        ) : (
+                                            null
+                                        )}
+                                    </div>
+                                </div>
+                </div>
                 <div className="three-col-container">
                     <div className="index-box">
                         <div className="index-box-top">
@@ -121,7 +196,7 @@ function MarketsPage() {
                                 </div>
                             </div>
                         </div>
-                        <IndexPriceChart dataObj={dowJones} title="SPDR Dow Jones Industrial Average ETF (DIA)" lineColor="#00D7FF" />
+                        <IndexPriceChart dataObj={dowJones} title="DIA" lineColor="#00D7FF" />
                     </div>
                     <div className="index-box">
                         <div className="index-box-top">
@@ -136,7 +211,7 @@ function MarketsPage() {
                                 </div>
                             </div>
                         </div>
-                        <IndexPriceChart dataObj={spy500} title="SPDR S&P 500 ETF (SPY)" lineColor="#FF00E0" />
+                        <IndexPriceChart dataObj={spy500} title="SPY" lineColor="#FF00E0" />
                     </div>
                     <div className="index-box">
                         <div className="index-box-top">
@@ -151,89 +226,224 @@ function MarketsPage() {
                                 </div>
                             </div>
                         </div>
-                        <IndexPriceChart dataObj={nasdaq} title="Invesco QQQ Trust (QQQ)" lineColor="#002CFF" />
+                        <IndexPriceChart dataObj={nasdaq} title="QQQ" lineColor="#002CFF" />
                     </div>
                 </div>
-                <div className="three-col-container">
-                    <div className="list-container">
-                        <h4>Top Gainers</h4>
-                        <div className="list-header">
-                            <div>No.</div>
-                            <div>Symbol/Name</div>
-                            <div className="list-right">(%) Change</div>
-                            <div className="list-right">Price</div>
-                        </div>
-                        <div className="list-content">
-                            {winners.length && winners.map((winner, index) => (
-                                <div key={index} className="list-item">
-                                    <div>{index + 1}</div>
-                                    <div onClick={() => history.push(`/markets/${winner.ticker}`)}
-                                        id="symbol-link"
-                                    >{winner.ticker}</div>
-                                    <div className="list-right"
-                                        id={parseFloat(winner.change_percentage) >= 0 ? "return-positive" : "return-negative"}
-                                    >
-                                        {"+" + parseFloat(winner.change_percentage).toFixed(1) + '%'}
+                {winners.length > 0 && losers.length > 0 && mostActive.length > 0 ?
+                    (
+                    <div className="three-col-container">
+                        <div className="list-container">
+                            <h4>Top Gainers</h4>
+                            <div className="list-header">
+                                <div>No.</div>
+                                <div>Symbol/Name</div>
+                                <div className="list-right">(%) Change</div>
+                                <div className="list-right">Price</div>
+                            </div>
+                            <div className="list-content">
+                                {winners.length && winners.map((winner, index) => (
+                                    <div key={index} className="list-item">
+                                        <div>{index + 1}</div>
+                                        <div onClick={() => history.push(`/markets/${winner.ticker}`)}
+                                            id="symbol-link"
+                                        >{winner.ticker}</div>
+                                        <div className="list-right"
+                                            id={parseFloat(winner.change_percentage) >= 0 ? "return-positive" : "return-negative"}
+                                        >
+                                            {"+" + parseFloat(winner.change_percentage).toFixed(1) + '%'}
+                                        </div>
+                                        <div className="list-right">{parseFloat(winner.price).toFixed(2)}</div>
                                     </div>
-                                    <div className="list-right">{parseFloat(winner.price).toFixed(2)}</div>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
+                        </div>
+                        <div className="list-container">
+                            <h4>Top Losers</h4>
+                            <div className="list-header">
+                                <div>No.</div>
+                                <div>Symbol/Name</div>
+                                <div className="list-right">(%) Change</div>
+                                <div className="list-right">Price</div>
+                            </div>
+                            <div className="list-content">
+                                {losers.length && losers.map((loser, index) => (
+                                    <div key={index} className="list-item">
+                                        <div>{index + 1}</div>
+                                        <div onClick={() => history.push(`/markets/${loser.ticker}`)}
+                                            id="symbol-link"
+                                        >
+                                            {loser.ticker}
+                                        </div>
+                                        <div className="list-right"
+                                            id={parseFloat(loser.change_percentage) >= 0 ? "return-positive" : "return-negative"}
+                                        >
+                                            {parseFloat(loser.change_percentage).toFixed(1) + '%'}
+                                        </div>
+                                        <div className="list-right">{parseFloat(loser.price).toFixed(2)}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="list-container">
+                            <h4>Most Active</h4>
+                            <div className="list-header">
+                                <div>No.</div>
+                                <div>Symbol/Name</div>
+                                <div className="list-right">Volume</div>
+                                <div className="list-right">Price</div>
+                            </div>
+                            <div className="list-content">
+                                {mostActive.length && mostActive.map((stonk, index) => (
+                                    <div key={index} className="list-item">
+                                        <div>{index + 1}</div>
+                                        <div onClick={() => history.push(`/markets/${stonk.ticker}`)}
+                                            id="symbol-link"
+                                        >{stonk.ticker}</div>
+                                        <div className="list-right">
+                                            {formatVolume(stonk.volume) + "M"}
+                                        </div>
+                                        <div className="list-right">{parseFloat(stonk.price).toFixed(2)}</div>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
-                    <div className="list-container">
-                        <h4>Top Losers</h4>
-                        <div className="list-header">
-                            <div>No.</div>
-                            <div>Symbol/Name</div>
-                            <div className="list-right">(%) Change</div>
-                            <div className="list-right">Price</div>
+                    ) : (
+                        null
+                    )
+                }
+                <h2>Economic Indicators</h2>
+                <div className="two-col-container">
+                    <div className="indicator-box">
+                        <div className="indicator-box-top">
+                            <h4>Real GDP</h4>
+                            <div className="indicator-timeframe">
+                                <button className={gdpTimeframe === 'QTR' ? 'active-timeframe' : null}
+                                    onClick={() => setGDPTimeframe('QTR')}
+                                >
+                                    QTR
+                                </button>
+                                <button className={gdpTimeframe === 'YEAR' ? 'active-timeframe' : null}
+                                    onClick={() => setGDPTimeframe('YEAR')}
+                                >
+                                    YEAR
+                                </button>
+                            </div>
                         </div>
-                        <div className="list-content">
-                            {losers.length && losers.map((loser, index) => (
-                                <div key={index} className="list-item">
-                                    <div>{index + 1}</div>
-                                    <div onClick={() => history.push(`/markets/${loser.ticker}`)}
-                                        id="symbol-link"
-                                    >
-                                        {loser.ticker}
-                                    </div>
-                                    <div className="list-right"
-                                        id={parseFloat(loser.change_percentage) >= 0 ? "return-positive" : "return-negative"}
-                                    >
-                                        {parseFloat(loser.change_percentage).toFixed(1) + '%'}
-                                    </div>
-                                    <div className="list-right">{parseFloat(loser.price).toFixed(2)}</div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                    <div className="list-container">
-                        <h4>Most Active</h4>
-                        <div className="list-header">
-                            <div>No.</div>
-                            <div>Symbol/Name</div>
-                            <div className="list-right">Volume</div>
-                            <div className="list-right">Price</div>
-                        </div>
-                        <div className="list-content">
-                            {mostActive.length && mostActive.map((stonk, index) => (
-                                <div key={index} className="list-item">
-                                    <div>{index + 1}</div>
-                                    <div onClick={() => history.push(`/markets/${stonk.ticker}`)}
-                                        id="symbol-link"
-                                    >{stonk.ticker}</div>
-                                    <div className="list-right">
-                                        {formatVolume(stonk.volume) + "M"}
-                                    </div>
-                                    <div className="list-right">{parseFloat(stonk.price).toFixed(2)}</div>
-                                </div>
-                            ))}
+                        <div className="indicator-graph">
+                                {GDP && GDP.length > 0 ? (
+                                    <EconomicBarChart data={GDP} timeframe={gdpTimeframe} lineColor="#52A955" />
+                                ) : (
+                                    <LoadingComponent />
+                                )}
                         </div>
                     </div>
-                    {/* <button onClick={() => dispatch(thunkGetStockPrices('TSLA', 'DAILY'))}>Stonk Data</button> */}
+                    <div className="indicator-box">
+                        <div className="indicator-box-top">
+                            <h4>Global Commodities Index</h4>
+                            <div className="indicator-timeframe">
+                                <button className={commodityTimeframe === 'MNTH' ? 'active-timeframe' : null}
+                                    onClick={() => setCommodityTimeframe('MNTH')}
+                                >
+                                    MNTH
+                                </button>
+                                <button className={commodityTimeframe === 'QTR' ? 'active-timeframe' : null}
+                                    onClick={() => setCommodityTimeframe('QTR')}
+                                >
+                                    QTR
+                                </button>
+                                <button className={commodityTimeframe === 'YEAR' ? 'active-timeframe' : null}
+                                    onClick={() => setCommodityTimeframe('YEAR')}
+                                >
+                                    YEAR
+                                </button>
+                            </div>
+                        </div>
+                        <div className="indicator-graph">
+                            {commodities && commodities.length > 0 ? (
+                                <EconomicLineChart data={commodities} timeframe={commodityTimeframe} lineColor="#FF9E00" title='commodities'/>
+                            ) : (
+                                <LoadingComponent />
+                            )}
+                        </div>
+                    </div>
                 </div>
                 <div className="two-col-container">
-
+                    <div className="indicator-box">
+                        <div className="indicator-box-top">
+                            <h4>Federal Funds (Interest) Rate</h4>
+                            <div className="indicator-timeframe">
+                                <button className={irTimeframe === 'WEEK' ? 'active-timeframe' : null}
+                                    onClick={() => setIRTimeframe('WEEK')}
+                                >
+                                    WEEK
+                                </button>
+                                <button className={irTimeframe === 'MNTH' ? 'active-timeframe' : null}
+                                    onClick={() => setIRTimeframe('MNTH')}
+                                >
+                                    MNTH
+                                </button>
+                            </div>
+                        </div>
+                        <div className="indicator-graph">
+                            {interest_rate && interest_rate.length > 0 ? (
+                                <EconomicLineChart data={interest_rate} timeframe={commodityTimeframe} lineColor="#2B6EEC" title='interest_rate'/>
+                            ) : (
+                                <LoadingComponent />
+                            )}
+                        </div>
+                    </div>
+                    <div className="indicator-box">
+                        <div className="indicator-box-top">
+                            <h4>10 Year Treasury</h4>
+                            <div className="indicator-timeframe">
+                                <button className={treasuryTimeframe === 'DAY' ? 'active-timeframe' : null}
+                                    onClick={() => setTreasuryTimeframe('DAY')}
+                                >
+                                    DAY
+                                </button>
+                                <button className={treasuryTimeframe === 'WEEK' ? 'active-timeframe' : null}
+                                    onClick={() => setTreasuryTimeframe('WEEK')}
+                                >
+                                    WEEK
+                                </button>
+                                <button className={treasuryTimeframe === 'MNTH' ? 'active-timeframe' : null}
+                                    onClick={() => setTreasuryTimeframe('MNTH')}
+                                >
+                                    MNTH
+                                </button>
+                            </div>
+                        </div>
+                        <div className="indicator-graph">
+                            {treasury_yield && treasury_yield.length > 0 ? (
+                                <EconomicLineChart data={treasury_yield} timeframe={treasuryTimeframe} lineColor="#E30000" title='treasury_yield'/>
+                            ) : (
+                                <LoadingComponent />
+                            )}
+                        </div>
+                    </div>
+                </div>
+                <div className="two-col-container">
+                    <div className="indicator-box">
+                        <h4>Inflation</h4>
+                        <div className="indicator-graph">
+                            {inflation && inflation.length > 0 ? (
+                                <EconomicBarChart data={inflation} timeframe='YEAR' lineColor="#E3C400" />
+                            ) : (
+                                <LoadingComponent />
+                            )}
+                        </div>
+                    </div>
+                    <div className="indicator-box">
+                        <h4>Unemployment</h4>
+                        <div className="indicator-graph">
+                            {unemployment && unemployment.length > 0 ? (
+                                <EconomicBarChart data={unemployment} timeframe='MNTH' lineColor="#9B43E5" />
+                            ) : (
+                                <LoadingComponent />
+                            )}
+                        </div>
+                    </div>
                 </div>
             </div>
             ) : (
