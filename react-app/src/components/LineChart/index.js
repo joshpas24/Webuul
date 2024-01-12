@@ -60,7 +60,7 @@ const IndexPriceChart = ({ dataObj, title, lineColor }) => {
             <ResponsiveContainer width="90%" height={250}>
                 <AreaChart data={data} margin={{ top: 0, right: 20, left: 0, bottom: 0 }} height={250}>
                     <defs>
-                        <linearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">
+                        <linearGradient id={title} x1="0" y1="0" x2="0" y2="1">
                             <stop offset="5%" stopColor={lineColor} stopOpacity={0.8} />
                             <stop offset="95%" stopColor={lineColor} stopOpacity={0} />
                         </linearGradient>
@@ -84,7 +84,7 @@ const IndexPriceChart = ({ dataObj, title, lineColor }) => {
                         type="monotone"
                         dataKey="price"
                         stroke={lineColor}
-                        fill={lineColor}
+                        fill={`url(#${title})`}
                         dot={false}
                     />
                 </AreaChart>
