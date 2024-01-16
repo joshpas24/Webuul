@@ -3,6 +3,7 @@
     width: fit-content;
     font-size: 14pt;
     border-radius: 25px;
+    z-index: 1001;
 }
 
 .add-watchlist-container h3 {

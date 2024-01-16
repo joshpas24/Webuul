@@ -2,27 +2,64 @@
 .trading-splash-container {
     position: relative;
     width: 100%;
-    height: 90vh;
+    min-height: 100vh;
     overflow: hidden;
-    display: flex;
+    display: grid;
+    grid-template-columns: 2fr 3fr;
     justify-content: center;
     align-items: center;
+    /* padding: 100px 5%; */
+}
+
+.trading-splash-left {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.trading-splash-header {
+    padding-left: 15%;
+    padding-right: 10%
+}
+
+.trading-splash-header h2 {
+    font-size: 40pt;
+    color: #00357a;
+    margin: 0 !important;
+}
+
+.trading-splash-header h3 {
+    font-size: 20pt;
+    font-weight: 300;
+    color: #00357a;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
 }
 
 #trading-video-background {
+    width: 100%;
+}
+
+.video-container {
+    position: relative;
+}
+
+.video-gradient {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
+    width: 50%;
     height: 100%;
-    object-fit: cover;
+    background: linear-gradient(to left, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+    z-index: 1;
 }
 
 .searchbar-div {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: center;
+    /* align-items: center; */
+    padding-left: 15%;
     z-index: 5000;
 }
 

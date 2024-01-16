@@ -23,7 +23,7 @@ function SignupFormPage() {
   const { setNavView } = useNavigation()
 
   useEffect(() => {
-    setNavView('')
+    setNavView('signup')
   }, [])
 
   useEffect(() => {

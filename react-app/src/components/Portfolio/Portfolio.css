@@ -4,6 +4,7 @@
     grid-template-columns: 2fr 1fr;
     gap: 50px;
     /* min-width: 100vh; */
+    padding-top: 140px;
 }
 
 .portfolio-left {

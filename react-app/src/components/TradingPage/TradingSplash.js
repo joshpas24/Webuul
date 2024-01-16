@@ -49,33 +49,44 @@ function TradingSplash() {
 
     return (
         <div className="trading-splash-container">
-            <video autoPlay controlsList="nodownload nofullscreen noremoteplayback" loop muted playsInline preload="auto" id="trading-video-background">
-                <source src={video} type="video/mp4" />
-            </video>
-            <div className="searchbar-div">
-                <div className="searchbar-container">
-                    <div className="searcbar-icon">
-                        <i class="fa-solid fa-magnifying-glass"></i>
+            <div className="trading-splash-left">
+                <div className="trading-splash-header">
+                    <h2>Did you know?</h2>
+                    <h3>Diversifying your portfolio can help manage risk.</h3>
+                    <h3>Explore new investment opportunities!</h3>
+                </div>
+                <div className="searchbar-div">
+                    <div className="searchbar-container">
+                        <div className="searcbar-icon">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </div>
+                        <input
+                            type="text"
+                            value={searchVal}
+                            placeholder={user ? "search by name or ticker" : "you must be logged into to search"}
+                            onChange={(e) => setSearchVal(e.target.value)}
+                            disabled={user ? false : true}
+                        />
                     </div>
-                    <input
-                        type="text"
-                        value={searchVal}
-                        placeholder={user ? "search by name or ticker" : "you must be logged into to search"}
-                        onChange={(e) => setSearchVal(e.target.value)}
-                    />
+                    <div className={searchVal.length > 0 ? "search-results" : null}>
+                        {searchResults && searchResults.length > 0 && searchVal.length > 0 ?
+                            searchResults.map((item) => (
+                                <li key={item['1. symbol']} onClick={() => getStockDetails(item['1. symbol'])}>
+                                    <div>{item['2. name']}</div>
+                                    <div>{item['1. symbol']}</div>
+                                </li>
+                            )
+                        ) : (
+                            <li className={showSearchList ? null : "hidden-search"}>No matches found</li>
+                        )}
+                    </div>
                 </div>
-                <div className="search-results">
-                    {searchResults && searchResults.length > 0 && searchVal.length > 0 ?
-                        searchResults.map((item) => (
-                            <li key={item['1. symbol']} onClick={() => getStockDetails(item['1. symbol'])}>
-                                <div>{item['2. name']}</div>
-                                <div>{item['1. symbol']}</div>
-                            </li>
-                        )
-                    ) : (
-                        <li className={showSearchList ? "" : "hidden-search"}>No matches found</li>
-                    )}
-                </div>
+            </div>
+            <div className="video-container">
+                <div className="video-gradient"></div>
+                <video autoPlay controlsList="nodownload nofullscreen noremoteplayback" loop muted playsInline preload="auto" id="trading-video-background">
+                    <source src={video} type="video/mp4" />
+                </video>
             </div>
         </div>
     )
