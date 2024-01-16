@@ -52,7 +52,8 @@ function TradingSplash() {
             <div className="trading-splash-left">
                 <div className="trading-splash-header">
                     <h2>Did you know?</h2>
-                    <h3>Diversifying your portfolio can help manage risk. Explore new investment opportunities!</h3>
+                    <h3>Diversifying your portfolio can help manage risk.</h3>
+                    <h3>Explore new investment opportunities!</h3>
                 </div>
                 <div className="searchbar-div">
                     <div className="searchbar-container">
