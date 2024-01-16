@@ -49,30 +49,36 @@ function TradingSplash() {
 
     return (
         <div className="trading-splash-container">
-            <div className="searchbar-div">
-                <div className="searchbar-container">
-                    <div className="searcbar-icon">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </div>
-                    <input
-                        type="text"
-                        value={searchVal}
-                        placeholder={user ? "search by name or ticker" : "you must be logged into to search"}
-                        onChange={(e) => setSearchVal(e.target.value)}
-                        disabled={user ? false : true}
-                    />
+            <div className="trading-splash-left">
+                <div className="trading-splash-header">
+                    <h2>Did you know?</h2>
+                    <h3>Diversifying your portfolio can help manage risk. Explore new investment opportunities!</h3>
                 </div>
-                <div className={searchVal.length > 0 ? "search-results" : null}>
-                    {searchResults && searchResults.length > 0 && searchVal.length > 0 ?
-                        searchResults.map((item) => (
-                            <li key={item['1. symbol']} onClick={() => getStockDetails(item['1. symbol'])}>
-                                <div>{item['2. name']}</div>
-                                <div>{item['1. symbol']}</div>
-                            </li>
-                        )
-                    ) : (
-                        <li className={showSearchList ? "" : "hidden-search"}>No matches found</li>
-                    )}
+                <div className="searchbar-div">
+                    <div className="searchbar-container">
+                        <div className="searcbar-icon">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </div>
+                        <input
+                            type="text"
+                            value={searchVal}
+                            placeholder={user ? "search by name or ticker" : "you must be logged into to search"}
+                            onChange={(e) => setSearchVal(e.target.value)}
+                            disabled={user ? false : true}
+                        />
+                    </div>
+                    <div className={searchVal.length > 0 ? "search-results" : null}>
+                        {searchResults && searchResults.length > 0 && searchVal.length > 0 ?
+                            searchResults.map((item) => (
+                                <li key={item['1. symbol']} onClick={() => getStockDetails(item['1. symbol'])}>
+                                    <div>{item['2. name']}</div>
+                                    <div>{item['1. symbol']}</div>
+                                </li>
+                            )
+                        ) : (
+                            <li className={showSearchList ? null : "hidden-search"}>No matches found</li>
+                        )}
+                    </div>
                 </div>
             </div>
             <div className="video-container">
