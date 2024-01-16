@@ -49,9 +49,6 @@ function TradingSplash() {
 
     return (
         <div className="trading-splash-container">
-            <video autoPlay controlsList="nodownload nofullscreen noremoteplayback" loop muted playsInline preload="auto" id="trading-video-background">
-                <source src={video} type="video/mp4" />
-            </video>
             <div className="searchbar-div">
                 <div className="searchbar-container">
                     <div className="searcbar-icon">
@@ -62,9 +59,10 @@ function TradingSplash() {
                         value={searchVal}
                         placeholder={user ? "search by name or ticker" : "you must be logged into to search"}
                         onChange={(e) => setSearchVal(e.target.value)}
+                        disabled={user ? false : true}
                     />
                 </div>
-                <div className="search-results">
+                <div className={searchVal.length > 0 ? "search-results" : null}>
                     {searchResults && searchResults.length > 0 && searchVal.length > 0 ?
                         searchResults.map((item) => (
                             <li key={item['1. symbol']} onClick={() => getStockDetails(item['1. symbol'])}>
@@ -76,6 +74,12 @@ function TradingSplash() {
                         <li className={showSearchList ? "" : "hidden-search"}>No matches found</li>
                     )}
                 </div>
+            </div>
+            <div className="video-container">
+                <div className="video-gradient"></div>
+                <video autoPlay controlsList="nodownload nofullscreen noremoteplayback" loop muted playsInline preload="auto" id="trading-video-background">
+                    <source src={video} type="video/mp4" />
+                </video>
             </div>
         </div>
     )

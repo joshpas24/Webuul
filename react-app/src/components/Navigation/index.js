@@ -17,16 +17,20 @@ function Navigation({ isLoaded }){
 	const user = useSelector(state => state.session.user);
 
 	const handleHome = () => {
-		if (user) {
-			history.push("/markets")
-		} else {
-			history.push("/")
-		}
+		history.push("/")
+	}
+
+	const navTransparency = navView !== 'home' ? {
+		backgroundColor: 'rgba(255, 255, 255, 0.9)',
+		boxShadow: '0 2px 50px rgba(107, 107, 107, 0.1)'
+	} : {
+		backgroundColor: 'rgba(255, 255, 255, 0)',
+		boxShadow: 'none'
 	}
 
 	return (
 		// <div className={user ? "three-container" : "two-container"}>
-		<div className="two-container">
+		<div className="two-container" style={navTransparency}>
 			<div className='nav-left'>
 				<button onClick={() => handleHome()} className='home-button'>
 					{user ? <img src='/icon.png' className='logo-image' /> :

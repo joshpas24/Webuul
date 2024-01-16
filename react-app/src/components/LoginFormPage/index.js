@@ -16,7 +16,7 @@ function LoginFormPage() {
   const { setNavView } = useNavigation()
 
   useEffect(() => {
-    setNavView('')
+    setNavView('login')
   }, [])
 
   if (sessionUser) return <Redirect to="/markets" />;
