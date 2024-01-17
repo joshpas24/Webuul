@@ -5,7 +5,7 @@
     min-height: 100vh;
     overflow: hidden;
     display: grid;
-    grid-template-columns: 2fr 3fr;
+    grid-template-columns: 4fr 6fr;
     justify-content: center;
     align-items: center;
     /* padding: 100px 5%; */
