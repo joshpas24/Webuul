@@ -23,7 +23,7 @@
     cursor: pointer;
     color: rgb(84, 84, 84);
     font-size: 11pt !important;
-    padding-bottom: 14px;
+    padding-bottom: 18px;
 }
 
 .footer-link:hover {
@@ -38,4 +38,16 @@
     display: flex;
     gap: 30%;
     font-size: 16pt;
+}
+
+.copyright {
+    padding: 15px 10%;
+    display: flex;
+    justify-content: flex-end;
+    border-top: 1px solid lightgray;
+}
+
+.copyright h7 {
+    font-size: 8pt !important;
+    color: rgb(145, 145, 145);
 }
