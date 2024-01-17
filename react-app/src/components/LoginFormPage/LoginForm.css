@@ -34,8 +34,9 @@
     padding: 10px 0;
 }
 
-h2 {
-    padding-bottom: 20px;
+.login-right h2 {
+    /* padding-bottom: 20px !important; */
+    margin: 0 !important;
 }
 
 .login-right {
@@ -99,11 +100,16 @@ h2 {
     border: 1px solid #38b6ff;
 }
 
-
+.login-error {
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
 
 .login-right li {
     list-style: none;
     color: red;
+    font-size: 10pt !important;
+    margin-bottom: 20px;
 }
 
 .login-button-demo {

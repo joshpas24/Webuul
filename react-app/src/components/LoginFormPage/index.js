@@ -43,18 +43,20 @@ function LoginFormPage() {
   return (
     <div className="login-container">
       <div className="login-left">
-        <h1>Invest in Stocks, ETFs, and Options</h1>
-        <h3>Join webuul today and start investing with 0 commission*</h3>
+        <h1>Paper trade stocks and ETFs</h1>
+        <h3>Join webuul today and start investing with $100,000</h3>
         <div>*Relevant regulatory and exchange fees do not apply because this is a clone of Webull.</div>
         <div>*Options are risky and not suitable for all investors. Investors can rapidly lose 100% or more of their investment trading options. Before trading options, carefully read Characteristics and Risks of Standardized Options, available somewhere on the internet.</div>
         <div>*Please note this website does not allow users to trade options, or anything real.</div>
       </div>
       <div className="login-right">
         <h2>Log in to <span>webuul</span></h2>
+        <div className="login-error">
+          {errors.map((error, idx) => (
+            <li key={idx}>{error}</li>
+          ))}
+        </div>
         <form onSubmit={handleSubmit}>
-            {errors.map((error, idx) => (
-              <li key={idx}>{error}</li>
-            ))}
           <label>
             <div>EMAIL</div>
             <input

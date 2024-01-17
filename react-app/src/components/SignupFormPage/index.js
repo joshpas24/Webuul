@@ -94,7 +94,7 @@ function SignupFormPage() {
   return (
     <div className="login-container">
       <div className="signup-left">
-        <h1>Paper trade stocks and ETFs.</h1>
+        <h1>Paper trade stocks and ETFs</h1>
         <h3>Join webuul today and start investing with $100,000</h3>
         <div>*Relevant regulatory and exchange fees do not apply because this is a clone of Webull.</div>
         <div>*Options are risky and not suitable for all investors. Investors can rapidly lose 100% or more of their investment trading options. Before trading options, carefully read Characteristics and Risks of Standardized Options, available somewhere on the internet.</div>
