@@ -26,30 +26,37 @@ function StockDetailsPage() {
 
     const { setNavView } = useNavigation()
 
+    let ticker;
+    if (symbol[symbol.length - 1] === '+') {
+        ticker = symbol.slice(0, symbol.length - 1)
+    } else {
+        ticker = symbol
+    }
+
     useEffect(() => {
         setNavView('markets')
-        dispatch(thunkGetStockInfo(symbol))
+        dispatch(thunkGetStockInfo(ticker))
         const fetchPrices = async () => {
             try {
-                const fiveYear = await dispatch(thunkGetStockPrices(symbol.toString(), 'MONTHLY'));
+                const fiveYear = await dispatch(thunkGetStockPrices(ticker, 'MONTHLY'));
 
                 // Check if five-year data is available based on your specific condition
                 if (!hasFiveYearData(fiveYear)) {
                     setDisable5Y(true);
                 }
 
-                const intradayPrices = await dispatch(thunkGetStockPrices(symbol.toString(), 'INTRADAY'));
+                const intradayPrices = await dispatch(thunkGetStockPrices(ticker, 'INTRADAY'));
 
                 // Check if intradayPrices contains data
-                if (intradayPrices && intradayPrices[symbol] && Object.keys(intradayPrices[symbol]).length > 0) {
+                if (intradayPrices && intradayPrices[ticker] && Object.keys(intradayPrices[ticker]).length > 0) {
                     // Intraday prices are available
                     setTimeframe('1D');
                 } else {
                     // Intraday prices not available, try fetching daily prices
-                    const dailyPrices = await dispatch(thunkGetStockPrices(symbol.toString(), 'DAILY'));
+                    const dailyPrices = await dispatch(thunkGetStockPrices(ticker, 'DAILY'));
 
                     // Check if dailyPrices contains data
-                    if (dailyPrices && dailyPrices[symbol] && Object.keys(dailyPrices[symbol]).length > 0) {
+                    if (dailyPrices && dailyPrices[ticker] && Object.keys(dailyPrices[ticker]).length > 0) {
                         setTimeframe('1M');
                         setDisableIntra(true);
                     } else {
@@ -69,7 +76,7 @@ function StockDetailsPage() {
     const hasFiveYearData = (data) => {
         // Add your specific condition here based on the data structure
         // For example, check if there are at least 60 data points for the last five years
-        return data && data[symbol] && Object.keys(data[symbol]).length >= 60;
+        return data && data[ticker] && Object.keys(data[ticker]).length >= 60;
     };
 
     useEffect(() => {
@@ -92,35 +99,35 @@ function StockDetailsPage() {
 
     let pricesArr;
 
-    if (pricesObj[symbol]) {
-        pricesArr = Object.values(pricesObj[`${symbol}`])
+    if (pricesObj[ticker]) {
+        pricesArr = Object.values(pricesObj[`${ticker}`])
     }
 
     useEffect(() => {
         // console.log('TIMEFRAME: ', timeframe)
 
         if (timeframe === ('ALL')) {
-            dispatch(thunkGetStockPrices(symbol.toString(), 'MONTHLY'))
+            dispatch(thunkGetStockPrices(ticker, 'MONTHLY'))
         }
 
         if (timeframe === ('5Y')) {
-            dispatch(thunkGetStockPrices(symbol.toString(), 'MONTHLY'))
+            dispatch(thunkGetStockPrices(ticker, 'MONTHLY'))
         }
 
         if (timeframe === '1Y') {
-            dispatch(thunkGetStockPrices(symbol.toString(), 'WEEKLY'))
+            dispatch(thunkGetStockPrices(ticker, 'WEEKLY'))
         }
 
         if (timeframe === '1M' || timeframe === '3M') {
-            dispatch(thunkGetStockPrices(symbol.toString(), 'DAILY'))
+            dispatch(thunkGetStockPrices(ticker, 'DAILY'))
         }
 
         if (timeframe === '1W') {
-            dispatch(thunkGetStockPrices(symbol.toString(), '1WEEK'))
+            dispatch(thunkGetStockPrices(ticker, '1WEEK'))
         }
 
         if (timeframe === ('1D')) {
-            dispatch(thunkGetStockPrices(symbol.toString(), 'INTRADAY'))
+            dispatch(thunkGetStockPrices(ticker, 'INTRADAY'))
         }
     }, [timeframe])
 
@@ -131,10 +138,10 @@ function StockDetailsPage() {
     //     }
     // }, [pricesArr])
 
-    const getStockDetails = (symbol) => {
-        dispatch(thunkGetStockInfo(symbol))
-        dispatch(thunkGetStockPrices(symbol, 'INTRADAY'))
-        history.push(`/markets/${symbol}`)
+    const getStockDetails = (ticker) => {
+        dispatch(thunkGetStockInfo(ticker))
+        dispatch(thunkGetStockPrices(ticker, 'INTRADAY'))
+        history.push(`/markets/${ticker}`)
         return;
     }
 
@@ -163,7 +170,7 @@ function StockDetailsPage() {
         } else {
             return 0;
         }
-        
+
         const openStr = prices[openIdx]['4. close']
         const closeStr = prices[prices.length - 1]['4. close']
         const open = parseFloat(openStr)
@@ -192,7 +199,7 @@ function StockDetailsPage() {
                                     </div>
                                     <i class="fa-solid fa-caret-right"></i>
                                     <div>
-                                        <div className="markets-text">{symbol}</div>
+                                        <div className="markets-text">{ticker}</div>
                                     </div>
                                 </div>
                                 <div className="details-searchbar-div">
@@ -224,7 +231,7 @@ function StockDetailsPage() {
                             <div className="details-top-content">
                                 <div className="info-top">
                                     <div className="stock-title">
-                                        <h1>{symbol}</h1>
+                                        <h1>{ticker}</h1>
                                         <div className="stock-title-right">
                                             <h5>{info["Name"]}</h5>
                                             <h5>{info["Exchange"]}</h5>
@@ -338,7 +345,7 @@ function StockDetailsPage() {
                                 <button onClick={() => setTimeframe("5Y")} className={timeframe === '5Y' ? 'active-timeframe' : null} disabled={disable5Y}>5Y</button>
                                 <button onClick={() => setTimeframe("ALL")} className={timeframe === 'ALL' ? 'active-timeframe' : null}>ALL</button>
                             </div>
-                            <StockPriceChart dataObj={pricesObj[`${symbol}`]} timeframe={timeframe} lineColor="rgb(0, 200, 0)" />
+                            <StockPriceChart dataObj={pricesObj[`${ticker}`]} timeframe={timeframe} lineColor="rgb(0, 200, 0)" />
                         </div>
                         <div className="about-section">
                             <h3>About</h3>

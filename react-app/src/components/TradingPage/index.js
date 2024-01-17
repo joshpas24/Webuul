@@ -19,6 +19,13 @@ function TradingPage() {
     const history = useHistory();
     const {symbol} = useParams()
 
+    let ticker;
+    if (symbol[symbol.length - 1] === '+') {
+        ticker = symbol.slice(0, symbol.length - 1)
+    } else {
+        ticker = symbol
+    }
+
     const { setNavView } = useNavigation()
 
     const cash = useSelector(state=>state.portfolio['cash'])
@@ -57,15 +64,15 @@ function TradingPage() {
                 const intradayPrices = await dispatch(thunkGetStockPrices(symbol.toString(), 'INTRADAY'));
 
                 // Check if intradayPrices contains data
-                if (intradayPrices && intradayPrices[symbol] && Object.keys(intradayPrices[symbol]).length > 0) {
+                if (intradayPrices && intradayPrices[ticker] && Object.keys(intradayPrices[ticker]).length > 0) {
                     // Intraday prices are available
                     setTimeframe('1D');
                 } else {
                     // Intraday prices not available, try fetching daily prices
-                    const dailyPrices = await dispatch(thunkGetStockPrices(symbol.toString(), 'DAILY'));
+                    const dailyPrices = await dispatch(thunkGetStockPrices(ticker.toString(), 'DAILY'));
 
                     // Check if dailyPrices contains data
-                    if (dailyPrices && dailyPrices[symbol] && Object.keys(dailyPrices[symbol]).length > 0) {
+                    if (dailyPrices && dailyPrices[ticker] && Object.keys(dailyPrices[ticker]).length > 0) {
                         setTimeframe('1M');
                         setDisableIntra(true);
                     } else {
@@ -74,9 +81,9 @@ function TradingPage() {
                     }
                 }
 
-                const fiveYear = await dispatch(thunkGetStockPrices(symbol.toString(), 'MONTHLY'));
+                const fiveYear = await dispatch(thunkGetStockPrices(ticker.toString(), 'MONTHLY'));
 
-                if (fiveYear && fiveYear[symbol] && Object.keys(fiveYear(symbol)).length < 62) {
+                if (fiveYear && fiveYear[ticker] && Object.keys(fiveYear(ticker)).length < 62) {
                     setDisable5Y(true)
                 }
 
@@ -86,7 +93,7 @@ function TradingPage() {
             }
         }
         fetchPrices()
-        dispatch(thunkGetStockInfo(symbol))
+        dispatch(thunkGetStockInfo(ticker))
         dispatch(thunkGetPortfolioInfo())
         setPostTransactionCash(cash)
         setIsLoaded(true)
@@ -96,27 +103,27 @@ function TradingPage() {
         // console.log('TIMEFRAME: ', timeframe)
 
         if (timeframe === ('ALL')) {
-            dispatch(thunkGetStockPrices(symbol.toString(), 'MONTHLY'))
+            dispatch(thunkGetStockPrices(ticker.toString(), 'MONTHLY'))
         }
 
         if (timeframe === ('5Y')) {
-            dispatch(thunkGetStockPrices(symbol.toString(), 'MONTHLY'))
+            dispatch(thunkGetStockPrices(ticker.toString(), 'MONTHLY'))
         }
 
         if (timeframe === '1Y') {
-            dispatch(thunkGetStockPrices(symbol.toString(), 'WEEKLY'))
+            dispatch(thunkGetStockPrices(ticker.toString(), 'WEEKLY'))
         }
 
         if (timeframe === '1M' || timeframe === '3M') {
-            dispatch(thunkGetStockPrices(symbol.toString(), 'DAILY'))
+            dispatch(thunkGetStockPrices(ticker.toString(), 'DAILY'))
         }
 
         if (timeframe === '1W') {
-            dispatch(thunkGetStockPrices(symbol.toString(), '1WEEK'))
+            dispatch(thunkGetStockPrices(ticker.toString(), '1WEEK'))
         }
 
         if (timeframe === ('1D')) {
-            dispatch(thunkGetStockPrices(symbol.toString(), 'INTRADAY'))
+            dispatch(thunkGetStockPrices(ticker.toString(), 'INTRADAY'))
         }
     }, [timeframe])
 
@@ -180,25 +187,25 @@ function TradingPage() {
             setTotalCost(0)
         }
 
-        if (transactionType === 'SELL' && !activeSymbols.includes(symbol)) {
+        if (transactionType === 'SELL' && !activeSymbols.includes(ticker)) {
             setDisabled(true)
-            let err = { "message": `You do not currently own ${symbol}`}
+            let err = { "message": `You do not currently own ${ticker}`}
             setErrors(err)
         } else {
-            if (activeHoldingsObj[symbol]) {
+            if (activeHoldingsObj[ticker]) {
                 //INITIALIZES SELLID TO THE FIRST HOLDING
-                let firstHolding = activeHoldingsObj[symbol][0]
+                let firstHolding = activeHoldingsObj[ticker][0]
                 setSellId(firstHolding.id)
                 let total = firstHolding.shares * currentMV
                 let roundedTotal = parseFloat(total).toFixed(2)
                 setTotalCost(roundedTotal)
             }
         }
-    }, [transactionType, symbol])
+    }, [transactionType, ticker])
 
     useEffect(() => {
-        if (sellId && activeHoldingsObj[symbol]) {
-            let holding = activeHoldingsObj[symbol].find( obj => obj.id == sellId)
+        if (sellId && activeHoldingsObj[ticker]) {
+            let holding = activeHoldingsObj[ticker].find( obj => obj.id == sellId)
             setSelectedTranche(holding)
         }
     }, [sellId])
@@ -224,10 +231,10 @@ function TradingPage() {
     if (holdings && holdings.length > 0) {
         holdings.forEach((holding) => {
             if (holding.shares > 0) {
-                if (activeHoldingsObj[holding.symbol]) {
-                    activeHoldingsObj[holding.symbol] = [...activeHoldingsObj[holding.symbol], holding]
+                if (activeHoldingsObj[holding.ticker]) {
+                    activeHoldingsObj[holding.ticker] = [...activeHoldingsObj[holding.ticker], holding]
                 } else {
-                    activeHoldingsObj[holding.symbol] = [holding]
+                    activeHoldingsObj[holding.ticker] = [holding]
                 }
             }
         })
@@ -243,14 +250,14 @@ function TradingPage() {
 
     let pricesArr;
 
-    if (pricesObj[symbol]) {
-        pricesArr = Object.values(pricesObj[`${symbol}`])
+    if (pricesObj[ticker]) {
+        pricesArr = Object.values(pricesObj[`${ticker}`])
     }
 
-    const getStockDetails = (symbol) => {
-        dispatch(thunkGetStockInfo(symbol))
-        dispatch(thunkGetStockPrices(symbol, 'INTRADAY'))
-        history.push(`/trading/${symbol}`)
+    const getStockDetails = (ticker) => {
+        dispatch(thunkGetStockInfo(ticker))
+        dispatch(thunkGetStockPrices(ticker, 'INTRADAY'))
+        history.push(`/trading/${ticker}`)
         setSearchVal("")
         return;
     }
@@ -352,12 +359,12 @@ function TradingPage() {
         if (transactionType === "BUY") {
             let price = pricesArr[pricesArr.length - 1]['4. close']
             if (quantityType === 'shares') {
-                dispatch(thunkPurchase(symbol, numShares, price))
+                dispatch(thunkPurchase(ticker, numShares, price))
                 setTotalCost(0)
                 setTotalShares(0)
                 history.push("/portfolio")
             } else {
-                dispatch(thunkPurchase(symbol, totalShares, price))
+                dispatch(thunkPurchase(ticker, totalShares, price))
                 setTotalCost(0)
                 setTotalShares(0)
                 history.push("/portfolio")
@@ -406,8 +413,8 @@ function TradingPage() {
                             <div className="trading-info-top">
                                 <div>
                                     <div className="trading-stock-title">
-                                        <h4>{info["Name"]} ({symbol})</h4>
-                                        <OpenModalButton modalComponent={<AddToWatchlist symbol={symbol} />}
+                                        <h4>{info["Name"]} ({ticker})</h4>
+                                        <OpenModalButton modalComponent={<AddToWatchlist symbol={ticker} />}
                                             buttonText={(
                                                 <>
                                                     <i class="fa-regular fa-star"></i>
@@ -435,7 +442,7 @@ function TradingPage() {
                                     <button onClick={() => setTimeframe("5Y")} className={timeframe === '5Y' ? 'active-timeframe' : null}>5Y</button>
                                     <button onClick={() => setTimeframe("ALL")} className={timeframe === 'ALL' ? 'active-timeframe' : null}>ALL</button>
                                 </div>
-                                <StockPriceChart dataObj={pricesObj[`${symbol}`]} timeframe={timeframe} lineColor="rgb(0, 200, 0)" />
+                                <StockPriceChart dataObj={pricesObj[`${ticker}`]} timeframe={timeframe} lineColor="rgb(0, 200, 0)" />
                             </div>
                             <div className="trading-info-stats">
                                 <div className="trading-info-stats-col">
@@ -534,9 +541,9 @@ function TradingPage() {
                                             <h4>
                                                 Tranche
                                             </h4>
-                                            {activeHoldingsObj[symbol] ? (
+                                            {activeHoldingsObj[ticker] ? (
                                                 <select value={sellId} onChange={handleSelectTranche}>
-                                                    {activeHoldingsObj[symbol].map((obj) => (
+                                                    {activeHoldingsObj[ticker].map((obj) => (
                                                         <option value={obj.id}>
                                                             {formatOption(obj.purchaseDate, obj.shares)}
                                                         </option>
