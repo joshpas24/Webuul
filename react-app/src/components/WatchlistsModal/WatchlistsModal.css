@@ -7,7 +7,7 @@
     padding: 40px 30px;
     background-color: #FFFFFF;
     box-shadow: -10px 0px 50px #e5e5e5;
-    transition: right 3s ease-in-out;
+    transition: right 10s ease-in-out;
     z-index: 5000;
 }
 

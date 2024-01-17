@@ -16,6 +16,10 @@ function WatchlistsModal() {
     const lists = useSelector(state=>state.watchlists)
 
     useEffect(() => {
+        dispatch(thunkGetWatchlists())
+    }, [dispatch])
+
+    useEffect(() => {
         if (!viewWatchlist) return;
 
         const closeWatchlists = (e) => {
@@ -29,11 +33,6 @@ function WatchlistsModal() {
 
         return () => document.removeEventListener("click", closeWatchlists);
     }, [viewWatchlist]);
-
-    useEffect(() => {
-        dispatch(thunkGetWatchlists())
-    }, [dispatch])
-
 
     const toggleWatchlists = () => {
         setViewWatchlist(!viewWatchlist)

@@ -3,7 +3,8 @@
     grid-template-columns: repeat(2, 1fr);
     width: 100%;
     height: fit-content;
-    min-height: 100vh;
+    min-height: 90vh;
+    padding-top: 113px;
 }
 
 .login-left {
