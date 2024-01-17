@@ -51,12 +51,10 @@ function LoginFormPage() {
       </div>
       <div className="login-right">
         <h2>Log in to <span>webuul</span></h2>
-        <div className="login-error">
+        <form onSubmit={handleSubmit}>
           {errors.map((error, idx) => (
             <li key={idx}>{error}</li>
           ))}
-        </div>
-        <form onSubmit={handleSubmit}>
           <label>
             <div>EMAIL</div>
             <input

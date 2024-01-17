@@ -3,7 +3,7 @@
     grid-template-columns: repeat(2, 1fr);
     width: 100%;
     height: fit-content;
-    min-height: 90vh;
+    min-height: 100vh;
     padding-top: 113px;
 }
 
@@ -32,11 +32,6 @@
     color: white !important;
     font-weight: 300;
     padding: 10px 0;
-}
-
-.login-right h2 {
-    /* padding-bottom: 20px !important; */
-    margin: 0 !important;
 }
 
 .login-right {
@@ -109,7 +104,6 @@
     list-style: none;
     color: red;
     font-size: 10pt !important;
-    margin-bottom: 20px;
 }
 
 .login-button-demo {
