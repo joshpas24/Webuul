@@ -49,12 +49,18 @@ https://webuul.onrender.com
 | GET /api/stocks/top10 | This endpoint will return an array for the top gainers, losers, and most actively traded stocks at the current timestamp |
 | GET /api/stocks/search/:keywords | This fetch will return an array of stocks and stock symbols which include the characters in the keywords.   |
 
+<img width="1238" alt="Screen Shot 2024-02-07 at 2 03 46 PM" src="https://github.com/joshpas24/Webuul/assets/125530122/6fdaa887-1b68-4b41-aabd-a170625ce47b">
+
+<img width="1235" alt="Screen Shot 2024-02-07 at 2 04 03 PM" src="https://github.com/joshpas24/Webuul/assets/125530122/638370eb-2b20-4f1b-8797-eca23f8e063d">
+
 ### Portfolio
 | Request                        | Purpose                |
 | :----------------------------- | :--------------------: |
 | GET /api/portfolio/current  | This endpoint will return an object containing the user's current holdings, past transactions, and cash balance. | 
 | POST /api/portfolio/purchase/:symbol/:price | This fetch will allow the user to purcahse a stock. Purchasing the stock will create a new holding and transaction. |
 | POST /api/portfolio/sell/:symbol/:price | This fetch will allow the user to sell a current holding. The sale of the stock will create a update the number of shares of the holding and create a new transaction. |
+
+<img width="1205" alt="Screen Shot 2024-02-07 at 2 07 23 PM" src="https://github.com/joshpas24/Webuul/assets/125530122/00082c98-3cc7-475c-9880-b8cd0c76f696">
 
 ### Watchlists
 | Request                        | Purpose                |
@@ -70,3 +76,5 @@ https://webuul.onrender.com
 | :----------------------------- | :--------------------: |
 | GET /api/news/latest   | This fetch will make a fetch call to the third party API and return an array of objects containing the latest news articles, sorted from latest to oldest, with no filter. |
 | GET /api/news/topic    | This fetch will This fetch will make a fetch call to the third party API and return an array of objects containing the news articles that pertain to the user-selected topics.  |
+
+<img width="1215" alt="Screen Shot 2024-02-07 at 2 07 55 PM" src="https://github.com/joshpas24/Webuul/assets/125530122/ffca2645-4354-4c57-8c8b-050494f628f1">
